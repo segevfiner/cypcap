@@ -2,6 +2,7 @@
 
 import socket
 import enum
+cimport cython
 from cpython cimport PyErr_SetFromErrno
 cimport cpcap
 cimport csocket
@@ -119,6 +120,30 @@ def findalldevs():
         return result
     finally:
         cpcap.pcap_freealldevs(devs)
+
+
+# TODO Consider also accepting PcapIf for convenience
+def create(source):
+    cdef cpcap.pcap_t* pcap
+
+    cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+    pcap = cpcap.pcap_create(source.encode(), errbuf)
+    if not pcap:
+        raise error(-1, errbuf)
+
+    cdef Pcap obj = Pcap.__new__(Pcap)
+    obj.pcap = pcap
+    return obj
+
+
+@cython.internal
+cdef class Pcap:
+    cdef cpcap.pcap_t* pcap
+
+    def __dealloc__(self):
+        if self.pcap:
+            cpcap.pcap_close(self.pcap)
+
 
 def lib_version():
     """Get the version information for libpcap."""

@@ -10,6 +10,11 @@ cdef extern from "<pcap/pcap.h>":
 
     ctypedef unsigned int bpf_u_int32
 
+    struct pcap:
+        pass
+
+    ctypedef pcap pcap_t
+
     struct pcap_if:
         pcap_if* next
         char* name
@@ -37,10 +42,14 @@ cdef extern from "<pcap/pcap.h>":
         sockaddr* broadaddr
         sockaddr* dstaddr
 
-    int pcap_init(unsigned int, char*)
+    int pcap_init(unsigned int, char *)
+
+    pcap_t *pcap_create(const char *, char *)
+
+    void pcap_close(pcap_t *)
 
     int	pcap_findalldevs(pcap_if_t **, char *)
 
     void pcap_freealldevs(pcap_if_t *)
 
-    const char* pcap_lib_version()
+    const char *pcap_lib_version()
