@@ -42,3 +42,7 @@ cdef extern from *:
 
     const char *inet_ntop(int af, const void* src,
                           char* dst, socklen_t size)
+
+    struct timeval:
+        long tv_sec
+        long tv_usec
