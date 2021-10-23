@@ -1,27 +1,4 @@
-cdef extern from *:
-    """
-    #ifdef _WIN32
-        #include <WinSock2.h>
-    #else
-        #include <sys/socket.h>
-        #include <netinet/in.h>
-    #endif
-    """
-    enum:
-        AF_INET
-
-    struct sockaddr:
-        unsigned short sa_family
-        char sa_data[14]
-
-    struct in_addr:
-        unsigned long s_addr
-
-    struct sockaddr_in:
-        unsigned short sin_family
-        unsigned short sin_port
-        in_addr sin_addr
-        char sin_zero[8]
+from csocket cimport sockaddr
 
 cdef extern from "<pcap/pcap.h>":
     enum:

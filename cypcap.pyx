@@ -2,7 +2,9 @@
 
 import socket
 import enum
+from cpython cimport PyErr_SetFromErrno
 cimport cpcap
+cimport csocket
 
 
 IF UNAME_SYSNAME == "Windows":
@@ -67,6 +69,9 @@ class PcapAddr:
         self.broadaddr = broadaddr
         self.dstaddr = dstaddr
 
+    def __repr__(self):
+        return f"PcapAddr({self.addr!r}, {self.netmask!r}, {self.broadaddr!r}, {self.dstaddr!r})"
+
 
 cdef object PcapAddr_from_c(cpcap.pcap_addr* addr):
     return PcapAddr(
@@ -77,14 +82,23 @@ cdef object PcapAddr_from_c(cpcap.pcap_addr* addr):
     )
 
 
-cdef object makesockaddr_addr(cpcap.sockaddr* addr):
+cdef makesockaddr_addr(csocket.sockaddr* addr):
+    cdef char inet_buf[csocket.INET_ADDRSTRLEN]
+    cdef char inet6_buf[csocket.INET6_ADDRSTRLEN]
+
     if not addr:
         return None
-    elif addr.sa_family == cpcap.AF_INET:
-        # TODO Barf... Anything less digusting?
-        return socket.inet_ntop(socket.AF_INET, (<unsigned char*>(&(<cpcap.sockaddr_in*>addr).sin_addr.s_addr))[:4])
+    elif addr.sa_family == csocket.AF_INET:
+        if not csocket.inet_ntop(socket.AF_INET, &(<csocket.sockaddr_in*>addr).sin_addr, inet_buf, sizeof(inet_buf)):
+            PyErr_SetFromErrno(OSError)
+        return inet_buf.decode()
+    elif addr.sa_family == csocket.AF_INET6:
+        if not csocket.inet_ntop(socket.AF_INET6, &(<csocket.sockaddr_in6*>addr).sin6_addr, inet6_buf, sizeof(inet6_buf)):
+            PyErr_SetFromErrno(OSError)
+        return inet6_buf.decode()
     else:
-        return (<unsigned char*>addr)[:sizeof(cpcap.sockaddr)]
+        # TODO What should we do for unknown sa_family?
+        return (<unsigned char*>addr)[:sizeof(csocket.sockaddr)]
 
 
 def findalldevs():

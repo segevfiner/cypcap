@@ -16,7 +16,7 @@ if sys.platform == "win32":
         library_dirs = [os.path.join(npcap_sdk, R"Lib\x64")]
     else:
         library_dirs = [os.path.join(npcap_sdk, "Lib")]
-    libraries = ["delayimp", "wpcap"]
+    libraries = ["delayimp", "Ws2_32", "wpcap"]
     extra_link_args = ["/DELAYLOAD:wpcap.dll"]
 else:
     include_dirs = []
