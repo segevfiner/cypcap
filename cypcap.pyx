@@ -128,6 +128,7 @@ def findalldevs():
 
 
 @cython.freelist(8)
+@cython.internal
 cdef class Pkthdr:
     cdef cpcap.pcap_pkthdr pkthdr
 
