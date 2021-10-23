@@ -19,18 +19,18 @@ def load_npcap_dlls():
     cdef UINT length = GetSystemDirectoryW(system_dir, MAX_PATH)
     if not length:
         PyErr_SetFromWindowsErr(0)
-        return
+        raise
 
     npcap_dir = system_dir[:length] + "\\Npcap"
 
     if not SetDllDirectoryW(npcap_dir):
         PyErr_SetFromWindowsErr(0)
-        return
+        raise
 
     cpcap.pcap_lib_version()
 
     if not SetDllDirectoryW(NULL):
         PyErr_SetFromWindowsErr(0)
-        return
+        raise
 
 load_npcap_dlls()
