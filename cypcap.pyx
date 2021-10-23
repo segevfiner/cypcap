@@ -90,11 +90,11 @@ cdef makesockaddr_addr(csocket.sockaddr* addr):
     if not addr:
         return None
     elif addr.sa_family == csocket.AF_INET:
-        if not csocket.inet_ntop(socket.AF_INET, &(<csocket.sockaddr_in*>addr).sin_addr, inet_buf, sizeof(inet_buf)):
+        if not csocket.inet_ntop(csocket.AF_INET, &(<csocket.sockaddr_in*>addr).sin_addr, inet_buf, sizeof(inet_buf)):
             PyErr_SetFromErrno(OSError)
         return inet_buf.decode()
     elif addr.sa_family == csocket.AF_INET6:
-        if not csocket.inet_ntop(socket.AF_INET6, &(<csocket.sockaddr_in6*>addr).sin6_addr, inet6_buf, sizeof(inet6_buf)):
+        if not csocket.inet_ntop(csocket.AF_INET6, &(<csocket.sockaddr_in6*>addr).sin6_addr, inet6_buf, sizeof(inet6_buf)):
             PyErr_SetFromErrno(OSError)
         return inet6_buf.decode()
     else:
@@ -123,13 +123,11 @@ def findalldevs():
 
 
 def create(source):
-    cdef cpcap.pcap_t* pcap
-
     if isinstance(source, PcapIf):
         source = source.name
 
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
-    pcap = cpcap.pcap_create(source.encode(), errbuf)
+    cdef cpcap.pcap_t* pcap = cpcap.pcap_create(source.encode(), errbuf)
     if not pcap:
         raise error(-1, errbuf)
 
