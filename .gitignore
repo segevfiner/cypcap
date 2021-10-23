@@ -5,4 +5,5 @@
 *.pyd
 *.so
 cypcap.c
+/*.html
 /npcap-sdk/
