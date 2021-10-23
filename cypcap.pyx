@@ -122,9 +122,11 @@ def findalldevs():
         cpcap.pcap_freealldevs(devs)
 
 
-# TODO Consider also accepting PcapIf for convenience
 def create(source):
     cdef cpcap.pcap_t* pcap
+
+    if isinstance(source, PcapIf):
+        source = source.name
 
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     pcap = cpcap.pcap_create(source.encode(), errbuf)
