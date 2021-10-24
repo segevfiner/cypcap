@@ -2,6 +2,19 @@ from csocket cimport sockaddr, timeval
 
 cdef extern from "<pcap/pcap.h>" nogil:
     enum:
+        DLT_NULL
+        DLT_EN10MB
+        DLT_EN3MB
+        DLT_AX25
+        DLT_PRONET
+        DLT_CHAOS
+        DLT_IEEE802
+        DLT_ARCNET
+        DLT_SLIP
+        DLT_PPP
+        DLT_FDDI
+
+    enum:
         PCAP_ERRBUF_SIZE
 
     enum:
@@ -92,16 +105,15 @@ cdef extern from "<pcap/pcap.h>" nogil:
 
     int pcap_activate(pcap_t *)
 
-    # TODO Bind
-    # int pcap_list_tstamp_types(pcap_t *, int **)
+    int pcap_list_tstamp_types(pcap_t *, int **)
 
-    # void pcap_free_tstamp_types(int *)
+    void pcap_free_tstamp_types(int *)
 
-    # int pcap_tstamp_type_name_to_val(const char *)
+    int pcap_tstamp_type_name_to_val(const char *)
 
-    # const char *pcap_tstamp_type_val_to_name(int)
+    const char *pcap_tstamp_type_val_to_name(int)
 
-    # const char *pcap_tstamp_type_val_to_description(int)
+    const char *pcap_tstamp_type_val_to_description(int)
 
     enum:
         PCAP_TSTAMP_HOST
@@ -136,6 +148,28 @@ cdef extern from "<pcap/pcap.h>" nogil:
     char* pcap_geterr(pcap_t *)
 
     int pcap_datalink(pcap_t *)
+
+    int pcap_list_datalinks(pcap_t *, int **)
+
+    int pcap_set_datalink(pcap_t *, int)
+
+    void pcap_free_datalinks(int *)
+
+    int pcap_datalink_name_to_val(const char *)
+
+    const char *pcap_datalink_val_to_name(int)
+
+    const char *pcap_datalink_val_to_description(int)
+
+    const char *pcap_datalink_val_to_description_or_dlt(int)
+
+    int	pcap_snapshot(pcap_t *)
+
+    bint pcap_is_swapped(pcap_t *)
+
+    int pcap_major_version(pcap_t *)
+
+    int pcap_minor_version(pcap_t *)
 
     int pcap_findalldevs(pcap_if_t **, char *)
 

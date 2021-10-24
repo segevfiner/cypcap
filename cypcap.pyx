@@ -13,6 +13,24 @@ IF UNAME_SYSNAME == "Windows":
     include "npcap.pxi"
 
 
+class DatalinkType(enum.IntEnum):
+    NULL_ = cpcap.DLT_NULL
+    EN10MB = cpcap.DLT_EN10MB
+    EN3MB = cpcap.DLT_EN3MB
+    AX25 = cpcap.DLT_AX25
+    PRONET = cpcap.DLT_PRONET
+    CHAOS = cpcap.DLT_CHAOS
+    IEEE802 = cpcap.DLT_IEEE802
+    ARCNET = cpcap.DLT_ARCNET
+    SLIP = cpcap.DLT_SLIP
+    PPP = cpcap.DLT_PPP
+    FDDI = cpcap.DLT_FDDI
+
+    @property
+    def description(self):
+        return cpcap.pcap_datalink_val_to_description_or_dlt(self).decode()
+
+
 class error(Exception):
     def __init__(self, code, msg):
         self.code = ErrorCode(code)
@@ -83,6 +101,23 @@ class ErrorCode(enum.IntEnum):
     TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
 
 
+class TstampType(enum.IntEnum):
+    HOST = cpcap.PCAP_TSTAMP_HOST
+    HOST_LOWPREC = cpcap.PCAP_TSTAMP_HOST_LOWPREC
+    HOST_HIPREC = cpcap.PCAP_TSTAMP_HOST_HIPREC
+    ADAPTER = cpcap.PCAP_TSTAMP_ADAPTER
+    ADAPTER_UNSYNCED = cpcap.PCAP_TSTAMP_ADAPTER_UNSYNCED
+    HOST_HIPREC_UNSYNCED = cpcap.PCAP_TSTAMP_HOST_HIPREC_UNSYNCED
+
+    @property
+    def name(self):
+        return cpcap.pcap_tstamp_type_val_to_name(self).decode()
+
+    @property
+    def description(self):
+        return cpcap.pcap_tstamp_type_val_to_description(self).decode()
+
+
 class TstampPrecision(enum.IntEnum):
     MICRO = cpcap.PCAP_TSTAMP_PRECISION_MICRO
     NANO = cpcap.PCAP_TSTAMP_PRECISION_NANO
@@ -129,9 +164,9 @@ cdef makesockaddr_addr(csocket.sockaddr* addr):
 
 def findalldevs():
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
-    cdef cpcap.pcap_if_t* devs
     cdef cpcap.pcap_if_t* dev
 
+    cdef cpcap.pcap_if_t* devs
     if cpcap.pcap_findalldevs(&devs, errbuf) < 0:
         raise error(-1, errbuf)
 
@@ -164,7 +199,7 @@ cdef class Pkthdr:
     def ts(self):
         return self.pkthdr.ts.tv_sec + self.pkthdr.ts.tv_usec / 1000000
 
-    # TODO Consider a ts_datetime property that returns ts as a datetime
+    # TODO Consider a ts_datetime property that returns ts as a datetime (What about the timezone though...)
 
     @property
     def caplen(self):
@@ -304,7 +339,6 @@ cdef class Pcap:
     def set_tstamp_type(self, tstamp_type):
         self._check_closed()
 
-        # TODO enum
         err = cpcap.pcap_set_tstamp_type(self.pcap, tstamp_type)
         if err < 0:
             raise error(err, cpcap.pcap_statustostr(err).decode())
@@ -326,7 +360,6 @@ cdef class Pcap:
     def set_tstamp_precision(self, tstamp_precision):
         self._check_closed()
 
-        # TODO enum
         err = cpcap.pcap_set_tstamp_precision(self.pcap, tstamp_precision)
         if err < 0:
             raise error(err, cpcap.pcap_statustostr(err).decode())
@@ -347,10 +380,81 @@ cdef class Pcap:
             # TODO Do we want the warning to include the warning code?
             warnings.warn(cpcap.pcap_geterr(self.pcap).decode(), warning)
 
+    def list_tstamp_types(self):
+        self._check_closed()
+
+        cdef int* tstamp_types
+        cdef int num = cpcap.pcap_list_tstamp_types(self.pcap, &tstamp_types)
+        if num < 0:
+            raise error(num, cpcap.pcap_geterr(self.pcap).decode())
+
+        try:
+            result = []
+            for tstamp_type in tstamp_types[:num]:
+                result.append(TstampType(tstamp_type))
+
+            return result
+        finally:
+            cpcap.pcap_free_tstamp_types(tstamp_types)
+
     def datalink(self):
         self._check_closed()
-        # TODO enum
-        return cpcap.pcap_datalink(self.pcap)
+
+        result = cpcap.pcap_datalink(self.pcap)
+        if result < 0:
+            raise error(result, cpcap.pcap_statustostr(result).decode())
+
+        try:
+            return DatalinkType(result)
+        except ValueError:
+            return result
+
+    def list_datalinks(self):
+        self._check_closed()
+
+        cdef int* datalinks
+        cdef int num = cpcap.pcap_list_datalinks(self.pcap, &datalinks)
+        if num < 0:
+            raise error(num, cpcap.pcap_statustostr(num).decode())
+
+        try:
+            result = []
+            for datalink in datalinks[:num]:
+                try:
+                    result.append(DatalinkType(datalink))
+                except ValueError:
+                    result.append(datalink)
+
+            return result
+        finally:
+            cpcap.pcap_free_datalinks(datalinks)
+
+    def set_datalink(self, datalink):
+        self._check_closed()
+
+        result = cpcap.pcap_set_datalink(self.pcap, datalink)
+        if result < 0:
+            raise error(result, cpcap.pcap_geterr(self.pcap).decode())
+
+        return result
+
+    def snapshot(self):
+        self._check_closed()
+
+        result = cpcap.pcap_snapshot(self.pcap)
+        if result < 0:
+            raise error(result, cpcap.pcap_statustostr(result).decode())
+
+        return result
+
+    def is_swapped(self):
+        self._check_closed()
+
+        result = cpcap.pcap_is_swapped(self.pcap)
+        if result < 0:
+            raise error(result, cpcap.pcap_statustostr(result).decode())
+
+        return result
 
 
 def lib_version():
