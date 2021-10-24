@@ -4,7 +4,7 @@ import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
 cimport cython
-from cpython cimport PyErr_SetFromErrno
+from cpython cimport PyObject, PyErr_SetFromErrno
 cimport cpcap
 cimport csocket
 
@@ -187,7 +187,7 @@ cdef class Pkthdr:
     cdef cpcap.pcap_pkthdr pkthdr
 
     @staticmethod
-    cdef from_ptr(cpcap.pcap_pkthdr* pkthdr):
+    cdef from_ptr(const cpcap.pcap_pkthdr* pkthdr):
         cdef Pkthdr self = Pkthdr.__new__(Pkthdr)
         self.pkthdr = pkthdr[0]
         return self
@@ -248,6 +248,20 @@ def open_offline(fname, precision=TstampPrecision.MICRO):
     return Pcap.from_ptr(pcap)
 
 
+cdef struct _LoopCallbackContext:
+    PyObject* pcap
+    PyObject* func
+
+
+cdef void _loop_callback(unsigned char* user, const cpcap.pcap_pkthdr* pkt_header, const unsigned char* pkt_data) except * with gil:
+    try:
+        ctx = <_LoopCallbackContext*>user
+        (<object>ctx.func)(Pkthdr.from_ptr(pkt_header), pkt_data[:pkt_header.caplen])
+    except:
+        cpcap.pcap_breakloop((<Pcap>ctx.pcap).pcap)
+        raise
+
+
 cdef class Pcap:
     cdef cpcap.pcap_t* pcap
 
@@ -298,6 +312,26 @@ cdef class Pcap:
         # TODO I wonder if there is a way to use the Python buffer interface to possibly save the copy
         # ownership is a problem since the pointer is only valid until the next call
         return Pkthdr.from_ptr(pkt_header), pkt_data[:pkt_header.caplen]
+
+    def loop(self, int cnt, callback):
+        cdef _LoopCallbackContext ctx
+        ctx.pcap = <PyObject*>self
+        ctx.func = <PyObject*>callback
+
+        with nogil:
+            err = cpcap.pcap_loop(self.pcap, cnt, _loop_callback, <unsigned char*>&ctx)
+        if err < 0:
+            raise error(err, cpcap.pcap_geterr(self.pcap).decode)
+
+    def dispatch(self, int cnt, callback):
+        cdef _LoopCallbackContext ctx
+        ctx.pcap = <PyObject*>self
+        ctx.func = <PyObject*>callback
+
+        with nogil:
+            err = cpcap.pcap_dispatch(self.pcap, cnt, _loop_callback, <unsigned char*>&ctx)
+        if err < 0:
+            raise error(err, cpcap.pcap_geterr(self.pcap).decode)
 
     def set_snaplen(self, snaplen):
         self._check_closed()

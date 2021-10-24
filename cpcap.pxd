@@ -60,6 +60,8 @@ cdef extern from "<pcap/pcap.h>" nogil:
         sockaddr* broadaddr
         sockaddr* dstaddr
 
+    ctypedef void (*pcap_handler)(unsigned char *, const pcap_pkthdr *, const unsigned char *) except *
+
     enum:
         PCAP_ERROR
         PCAP_ERROR_BREAK
@@ -139,9 +141,15 @@ cdef extern from "<pcap/pcap.h>" nogil:
 
     void pcap_close(pcap_t *)
 
+    int pcap_loop(pcap_t *, int, pcap_handler, unsigned char *) except *
+
+    int pcap_dispatch(pcap_t *, int, pcap_handler, unsigned char *) except *
+
     const unsigned char *pcap_next(pcap_t *, pcap_pkthdr *)
 
-    int pcap_next_ex(pcap_t *, pcap_pkthdr **, const unsigned char **);
+    int pcap_next_ex(pcap_t *, pcap_pkthdr **, const unsigned char **)
+
+    void pcap_breakloop(pcap_t *)
 
     const char *pcap_statustostr(int)
 
