@@ -314,6 +314,8 @@ cdef class Pcap:
         return Pkthdr.from_ptr(pkt_header), pkt_data[:pkt_header.caplen]
 
     def loop(self, int cnt, callback):
+        self._check_closed()
+
         cdef _LoopCallbackContext ctx
         ctx.pcap = <PyObject*>self
         ctx.func = <PyObject*>callback
@@ -324,6 +326,8 @@ cdef class Pcap:
             raise error(err, cpcap.pcap_geterr(self.pcap).decode)
 
     def dispatch(self, int cnt, callback):
+        self._check_closed()
+
         cdef _LoopCallbackContext ctx
         ctx.pcap = <PyObject*>self
         ctx.func = <PyObject*>callback
