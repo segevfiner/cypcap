@@ -43,7 +43,7 @@ class warning(Warning):
 
 cdef char init_errbuf[cpcap.PCAP_ERRBUF_SIZE]
 if cpcap.pcap_init(cpcap.PCAP_CHAR_ENC_UTF_8, init_errbuf) < 0:
-    raise error(-1, init_errbuf)
+    raise error(-1, init_errbuf.decode())
 
 
 class PcapIf:
@@ -168,7 +168,7 @@ def findalldevs():
 
     cdef cpcap.pcap_if_t* devs
     if cpcap.pcap_findalldevs(&devs, errbuf) < 0:
-        raise error(-1, errbuf)
+        raise error(-1, errbuf.decode())
 
     try:
         result = []
@@ -217,7 +217,7 @@ def create(source):
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.pcap_t* pcap = cpcap.pcap_create(source.encode(), errbuf)
     if not pcap:
-        raise error(-1, errbuf)
+        raise error(-1, errbuf.decode())
 
     return Pcap.from_ptr(pcap)
 
@@ -229,7 +229,7 @@ def open_live(device, snaplen, promisc, to_ms):
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.pcap_t* pcap = cpcap.pcap_open_live(device.encode(), snaplen, promisc, to_ms, errbuf)
     if not pcap:
-        raise error(-1, errbuf)
+        raise error(-1, errbuf.decode())
 
     return Pcap.from_ptr(pcap)
 
@@ -243,7 +243,7 @@ def open_offline(fname, precision=TstampPrecision.MICRO):
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.pcap_t* pcap = cpcap.pcap_open_offline_with_tstamp_precision(fname, precision, errbuf)
     if not pcap:
-        raise error(-1, errbuf)
+        raise error(-1, errbuf.decode())
 
     return Pcap.from_ptr(pcap)
 
@@ -335,7 +335,7 @@ cdef class Pcap:
         with nogil:
             err = cpcap.pcap_dispatch(self.pcap, cnt, _loop_callback, <unsigned char*>&ctx)
         if err < 0:
-            raise error(err, cpcap.pcap_geterr(self.pcap).decode)
+            raise error(err, cpcap.pcap_geterr(self.pcap).decode())
 
     def set_snaplen(self, snaplen):
         self._check_closed()
