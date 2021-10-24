@@ -159,6 +159,8 @@ cdef class Pkthdr:
     def ts(self):
         return self.pkthdr.ts.tv_sec + self.pkthdr.ts.tv_usec / 1000000
 
+    # TODO Consider a ts_datetime property that returns ts as a datetime
+
     @property
     def caplen(self):
         return self.pkthdr.caplen
