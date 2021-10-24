@@ -253,6 +253,7 @@ cdef struct _LoopCallbackContext:
     PyObject* func
 
 
+# TODO Is the way we propogate exceptions here safe?
 cdef void _loop_callback(unsigned char* user, const cpcap.pcap_pkthdr* pkt_header, const unsigned char* pkt_data) except * with gil:
     try:
         ctx = <_LoopCallbackContext*>user
@@ -336,6 +337,29 @@ cdef class Pcap:
             err = cpcap.pcap_dispatch(self.pcap, cnt, _loop_callback, <unsigned char*>&ctx)
         if err < 0:
             raise error(err, cpcap.pcap_geterr(self.pcap).decode())
+
+    def breakloop(self):
+        self._check_closed()
+
+        cpcap.pcap_breakloop(self.pcap)
+
+    def getnonblock(self):
+        self._check_closed()
+
+        cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+        result = cpcap.pcap_getnonblock(self.pcap, errbuf)
+        if result < 0:
+            raise error(result, errbuf.decode())
+
+        return bool(result)
+
+    def setnonblock(self, nonblock):
+        self._check_closed()
+
+        cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+        result = cpcap.pcap_setnonblock(self.pcap, nonblock, errbuf)
+        if result < 0:
+            raise error(result, errbuf.decode())
 
     def set_snaplen(self, snaplen):
         self._check_closed()

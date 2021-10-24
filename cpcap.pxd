@@ -1,6 +1,8 @@
 from csocket cimport sockaddr, timeval
 
 cdef extern from "<pcap/pcap.h>" nogil:
+    ctypedef unsigned int bpf_u_int32
+
     enum:
         DLT_NULL
         DLT_EN10MB
@@ -14,6 +16,16 @@ cdef extern from "<pcap/pcap.h>" nogil:
         DLT_PPP
         DLT_FDDI
 
+    struct bpf_insn:
+        unsigned short	code
+        unsigned char 	jt
+        unsigned char 	jf
+        bpf_u_int32     k
+
+    struct bpf_program:
+        unsigned int bf_len
+        bpf_insn* bf_insns
+
     enum:
         PCAP_ERRBUF_SIZE
 
@@ -21,17 +33,23 @@ cdef extern from "<pcap/pcap.h>" nogil:
         PCAP_CHAR_ENC_LOCAL
         PCAP_CHAR_ENC_UTF_8
 
-    ctypedef unsigned int bpf_u_int32
-
     struct pcap:
         pass
 
     ctypedef pcap pcap_t
 
+    ctypedef enum pcap_direction_t:
+        PCAP_D_INOUT
+        PCAP_D_IN
+        PCAP_D_OUT
+
     struct pcap_pkthdr:
         timeval ts
         bpf_u_int32 caplen
         bpf_u_int32 len
+
+    struct pcap_stat:
+        pass
 
     struct pcap_if:
         pcap_if* next
@@ -150,6 +168,16 @@ cdef extern from "<pcap/pcap.h>" nogil:
     int pcap_next_ex(pcap_t *, pcap_pkthdr **, const unsigned char **)
 
     void pcap_breakloop(pcap_t *)
+
+    int pcap_stats(pcap_t *, pcap_stat *)
+
+    int pcap_setfilter(pcap_t *, bpf_program *)
+
+    int pcap_setdirection(pcap_t *, pcap_direction_t);
+
+    int pcap_getnonblock(pcap_t *, char *)
+
+    int pcap_setnonblock(pcap_t *, bint, char *)
 
     const char *pcap_statustostr(int)
 
