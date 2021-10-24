@@ -2,6 +2,7 @@ from cpython cimport PyErr_SetFromWindowsErr
 cimport cpcap
 
 cdef extern from "<Windows.h>":
+    # TODO Using Py_UNICODE raises a warning, is there anything better?
     ctypedef Py_UNICODE WCHAR
     ctypedef WCHAR* LPWSTR
     ctypedef const WCHAR* LPCWSTR
@@ -14,7 +15,7 @@ cdef extern from "<Windows.h>":
     UINT GetSystemDirectoryW(LPWSTR, UINT)
     BOOL SetDllDirectoryW(LPCWSTR)
 
-def load_npcap_dlls():
+cdef int load_npcap_dlls() except -1:
     cdef WCHAR system_dir[MAX_PATH]
     cdef UINT length = GetSystemDirectoryW(system_dir, MAX_PATH)
     if not length:

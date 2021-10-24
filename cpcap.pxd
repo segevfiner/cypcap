@@ -1,6 +1,6 @@
 from csocket cimport sockaddr, timeval
 
-cdef extern from "<pcap/pcap.h>":
+cdef extern from "<pcap/pcap.h>" nogil:
     enum:
         PCAP_ERRBUF_SIZE
 
@@ -69,7 +69,21 @@ cdef extern from "<pcap/pcap.h>":
 
     int pcap_set_promisc(pcap_t *, bint)
 
+    int pcap_can_set_rfmon(pcap_t *)
+
+    int pcap_set_rfmon(pcap_t *, bint)
+
     int pcap_set_timeout(pcap_t *, int)
+
+    int pcap_set_tstamp_type(pcap_t *, int)
+
+    int pcap_set_immediate_mode(pcap_t *, bint)
+
+    int pcap_set_buffer_size(pcap_t *, int)
+
+    int pcap_set_tstamp_precision(pcap_t *, int)
+
+    int pcap_get_tstamp_precision(pcap_t *)
 
     int pcap_activate(pcap_t *)
 
@@ -85,7 +99,7 @@ cdef extern from "<pcap/pcap.h>":
 
     int pcap_datalink(pcap_t *)
 
-    int	pcap_findalldevs(pcap_if_t **, char *)
+    int pcap_findalldevs(pcap_if_t **, char *)
 
     void pcap_freealldevs(pcap_if_t *)
 

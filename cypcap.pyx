@@ -1,6 +1,6 @@
 # cython: language_level=3str
 
-import socket
+import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
 cimport cython
@@ -68,6 +68,21 @@ class PcapIfFlags(enum.IntFlag):
     CONNECTION_STATUS_NOT_APPLICABLE = cpcap.PCAP_IF_CONNECTION_STATUS_NOT_APPLICABLE
 
 
+# TODO enum?
+PCAP_ERROR = cpcap.PCAP_ERROR
+PCAP_ERROR_BREAK = cpcap.PCAP_ERROR_BREAK
+PCAP_ERROR_NOT_ACTIVATED = cpcap.PCAP_ERROR_NOT_ACTIVATED
+PCAP_ERROR_ACTIVATED = cpcap.PCAP_ERROR_ACTIVATED
+PCAP_ERROR_NO_SUCH_DEVICE = cpcap.PCAP_ERROR_NO_SUCH_DEVICE
+PCAP_ERROR_RFMON_NOTSUP = cpcap.PCAP_ERROR_RFMON_NOTSUP
+PCAP_ERROR_NOT_RFMON = cpcap.PCAP_ERROR_NOT_RFMON
+PCAP_ERROR_PERM_DENIED = cpcap.PCAP_ERROR_PERM_DENIED
+PCAP_ERROR_IFACE_NOT_UP = cpcap.PCAP_ERROR_IFACE_NOT_UP
+PCAP_ERROR_CANTSET_TSTAMP_TYPE = cpcap.PCAP_ERROR_CANTSET_TSTAMP_TYPE
+PCAP_ERROR_PROMISC_PERM_DENIED = cpcap.PCAP_ERROR_PROMISC_PERM_DENIED
+PCAP_ERROR_TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
+
+
 class PcapAddr:
     def __init__(self, addr, netmask, broadaddr, dstaddr):
         self.addr = addr
@@ -128,7 +143,6 @@ def findalldevs():
 
 
 @cython.freelist(8)
-@cython.internal
 cdef class Pkthdr:
     cdef cpcap.pcap_pkthdr pkthdr
 
@@ -166,7 +180,6 @@ def create(source):
     return Pcap.from_ptr(pcap)
 
 
-@cython.internal
 cdef class Pcap:
     cdef cpcap.pcap_t* pcap
 
@@ -177,17 +190,30 @@ cdef class Pcap:
         return self
 
     def __dealloc__(self):
+        # TODO ResourceWarning?
+        self.close()
+
+    cpdef close(self):
         if self.pcap:
             cpcap.pcap_close(self.pcap)
+            self.pcap = NULL
+
+    cdef int _check_closed(self) except -1:
+        if self.pcap == NULL:
+            raise ValueError("Operation on closed Pcap")
 
     def __iter__(self):
         return self
 
     def __next__(self):
+        self._check_closed()
+
         cdef cpcap.pcap_pkthdr* pkt_header
         cdef const unsigned char* pkt_data
 
-        err = cpcap.pcap_next_ex(self.pcap, &pkt_header, &pkt_data)
+        with nogil:
+            err = cpcap.pcap_next_ex(self.pcap, &pkt_header, &pkt_data)
+
         if err == cpcap.PCAP_ERROR_BREAK:
             raise StopIteration
         elif err < 0:
@@ -200,28 +226,90 @@ cdef class Pcap:
         return Pkthdr.from_ptr(pkt_header), pkt_data[:pkt_header.caplen]
 
     def set_snaplen(self, snaplen):
+        self._check_closed()
+
         err = cpcap.pcap_set_snaplen(self.pcap, snaplen)
-        if err:
+        if err < 0:
             raise error(err, cpcap.pcap_statustostr(err).decode())
 
     def set_promisc(self, promisc):
+        self._check_closed()
+
         err = cpcap.pcap_set_promisc(self.pcap, promisc)
-        if err:
+        if err < 0:
+            raise error(err, cpcap.pcap_statustostr(err).decode())
+
+    def can_set_rfmon(self):
+        self._check_closed()
+
+        result = cpcap.pcap_can_set_rfmon(self.pcap)
+        if result < 0:
+            raise error(result, cpcap.pcap_statustostr(result).decode())
+
+        return bool(result)
+
+    def set_rfmon(self, rfmon):
+        self._check_closed()
+
+        err = cpcap.pcap_set_rfmon(self.pcap, rfmon)
+        if err < 0:
             raise error(err, cpcap.pcap_statustostr(err).decode())
 
     def set_timeout(self, timeout):
+        self._check_closed()
+
         err = cpcap.pcap_set_timeout(self.pcap, timeout)
-        if err:
+        if err < 0:
             raise error(err, cpcap.pcap_statustostr(err).decode())
 
+    def set_tstamp_type(self, tstamp_type):
+        self._check_closed()
+
+        # TODO enum
+        err = cpcap.pcap_set_tstamp_type(self.pcap, tstamp_type)
+        if err < 0:
+            raise error(err, cpcap.pcap_statustostr(err).decode())
+
+    def set_immediate_mode(self, immediate_mode):
+        self._check_closed()
+
+        err = cpcap.pcap_set_immediate_mode(self.pcap, immediate_mode)
+        if err < 0:
+            raise error(err, cpcap.pcap_statustostr(err).decode())
+
+    def set_buffer_size(self, buffer_size):
+        self._check_closed()
+
+        err = cpcap.pcap_set_buffer_size(self.pcap, buffer_size)
+        if err < 0:
+            raise error(err, cpcap.pcap_statustostr(err).decode())
+
+    def set_tstamp_precision(self, tstamp_precision):
+        self._check_closed()
+
+        # TODO enum
+        err = cpcap.pcap_set_tstamp_precision(self.pcap, tstamp_precision)
+        if err < 0:
+            raise error(err, cpcap.pcap_statustostr(err).decode())
+
+    def get_tstamp_precision(self):
+        self._check_closed()
+
+        # TODO enum
+        return cpcap.pcap_get_tstamp_precision(self.pcap)
+
     def activate(self):
+        self._check_closed()
+
         err = cpcap.pcap_activate(self.pcap)
         if err < 0:
             raise error(err, cpcap.pcap_geterr(self.pcap).decode())
         elif err > 1:
+            # TODO Do we want the warning to include the warning code?
             warnings.warn(cpcap.pcap_geterr(self.pcap).decode(), warning)
 
     def datalink(self):
+        self._check_closed()
         return cpcap.pcap_datalink(self.pcap)
 
 
