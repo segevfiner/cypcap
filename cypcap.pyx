@@ -14,8 +14,8 @@ IF UNAME_SYSNAME == "Windows":
 
 
 class error(Exception):
-    def __init__(self, int code, str msg):
-        self.code = code
+    def __init__(self, code, msg):
+        self.code = ErrorCode(code)
         self.msg = msg
 
 
@@ -68,19 +68,24 @@ class PcapIfFlags(enum.IntFlag):
     CONNECTION_STATUS_NOT_APPLICABLE = cpcap.PCAP_IF_CONNECTION_STATUS_NOT_APPLICABLE
 
 
-# TODO enum?
-PCAP_ERROR = cpcap.PCAP_ERROR
-PCAP_ERROR_BREAK = cpcap.PCAP_ERROR_BREAK
-PCAP_ERROR_NOT_ACTIVATED = cpcap.PCAP_ERROR_NOT_ACTIVATED
-PCAP_ERROR_ACTIVATED = cpcap.PCAP_ERROR_ACTIVATED
-PCAP_ERROR_NO_SUCH_DEVICE = cpcap.PCAP_ERROR_NO_SUCH_DEVICE
-PCAP_ERROR_RFMON_NOTSUP = cpcap.PCAP_ERROR_RFMON_NOTSUP
-PCAP_ERROR_NOT_RFMON = cpcap.PCAP_ERROR_NOT_RFMON
-PCAP_ERROR_PERM_DENIED = cpcap.PCAP_ERROR_PERM_DENIED
-PCAP_ERROR_IFACE_NOT_UP = cpcap.PCAP_ERROR_IFACE_NOT_UP
-PCAP_ERROR_CANTSET_TSTAMP_TYPE = cpcap.PCAP_ERROR_CANTSET_TSTAMP_TYPE
-PCAP_ERROR_PROMISC_PERM_DENIED = cpcap.PCAP_ERROR_PROMISC_PERM_DENIED
-PCAP_ERROR_TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
+class ErrorCode(enum.IntEnum):
+    ERROR = cpcap.PCAP_ERROR
+    BREAK = cpcap.PCAP_ERROR_BREAK
+    NOT_ACTIVATED = cpcap.PCAP_ERROR_NOT_ACTIVATED
+    ACTIVATED = cpcap.PCAP_ERROR_ACTIVATED
+    NO_SUCH_DEVICE = cpcap.PCAP_ERROR_NO_SUCH_DEVICE
+    RFMON_NOTSUP = cpcap.PCAP_ERROR_RFMON_NOTSUP
+    NOT_RFMON = cpcap.PCAP_ERROR_NOT_RFMON
+    PERM_DENIED = cpcap.PCAP_ERROR_PERM_DENIED
+    IFACE_NOT_UP = cpcap.PCAP_ERROR_IFACE_NOT_UP
+    CANTSET_TSTAMP_TYPE = cpcap.PCAP_ERROR_CANTSET_TSTAMP_TYPE
+    PROMISC_PERM_DENIED = cpcap.PCAP_ERROR_PROMISC_PERM_DENIED
+    TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
+
+
+class TstampPrecision(enum.IntEnum):
+    MICRO = cpcap.PCAP_TSTAMP_PRECISION_MICRO
+    NANO = cpcap.PCAP_TSTAMP_PRECISION_NANO
 
 
 class PcapAddr:
@@ -176,6 +181,32 @@ def create(source):
 
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.pcap_t* pcap = cpcap.pcap_create(source.encode(), errbuf)
+    if not pcap:
+        raise error(-1, errbuf)
+
+    return Pcap.from_ptr(pcap)
+
+
+def open_live(device, snaplen, promisc, to_ms):
+    if isinstance(device, PcapIf):
+        device = device.name
+
+    cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_live(device.encode(), snaplen, promisc, to_ms, errbuf)
+    if not pcap:
+        raise error(-1, errbuf)
+
+    return Pcap.from_ptr(pcap)
+
+
+def open_dead(linktype, snaplen, precision=TstampPrecision.MICRO):
+   cdef cpcap.pcap_t* pcap = cpcap.pcap_open_dead_with_tstamp_precision(linktype, snaplen, precision)
+   return Pcap.from_ptr(pcap)
+
+
+def open_offline(fname, precision=TstampPrecision.MICRO):
+    cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_offline_with_tstamp_precision(fname, precision, errbuf)
     if not pcap:
         raise error(-1, errbuf)
 

@@ -92,6 +92,39 @@ cdef extern from "<pcap/pcap.h>" nogil:
 
     int pcap_activate(pcap_t *)
 
+    # TODO Bind
+    # int pcap_list_tstamp_types(pcap_t *, int **)
+
+    # void pcap_free_tstamp_types(int *)
+
+    # int pcap_tstamp_type_name_to_val(const char *)
+
+    # const char *pcap_tstamp_type_val_to_name(int)
+
+    # const char *pcap_tstamp_type_val_to_description(int)
+
+    enum:
+        PCAP_TSTAMP_HOST
+        PCAP_TSTAMP_HOST_LOWPREC
+        PCAP_TSTAMP_HOST_HIPREC
+        PCAP_TSTAMP_ADAPTER
+        PCAP_TSTAMP_ADAPTER_UNSYNCED
+        PCAP_TSTAMP_HOST_HIPREC_UNSYNCED
+
+    enum:
+        PCAP_TSTAMP_PRECISION_MICRO
+        PCAP_TSTAMP_PRECISION_NANO
+
+    pcap_t *pcap_open_live(const char *, int, bint, int, char *)
+
+    pcap_t *pcap_open_dead(int, int)
+
+    pcap_t *pcap_open_dead_with_tstamp_precision(int, int, unsigned int)
+
+    pcap_t *pcap_open_offline_with_tstamp_precision(const char *, unsigned int, char *)
+
+    pcap_t *pcap_open_offline(const char *, char *)
+
     void pcap_close(pcap_t *)
 
     const unsigned char *pcap_next(pcap_t *, pcap_pkthdr *)
