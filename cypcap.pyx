@@ -202,6 +202,12 @@ cdef class Pcap:
         if self.pcap == NULL:
             raise ValueError("Operation on closed Pcap")
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        self.close()
+
     def __iter__(self):
         return self
 
