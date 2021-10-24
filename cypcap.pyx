@@ -310,6 +310,7 @@ cdef class Pcap:
 
     def datalink(self):
         self._check_closed()
+        # TODO enum
         return cpcap.pcap_datalink(self.pcap)
 
 
