@@ -61,6 +61,11 @@ cdef extern from "<pcap/pcap.h>" nogil:
         PCAP_ERROR_PROMISC_PERM_DENIED
         PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
 
+    enum:
+        PCAP_WARNING
+        PCAP_WARNING_PROMISC_NOTSUP
+        PCAP_WARNING_TSTAMP_TYPE_NOTSUP
+
     int pcap_init(unsigned int, char *)
 
     pcap_t *pcap_create(const char *, char *)
