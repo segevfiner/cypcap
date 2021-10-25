@@ -1,4 +1,5 @@
 from csocket cimport sockaddr, timeval
+from libc.stdint cimport int64_t
 
 cdef extern from "<pcap/pcap.h>" nogil:
     ctypedef unsigned int bpf_u_int32
@@ -37,6 +38,11 @@ cdef extern from "<pcap/pcap.h>" nogil:
         pass
 
     ctypedef pcap pcap_t
+
+    struct pcap_dumper:
+        pass
+
+    ctypedef pcap_dumper pcap_dumper_t
 
     ctypedef enum pcap_direction_t:
         PCAP_D_INOUT
@@ -186,6 +192,10 @@ cdef extern from "<pcap/pcap.h>" nogil:
 
     int pcap_setnonblock(pcap_t *, bint, char *)
 
+    int pcap_inject(pcap_t *, const void *, size_t)
+
+    int pcap_sendpacket(pcap_t *, const unsigned char *, int)
+
     const char *pcap_statustostr(int)
 
     char* pcap_geterr(pcap_t *)
@@ -219,6 +229,20 @@ cdef extern from "<pcap/pcap.h>" nogil:
     int pcap_major_version(pcap_t *)
 
     int pcap_minor_version(pcap_t *)
+
+    pcap_dumper_t *pcap_dump_open(pcap_t *, const char *)
+
+    pcap_dumper_t *pcap_dump_open_append(pcap_t *, const char *)
+
+    long pcap_dump_ftell(pcap_dumper_t *)
+
+    int64_t pcap_dump_ftell64(pcap_dumper_t *)
+
+    int pcap_dump_flush(pcap_dumper_t *)
+
+    void pcap_dump_close(pcap_dumper_t *)
+
+    void pcap_dump(unsigned char *, const pcap_pkthdr *, const unsigned char *)
 
     int pcap_findalldevs(pcap_if_t **, char *)
 

@@ -101,6 +101,8 @@ class ErrorCode(enum.IntEnum):
     PROMISC_PERM_DENIED = cpcap.PCAP_ERROR_PROMISC_PERM_DENIED
     TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
 
+    # TODO pcap_statustostr?
+
 
 class WarningCode(enum.IntEnum):
     WARNING = cpcap.PCAP_WARNING
@@ -608,6 +610,42 @@ cdef class Pcap:
 
         return stat
 
+    def dump_open(self, fname):
+        self._check_closed()
+
+        cdef Dumper dumper = Dumper.__new__(Dumper)
+        dumper.dumper = cpcap.pcap_dump_open(self.pcap, fname)
+        if not dumper.dumper:
+            raise error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
+
+        return dumper
+
+    def dump_open_append(self, fname):
+        self._check_closed()
+
+        cdef Dumper dumper = Dumper.__new__(Dumper)
+        dumper.dumper = cpcap.pcap_dump_open_append(self.pcap, fname)
+        if not dumper.dumper:
+            raise error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
+
+        return dumper
+
+    def inject(self, buf):
+        self._check_closed()
+
+        result = cpcap.pcap_inject(self.pcap, <unsigned char*>buf, <int>len(buf))
+        if result < 0:
+            raise error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
+
+        return result
+
+    def sendpacket(self, buf):
+        self._check_closed()
+
+        result = cpcap.pcap_sendpacket(self.pcap, <unsigned char*>buf, <int>len(buf))
+        if result < 0:
+            raise error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
+
 
 # TODO Support dumping/loading bytecode, __getitem__?
 cdef class BpfProgram:
@@ -623,6 +661,42 @@ cdef class BpfProgram:
     def dump(self, option=0):
         cpcap.bpf_dump(&self.bpf_prog, option)
 
+
+cdef class Dumper:
+    cdef cpcap.pcap_dumper_t* dumper
+
+    def __dealloc__(self):
+        # TODO ResourceWarning?
+        self.close()
+
+    cpdef close(self):
+        if self.dumper:
+            cpcap.pcap_dump_close(self.dumper)
+            self.dumper = NULL
+
+    cdef int _check_closed(self) except -1:
+        if self.dumper is NULL:
+            raise ValueError("Operation on closed Dumper")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        self.close()
+
+    def dump(self, Pkthdr pkt_header, pkt_data):
+        self._check_closed()
+
+        cpcap.pcap_dump(<unsigned char*>self.dumper, &pkt_header.pkthdr, pkt_data)
+
+    def ftell(self):
+        self._check_closed()
+
+        result = cpcap.pcap_dump_ftell64(self.dumper)
+        if result == cpcap.PCAP_ERROR:
+            raise error(result, cpcap.pcap_statustostr(<int>result).decode())
+
+        return result
 
 def lib_version():
     """Get the version information for libpcap."""
