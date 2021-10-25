@@ -338,7 +338,7 @@ cdef class Pcap:
             self.pcap = NULL
 
     cdef int _check_closed(self) except -1:
-        if self.pcap == NULL:
+        if self.pcap is NULL:
             raise ValueError("Operation on closed Pcap")
 
     def __enter__(self):
@@ -575,6 +575,8 @@ cdef class Pcap:
         return result
 
     def compile(self, filter_, optimize, netmask):
+        self._check_closed()
+
         cdef BpfProgram bpf_prog = BpfProgram.__new__(BpfProgram)
         err = cpcap.pcap_compile(self.pcap, &bpf_prog.bpf_prog, filter_.encode(), optimize, netmask)
         if err < 0:
@@ -583,16 +585,22 @@ cdef class Pcap:
         return bpf_prog
 
     def setfilter(self, BpfProgram bpf_prog):
+        self._check_closed()
+
         err = cpcap.pcap_setfilter(self.pcap, &bpf_prog.bpf_prog)
         if err < 0:
             raise error(err, cpcap.pcap_geterr(self.pcap).decode())
 
     def setdirection(self, d):
+        self._check_closed()
+
         err = cpcap.pcap_setdirection(self.pcap, d)
         if err < 0:
             raise error(err, cpcap.pcap_geterr(self.pcap).decode())
 
     def stats(self):
+        self._check_closed()
+
         cdef Stat stat = Stat.__new__(Stat)
         err = cpcap.pcap_stats(self.pcap, &stat.stat)
         if err < 0:
