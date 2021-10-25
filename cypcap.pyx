@@ -102,6 +102,18 @@ class ErrorCode(enum.IntEnum):
     TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
 
 
+class WarningCode(enum.IntEnum):
+    WARNING = cpcap.PCAP_WARNING
+    PROMISC_NOTSUP = cpcap.PCAP_WARNING_PROMISC_NOTSUP
+    TSTAMP_TYPE_NOTSUP = cpcap.PCAP_WARNING_TSTAMP_TYPE_NOTSUP
+
+
+class Direction(enum.IntEnum):
+    INOUT = cpcap.PCAP_D_INOUT
+    IN = cpcap.PCAP_D_IN
+    OUT = cpcap.PCAP_D_OUT
+
+
 NETMASK_UNKNOWN = cpcap.PCAP_NETMASK_UNKNOWN
 
 
@@ -192,6 +204,26 @@ cdef class Pkthdr:
     @property
     def len(self):
         return self.pkthdr.len
+
+
+@cython.freelist(8)
+cdef class Stat:
+    cdef cpcap.pcap_stat stat
+
+    def __repr__(self):
+        return f"<Stat recv={self.recv!r} drop={self.drop!r} ifdrop={self.ifdrop!r}>"
+
+    @property
+    def recv(self):
+        return self.stat.ps_recv
+
+    @property
+    def drop(self):
+        return self.stat.ps_drop
+
+    @property
+    def ifdrop(self):
+        return self.stat.ps_ifdrop
 
 
 def findalldevs():
@@ -543,7 +575,7 @@ cdef class Pcap:
         return result
 
     def compile(self, filter_, optimize, netmask):
-        bpf_prog = BpfProgram()
+        cdef BpfProgram bpf_prog = BpfProgram.__new__(BpfProgram)
         err = cpcap.pcap_compile(self.pcap, &bpf_prog.bpf_prog, filter_.encode(), optimize, netmask)
         if err < 0:
             raise error(err, cpcap.pcap_geterr(self.pcap).decode())
@@ -554,6 +586,19 @@ cdef class Pcap:
         err = cpcap.pcap_setfilter(self.pcap, &bpf_prog.bpf_prog)
         if err < 0:
             raise error(err, cpcap.pcap_geterr(self.pcap).decode())
+
+    def setdirection(self, d):
+        err = cpcap.pcap_setdirection(self.pcap, d)
+        if err < 0:
+            raise error(err, cpcap.pcap_geterr(self.pcap).decode())
+
+    def stats(self):
+        cdef Stat stat = Stat.__new__(Stat)
+        err = cpcap.pcap_stats(self.pcap, &stat.stat)
+        if err < 0:
+            raise error(err, cpcap.pcap_geterr(self.pcap).decode())
+
+        return stat
 
 
 # TODO Support dumping/loading bytecode, __getitem__?

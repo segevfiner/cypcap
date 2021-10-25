@@ -49,7 +49,9 @@ cdef extern from "<pcap/pcap.h>" nogil:
         bpf_u_int32 len
 
     struct pcap_stat:
-        pass
+        unsigned int ps_recv
+        unsigned int ps_drop
+        unsigned int ps_ifdrop
 
     struct pcap_if:
         pcap_if* next
