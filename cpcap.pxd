@@ -99,7 +99,12 @@ cdef extern from "<pcap/pcap.h>" nogil:
         PCAP_WARNING_PROMISC_NOTSUP
         PCAP_WARNING_TSTAMP_TYPE_NOTSUP
 
+    enum:
+        PCAP_NETMASK_UNKNOWN
+
     int pcap_init(unsigned int, char *)
+
+    int pcap_lookupnet(const char *, bpf_u_int32 *, bpf_u_int32 *, char *)
 
     pcap_t *pcap_create(const char *, char *)
 
@@ -183,6 +188,12 @@ cdef extern from "<pcap/pcap.h>" nogil:
 
     char* pcap_geterr(pcap_t *)
 
+    int	pcap_compile(pcap_t *, bpf_program *, const char *, int, bpf_u_int32)
+
+    void pcap_freecode(bpf_program *)
+
+    bint pcap_offline_filter(const bpf_program *, const pcap_pkthdr *, const unsigned char *)
+
     int pcap_datalink(pcap_t *)
 
     int pcap_list_datalinks(pcap_t *, int **)
@@ -212,3 +223,5 @@ cdef extern from "<pcap/pcap.h>" nogil:
     void pcap_freealldevs(pcap_if_t *)
 
     const char *pcap_lib_version()
+
+    void bpf_dump(const bpf_program *, int)

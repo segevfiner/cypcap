@@ -44,7 +44,7 @@ class warning(Warning):
 
 cdef char init_errbuf[cpcap.PCAP_ERRBUF_SIZE]
 if cpcap.pcap_init(cpcap.PCAP_CHAR_ENC_UTF_8, init_errbuf) < 0:
-    raise error(-1, init_errbuf.decode())
+    raise error(ErrorCode.ERROR, init_errbuf.decode())
 
 
 class PcapIf:
@@ -100,6 +100,9 @@ class ErrorCode(enum.IntEnum):
     CANTSET_TSTAMP_TYPE = cpcap.PCAP_ERROR_CANTSET_TSTAMP_TYPE
     PROMISC_PERM_DENIED = cpcap.PCAP_ERROR_PROMISC_PERM_DENIED
     TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
+
+
+NETMASK_UNKNOWN = cpcap.PCAP_NETMASK_UNKNOWN
 
 
 class TstampType(enum.IntEnum):
@@ -163,26 +166,6 @@ cdef makesockaddr_addr(csocket.sockaddr* addr):
         return (<unsigned char*>addr)[:sizeof(csocket.sockaddr)]
 
 
-def findalldevs():
-    cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
-    cdef cpcap.pcap_if_t* dev
-
-    cdef cpcap.pcap_if_t* devs
-    if cpcap.pcap_findalldevs(&devs, errbuf) < 0:
-        raise error(-1, errbuf.decode())
-
-    try:
-        result = []
-        dev = devs
-        while dev:
-            result.append(PcapIf_from_c(dev))
-            dev = dev.next
-
-        return result
-    finally:
-        cpcap.pcap_freealldevs(devs)
-
-
 @cython.freelist(8)
 cdef class Pkthdr:
     cdef cpcap.pcap_pkthdr pkthdr
@@ -211,6 +194,41 @@ cdef class Pkthdr:
         return self.pkthdr.len
 
 
+def findalldevs():
+    cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+    cdef cpcap.pcap_if_t* dev
+
+    cdef cpcap.pcap_if_t* devs
+    err = cpcap.pcap_findalldevs(&devs, errbuf)
+    if err < 0:
+        raise error(err, errbuf.decode())
+
+    try:
+        result = []
+        dev = devs
+        while dev:
+            result.append(PcapIf_from_c(dev))
+            dev = dev.next
+
+        return result
+    finally:
+        cpcap.pcap_freealldevs(devs)
+
+
+def lookupnet(device):
+    if isinstance(device, PcapIf):
+        device = device.name
+
+    cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+    cdef cpcap.bpf_u_int32 net
+    cdef cpcap.bpf_u_int32 mask
+    err = cpcap.pcap_lookupnet(device, &net, &mask, errbuf)
+    if err < 0:
+        raise error(err, errbuf.decode())
+
+    return net, mask
+
+
 def create(source):
     if isinstance(source, PcapIf):
         source = source.name
@@ -218,7 +236,7 @@ def create(source):
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.pcap_t* pcap = cpcap.pcap_create(source.encode(), errbuf)
     if not pcap:
-        raise error(-1, errbuf.decode())
+        raise error(ErrorCode.ERROR, errbuf.decode())
 
     return Pcap.from_ptr(pcap)
 
@@ -230,12 +248,12 @@ def open_live(device, snaplen, promisc, to_ms):
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.pcap_t* pcap = cpcap.pcap_open_live(device.encode(), snaplen, promisc, to_ms, errbuf)
     if not pcap:
-        raise error(-1, errbuf.decode())
+        raise error(ErrorCode.ERROR, errbuf.decode())
 
     return Pcap.from_ptr(pcap)
 
 
-def open_dead(linktype, snaplen, precision=TstampPrecision.MICRO):
+cpdef open_dead(linktype, snaplen, precision=TstampPrecision.MICRO):
    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_dead_with_tstamp_precision(linktype, snaplen, precision)
    return Pcap.from_ptr(pcap)
 
@@ -244,9 +262,14 @@ def open_offline(fname, precision=TstampPrecision.MICRO):
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.pcap_t* pcap = cpcap.pcap_open_offline_with_tstamp_precision(fname, precision, errbuf)
     if not pcap:
-        raise error(-1, errbuf.decode())
+        raise error(ErrorCode.ERROR, errbuf.decode())
 
     return Pcap.from_ptr(pcap)
+
+
+def compile(linktype, snaplen, filter_, optimize, netmask):
+    with open_dead(linktype, snaplen) as pcap:
+        return pcap.compile(filter_, optimize, netmask)
 
 
 cdef struct _LoopCallbackContext:
@@ -518,6 +541,34 @@ cdef class Pcap:
             raise error(result, cpcap.pcap_statustostr(result).decode())
 
         return result
+
+    def compile(self, filter_, optimize, netmask):
+        bpf_prog = BpfProgram()
+        err = cpcap.pcap_compile(self.pcap, &bpf_prog.bpf_prog, filter_.encode(), optimize, netmask)
+        if err < 0:
+            raise error(err, cpcap.pcap_geterr(self.pcap).decode())
+
+        return bpf_prog
+
+    def setfilter(self, BpfProgram bpf_prog):
+        err = cpcap.pcap_setfilter(self.pcap, &bpf_prog.bpf_prog)
+        if err < 0:
+            raise error(err, cpcap.pcap_geterr(self.pcap).decode())
+
+
+# TODO Support dumping/loading bytecode, __getitem__?
+cdef class BpfProgram:
+    cdef cpcap.bpf_program bpf_prog
+
+    def __dealloc__(self):
+        if self.bpf_prog.bf_insns:
+            cpcap.pcap_freecode(&self.bpf_prog)
+
+    def offline_filter(self, Pkthdr pkt_header, pkt_data):
+        return cpcap.pcap_offline_filter(&self.bpf_prog, &pkt_header.pkthdr, pkt_data)
+
+    def dump(self, option=0):
+        cpcap.bpf_dump(&self.bpf_prog, option)
 
 
 def lib_version():
