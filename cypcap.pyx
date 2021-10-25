@@ -35,6 +35,7 @@ class error(Exception):
     def __init__(self, code, msg):
         self.code = ErrorCode(code)
         self.msg = msg
+        super().__init__(self.code, self.msg)
 
 
 class warning(Warning):
