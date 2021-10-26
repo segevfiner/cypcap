@@ -1,4 +1,3 @@
-from cpython cimport PyErr_SetFromWindowsErr
 cimport cpcap
 
 cdef extern from *:
