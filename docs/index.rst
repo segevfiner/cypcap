@@ -13,6 +13,8 @@ be more complete than existing and poorly maintained implementations.
 See `pcap(3pcap) <https://www.tcpdump.org/manpages/pcap.3pcap.html>`_ for more detailed
 documentation about libpcap.
 
+See the `README.rst <https://github.com/segevfiner/cypcap/blob/master/README.rst>`_ for installation instructions.
+
 .. module:: cypcap
 
 Finding Devices/Interfaces

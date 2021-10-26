@@ -63,7 +63,7 @@ class Warning(Warning):
     Warning category for libpcap warnings.
 
     .. attribute:: code
-       :type: WarningCode
+       :type: ErrorCode
 
        Error code.
 
@@ -73,7 +73,7 @@ class Warning(Warning):
        Warning message.
     """
     def __init__(self, code, msg):
-        self.code = WarningCode(code)
+        self.code = ErrorCode(code)
         self.msg = msg
         super().__init__(self.code, self.msg)
 
@@ -166,17 +166,14 @@ class ErrorCode(enum.IntEnum):
     PROMISC_PERM_DENIED = cpcap.PCAP_ERROR_PROMISC_PERM_DENIED
     TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
 
+    WARNING = cpcap.PCAP_WARNING
+    WARNING_PROMISC_NOTSUP = cpcap.PCAP_WARNING_PROMISC_NOTSUP
+    WARNING_TSTAMP_TYPE_NOTSUP = cpcap.PCAP_WARNING_TSTAMP_TYPE_NOTSUP
+
     @property
     def description(self):
         """Error code description."""
         return cpcap.pcap_statustostr(self).decode()
-
-
-class WarningCode(enum.IntEnum):
-    """Pcap warning codes."""
-    WARNING = cpcap.PCAP_WARNING
-    PROMISC_NOTSUP = cpcap.PCAP_WARNING_PROMISC_NOTSUP
-    TSTAMP_TYPE_NOTSUP = cpcap.PCAP_WARNING_TSTAMP_TYPE_NOTSUP
 
 
 class Direction(enum.IntEnum):
@@ -459,7 +456,12 @@ cdef class Pcap:
     To read packets, iterate this object. For example::
 
         for pkthdr, data in pcap:
+            if pkthdr is None:
+                continue
+
             print(pkthdr, data)
+
+    .. warning:: Iteration will return ``(None, None)`` in case of packet buffer timeouts.
 
     Or use :meth:`loop` or :meth:`dispatch`.
     """
@@ -593,6 +595,9 @@ cdef class Pcap:
 
         result = cpcap.pcap_can_set_rfmon(self.pcap)
         if result < 0:
+            if result == ErrorCode.ERROR:
+                raise Error(result, cpcap.pcap_geterr(self.pcap).decode())
+
             raise Error(result, cpcap.pcap_statustostr(result).decode())
 
         return bool(result)
@@ -658,7 +663,7 @@ cdef class Pcap:
         err = cpcap.pcap_activate(self.pcap)
         if err < 0:
             raise Error(err, cpcap.pcap_geterr(self.pcap).decode())
-        elif err > 1:
+        elif err > 0:
             warnings.warn(Warning(err, cpcap.pcap_geterr(self.pcap).decode()))
 
     def list_tstamp_types(self) -> List[TstampType]:
@@ -699,7 +704,7 @@ cdef class Pcap:
         cdef int* datalinks
         cdef int num = cpcap.pcap_list_datalinks(self.pcap, &datalinks)
         if num < 0:
-            raise Error(num, cpcap.pcap_statustostr(num).decode())
+            raise Error(num, cpcap.pcap_geterr(self.pcap).decode())
 
         try:
             result = []
@@ -745,6 +750,7 @@ cdef class Pcap:
 
     def compile(self, filter_: str, optimize: bool, netmask: int) -> BpfProgram:
         """Compile a filter expression."""
+        # Note that if we add support for libpcap older than 1.8, we need to add a global lock here
         self._check_closed()
 
         cdef BpfProgram bpf_prog = BpfProgram.__new__(BpfProgram)
