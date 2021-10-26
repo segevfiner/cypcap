@@ -153,6 +153,10 @@ setup(
     long_description=long_description,
     long_description_content_type="text/x-rst",
     url="https://github.com/segevfiner/cypcap",
+    project_urls={
+        "Documentation": "https://segevfiner.github.io/cypcap/",
+        "Issue Tracker": "https://github.com/segevfiner/cypcap/issues",
+    },
     license="BSD-3-Clause",
     classifiers=[
         "Development Status :: 3 - Alpha",
