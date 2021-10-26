@@ -699,6 +699,7 @@ cdef class Dumper:
 
         return result
 
+
 def lib_version():
     """Get the version information for libpcap."""
     return cpcap.pcap_lib_version().decode()
