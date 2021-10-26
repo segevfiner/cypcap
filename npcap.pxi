@@ -1,34 +1,36 @@
 from cpython cimport PyErr_SetFromWindowsErr
 cimport cpcap
 
-cdef extern from "<Windows.h>":
-    # TODO Using Py_UNICODE raises a warning, is there anything better?
-    ctypedef Py_UNICODE WCHAR
-    ctypedef WCHAR* LPWSTR
-    ctypedef const WCHAR* LPCWSTR
-    ctypedef unsigned int UINT
-    ctypedef bint BOOL
+cdef extern from *:
+    """
+    #ifdef _WIN32
+    #include <Windows.h>
+    #include <stdio.h>
+    #include <wchar.h>
+    static int load_npcap_dlls(void)
+    {
+        WCHAR npcap_dir[512];
+        UINT len;
+        len = GetSystemDirectoryW(npcap_dir, 480);
+        if (!len) {
+            fprintf(stderr, "Error in GetSystemDirectory: %x\\n", GetLastError());
+            return 0;
+        }
+        wcscat_s(npcap_dir, 512, L"\\\\Npcap");
+        if (SetDllDirectoryW(npcap_dir) == 0) {
+            fprintf(stderr, "Error in SetDllDirectory: %x\\n", GetLastError());
+            return 0;
+        }
+        return 1;
+    }
+    #else
+    static int load_npcap_dlls(void)
+    {
+        return 1;
+    }
+    #endif
+    """
+    int load_npcap_dlls()
 
-    enum:
-        MAX_PATH
-
-    UINT GetSystemDirectoryW(LPWSTR, UINT)
-    BOOL SetDllDirectoryW(LPCWSTR)
-
-cdef int load_npcap_dlls() except -1:
-    cdef WCHAR system_dir[MAX_PATH]
-    cdef UINT length = GetSystemDirectoryW(system_dir, MAX_PATH)
-    if not length:
-        PyErr_SetFromWindowsErr(0)
-
-    npcap_dir = system_dir[:length] + "\\Npcap"
-
-    if not SetDllDirectoryW(npcap_dir):
-        PyErr_SetFromWindowsErr(0)
-
-    cpcap.pcap_lib_version()
-
-    if not SetDllDirectoryW(NULL):
-        PyErr_SetFromWindowsErr(0)
 
 load_npcap_dlls()

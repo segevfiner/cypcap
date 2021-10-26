@@ -9,8 +9,7 @@ cimport cpcap
 cimport csocket
 
 
-IF UNAME_SYSNAME == "Windows":
-    include "npcap.pxi"
+include "npcap.pxi"
 
 
 class DatalinkType(enum.IntEnum):
