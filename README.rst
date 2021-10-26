@@ -1,7 +1,9 @@
 cypcap
 ======
-This package is a Cython based binding for modern libpcap versions, attempting to be more complete
-than existing and poorly maintained implementations.
+This package is a Cython based binding for modern libpcap versions, for Python 3.6+, attempting to
+be more complete than existing and poorly maintained implementations.
+
+`Documentation <https://segevfiner.github.io/cypcap>`
 
 Installation
 ------------
