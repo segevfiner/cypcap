@@ -7,3 +7,4 @@
 cypcap.c
 /*.html
 /npcap-sdk/
+docs/_build/

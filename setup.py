@@ -1,9 +1,18 @@
 import sys
 import os
 import contextlib
+import re
+from io import open
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext as _build_ext
 from distutils.errors import CompileError, LinkError
+
+
+with open("cypcap.pyx", "r", encoding="utf-8") as f:
+    version = re.search(r'(?m)^__version__ = u"([a-zA-Z0-9.-]+)"', f.read()).group(1)
+
+with open("README.rst", "r", encoding="utf-8") as f:
+    long_description = f.read()
 
 
 def _has_function(compiler, funcname, includes=None, include_dirs=None,
@@ -137,7 +146,29 @@ class build_ext(_build_ext):
 
 setup(
     name="cypcap",
-    version="0.1.0",
+    version=version,
+    author="Segev Finer",
+    author_email="segev208@gmail.com",
+    description="A Cython based binding for modern libpcap",
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
+    url="https://github.com/segevfiner/cypcap",
+    license="BSD-3-Clause",
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "Topic :: System :: Networking :: Monitoring",
+        "License :: OSI Approved :: BSD License",
+        "Programming Language :: Cython",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+    ],
+    keywords="libpcap pcap",
+    zip_safe=False,
     ext_modules=[
         Extension(
             "cypcap", ["cypcap.pyx"],
@@ -149,4 +180,10 @@ setup(
         ),
     ],
     cmdclass={"build_ext": build_ext},
+    python_requires='>=3.6',
+    extras_require={
+        "dev": [
+            "sphinx==4.*"
+        ],
+    },
 )

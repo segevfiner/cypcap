@@ -1,12 +1,19 @@
-# cython: language_level=3str
+# cython: language_level=3str, binding=True
+"""
+This module is a Cython based binding for modern libpcap.
+"""
 
 import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
+from typing import Optional, List
 cimport cython
 from cpython cimport PyObject, PyErr_SetFromErrno
 cimport cpcap
 cimport csocket
+
+
+__version__ = u"0.1.0"
 
 
 include "npcap.pxi"
@@ -47,6 +54,32 @@ if cpcap.pcap_init(cpcap.PCAP_CHAR_ENC_UTF_8, init_errbuf) < 0:
 
 
 class PcapIf:
+    """
+    A Pcap interface.
+
+    You can either pass this object or its :attr:`name` to functions expecting an interface.
+
+    .. attribute:: name
+       :type: str
+
+       Interface name.
+
+    .. attribute:: description
+       :type: Optional[str]
+
+       Interface description.
+
+    .. attribute:: addresses
+       :type: PcapAddr
+
+       List of interface addresses.
+
+    .. attribute:: flags
+       :type: PcapIfFlags
+
+       Interface flags.
+    """
+
     def __init__(self, name, description, addresses, flags):
         self.name = name
         self.description = description
@@ -75,6 +108,7 @@ cdef object PcapIf_from_c(cpcap.pcap_if_t* dev):
 
 
 class PcapIfFlags(enum.IntFlag):
+    """Pcap interface flags."""
     LOOPBACK = cpcap.PCAP_IF_LOOPBACK
     UP = cpcap.PCAP_IF_UP
     RUNNING = cpcap.PCAP_IF_RUNNING
@@ -143,6 +177,26 @@ class TstampPrecision(enum.IntEnum):
 
 
 class PcapAddr:
+    """
+    Pcap interface address.
+
+    .. attribute:: addr
+
+       Address.
+
+    .. attribute:: netmask
+
+       Netmask for the address.
+
+    .. attribute:: broadaddr
+
+       Broadcast address for that address.
+
+    .. attribute:: dstaddr
+
+       P2P destination address for that address.
+    """
+
     def __init__(self, addr, netmask, broadaddr, dstaddr):
         self.addr = addr
         self.netmask = netmask
@@ -229,7 +283,8 @@ cdef class Stat:
         return self.stat.ps_ifdrop
 
 
-def findalldevs():
+def findalldevs() -> List[PcapIf]:
+    """Get a list of capture devices."""
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.pcap_if_t* dev
 
