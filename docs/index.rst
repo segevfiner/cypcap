@@ -113,11 +113,6 @@ Errors & Warnings
    :undoc-members:
    :member-order: bysource
 
-.. autoclass:: WarningCode
-   :members:
-   :undoc-members:
-   :member-order: bysource
-
 Indices and tables
 ==================
 
