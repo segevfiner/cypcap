@@ -1,0 +1,917 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Welcome to cypcap’s documentation! &#8212; cypcap 0.1.0b1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="welcome-to-cypcap-s-documentation">
+<h1>Welcome to cypcap’s documentation!<a class="headerlink" href="#welcome-to-cypcap-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>Version: 0.1.0b1</p>
+<p>This package is a Cython based binding for modern libpcap versions, for Python 3.6+, attempting to
+be more complete than existing and poorly maintained packages.</p>
+<p>See <a class="reference external" href="https://www.tcpdump.org/manpages/pcap.3pcap.html">pcap(3pcap)</a> for more detailed
+documentation about libpcap.</p>
+<p>See the <a class="reference external" href="https://github.com/segevfiner/cypcap/blob/master/README.rst">README.rst</a> for installation instructions.</p>
+<span class="target" id="module-cypcap"></span><section id="finding-devices-interfaces">
+<h2>Finding Devices/Interfaces<a class="headerlink" href="#finding-devices-interfaces" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.findalldevs">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">findalldevs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#cypcap.PcapIf" title="cypcap.PcapIf"><span class="pre">cypcap.PcapIf</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cypcap.findalldevs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of capture devices.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.PcapIf">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">PcapIf</span></span><a class="headerlink" href="#cypcap.PcapIf" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Pcap interface.</p>
+<p>You can either pass this object or its <a class="reference internal" href="#cypcap.PcapIf.name" title="cypcap.PcapIf.name"><code class="xref py py-attr docutils literal notranslate"><span class="pre">name</span></code></a> to functions expecting an interface.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIf.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#cypcap.PcapIf.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIf.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cypcap.PcapIf.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface description.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIf.addresses">
+<span class="sig-name descname"><span class="pre">addresses</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#cypcap.PcapAddr" title="cypcap.PcapAddr"><span class="pre">PcapAddr</span></a></em><a class="headerlink" href="#cypcap.PcapIf.addresses" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of interface addresses.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIf.flags">
+<span class="sig-name descname"><span class="pre">flags</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#cypcap.PcapIfFlags" title="cypcap.PcapIfFlags"><span class="pre">PcapIfFlags</span></a></em><a class="headerlink" href="#cypcap.PcapIf.flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface flags.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.PcapAddr">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">PcapAddr</span></span><a class="headerlink" href="#cypcap.PcapAddr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pcap interface address.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapAddr.addr">
+<span class="sig-name descname"><span class="pre">addr</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#cypcap.PcapAddr.addr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Address.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapAddr.netmask">
+<span class="sig-name descname"><span class="pre">netmask</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#cypcap.PcapAddr.netmask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Netmask for the address.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapAddr.broadaddr">
+<span class="sig-name descname"><span class="pre">broadaddr</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#cypcap.PcapAddr.broadaddr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast address for that address.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapAddr.dstaddr">
+<span class="sig-name descname"><span class="pre">dstaddr</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cypcap.PcapAddr.dstaddr" title="Permalink to this definition">¶</a></dt>
+<dd><p>P2P destination address for that address.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">PcapIfFlags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.PcapIfFlags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pcap interface flags.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.LOOPBACK">
+<span class="sig-name descname"><span class="pre">LOOPBACK</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.LOOPBACK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.UP">
+<span class="sig-name descname"><span class="pre">UP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.UP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.RUNNING">
+<span class="sig-name descname"><span class="pre">RUNNING</span></span><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.RUNNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.WIRELESS">
+<span class="sig-name descname"><span class="pre">WIRELESS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.WIRELESS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.CONNECTION_STATUS">
+<span class="sig-name descname"><span class="pre">CONNECTION_STATUS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">48</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.CONNECTION_STATUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.CONNECTION_STATUS_UNKNOWN">
+<span class="sig-name descname"><span class="pre">CONNECTION_STATUS_UNKNOWN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.CONNECTION_STATUS_UNKNOWN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.CONNECTION_STATUS_CONNECTED">
+<span class="sig-name descname"><span class="pre">CONNECTION_STATUS_CONNECTED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">16</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.CONNECTION_STATUS_CONNECTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.CONNECTION_STATUS_DISCONNECTED">
+<span class="sig-name descname"><span class="pre">CONNECTION_STATUS_DISCONNECTED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">32</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.CONNECTION_STATUS_DISCONNECTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapIfFlags.CONNECTION_STATUS_NOT_APPLICABLE">
+<span class="sig-name descname"><span class="pre">CONNECTION_STATUS_NOT_APPLICABLE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">48</span></em><a class="headerlink" href="#cypcap.PcapIfFlags.CONNECTION_STATUS_NOT_APPLICABLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="opening-a-pcap">
+<h2>Opening a Pcap<a class="headerlink" href="#opening-a-pcap" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.create">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#cypcap.PcapIf" title="cypcap.PcapIf"><span class="pre">cypcap.PcapIf</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Pcap" title="cypcap.Pcap"><span class="pre">cypcap.Pcap</span></a></span></span><a class="headerlink" href="#cypcap.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a live capture.</p>
+<p>Set any additional configuration and call <a class="reference internal" href="#cypcap.Pcap.activate" title="cypcap.Pcap.activate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pcap.activate()</span></code></a> to activate the capture.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.open_live">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">open_live</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#cypcap.PcapIf" title="cypcap.PcapIf"><span class="pre">cypcap.PcapIf</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snaplen</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">promisc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_ms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Pcap" title="cypcap.Pcap"><span class="pre">cypcap.Pcap</span></a></span></span><a class="headerlink" href="#cypcap.open_live" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a device for capturing.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version libpcap-1.0: </span>Prefer <a class="reference internal" href="#cypcap.create" title="cypcap.create"><code class="xref py py-func docutils literal notranslate"><span class="pre">create()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.open_dead">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">open_dead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linktype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.DatalinkType" title="cypcap.DatalinkType"><span class="pre">DatalinkType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">snaplen</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.TstampPrecision" title="cypcap.TstampPrecision"><span class="pre">TstampPrecision</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">TstampPrecision.MICRO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Pcap" title="cypcap.Pcap"><span class="pre">cypcap.Pcap</span></a></span></span><a class="headerlink" href="#cypcap.open_dead" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a fake Pcap for compiling filters or opening a capture for output.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.open_offline">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">open_offline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.TstampPrecision" title="cypcap.TstampPrecision"><span class="pre">cypcap.TstampPrecision</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">TstampPrecision.MICRO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Pcap" title="cypcap.Pcap"><span class="pre">cypcap.Pcap</span></a></span></span><a class="headerlink" href="#cypcap.open_offline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a saved capture file for reading.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.compile">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linktype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.DatalinkType" title="cypcap.DatalinkType"><span class="pre">cypcap.DatalinkType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">snaplen</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">netmask</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.BpfProgram" title="cypcap.BpfProgram"><span class="pre">cypcap.BpfProgram</span></a></span></span><a class="headerlink" href="#cypcap.compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile a filter expression.</p>
+<p>Shortcut for compiling a filter without an active Pcap. You might want to use
+<a class="reference internal" href="#cypcap.Pcap.compile" title="cypcap.Pcap.compile"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pcap.compile()</span></code></a> which will save you from passing some parameters.</p>
+</dd></dl>
+
+</section>
+<section id="pcap">
+<h2>Pcap<a class="headerlink" href="#pcap" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.Pcap">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">Pcap</span></span><a class="headerlink" href="#cypcap.Pcap" title="Permalink to this definition">¶</a></dt>
+<dd><p>A packet capture.</p>
+<p>Created by one of <a class="reference internal" href="#cypcap.create" title="cypcap.create"><code class="xref py py-func docutils literal notranslate"><span class="pre">create()</span></code></a>, <a class="reference internal" href="#cypcap.open_live" title="cypcap.open_live"><code class="xref py py-func docutils literal notranslate"><span class="pre">open_live()</span></code></a>, <a class="reference internal" href="#cypcap.open_dead" title="cypcap.open_dead"><code class="xref py py-func docutils literal notranslate"><span class="pre">open_dead()</span></code></a>, or <a class="reference internal" href="#cypcap.open_offline" title="cypcap.open_offline"><code class="xref py py-func docutils literal notranslate"><span class="pre">open_offline()</span></code></a>.</p>
+<p>You need to explicitly <a class="reference internal" href="#cypcap.Pcap.close" title="cypcap.Pcap.close"><code class="xref py py-meth docutils literal notranslate"><span class="pre">close()</span></code></a> this when done or you will get a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ResourceWarning" title="(in Python v3.10)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ResourceWarning</span></code></a>.
+(You can use <code class="docutils literal notranslate"><span class="pre">with</span></code>).</p>
+<p>To read packets, iterate this object. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">pkthdr</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">pcap</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">pkthdr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">pkthdr</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Iteration will return <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">None)</span></code> in case of packet buffer timeouts.</p>
+</div>
+<p>Or use <a class="reference internal" href="#cypcap.Pcap.loop" title="cypcap.Pcap.loop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">loop()</span></code></a> or <a class="reference internal" href="#cypcap.Pcap.dispatch" title="cypcap.Pcap.dispatch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch()</span></code></a>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.activate">
+<span class="sig-name descname"><span class="pre">activate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activate a Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.breakloop">
+<span class="sig-name descname"><span class="pre">breakloop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.breakloop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force a <a class="reference internal" href="#cypcap.Pcap.dispatch" title="cypcap.Pcap.dispatch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch()</span></code></a> or <a class="reference internal" href="#cypcap.Pcap.loop" title="cypcap.Pcap.loop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">loop()</span></code></a> call to return.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.can_set_rfmon">
+<span class="sig-name descname"><span class="pre">can_set_rfmon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.can_set_rfmon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether monitor mode can be set for a not-yet-activated Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimize</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">netmask</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.BpfProgram" title="cypcap.BpfProgram"><span class="pre">cypcap.BpfProgram</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile a filter expression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.datalink">
+<span class="sig-name descname"><span class="pre">datalink</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.DatalinkType" title="cypcap.DatalinkType"><span class="pre">cypcap.DatalinkType</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.datalink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the link-layer header type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.dispatch">
+<span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cnt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#cypcap.Pkthdr" title="cypcap.Pkthdr"><span class="pre">cypcap.Pkthdr</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process packets from a live capture or savefile.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.dump_open">
+<span class="sig-name descname"><span class="pre">dump_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Dumper" title="cypcap.Dumper"><span class="pre">cypcap.Dumper</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.dump_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a file to which to write packets.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.dump_open_append">
+<span class="sig-name descname"><span class="pre">dump_open_append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Dumper" title="cypcap.Dumper"><span class="pre">cypcap.Dumper</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.dump_open_append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open a file to which to write packets but, if the file already exists, and is a pcap file
+with the same byte order as the host opening the file, and has the same time stamp
+precision, link-layer header type, and snapshot length as p, it will write new packets at
+the end of the file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.get_tstamp_precision">
+<span class="sig-name descname"><span class="pre">get_tstamp_precision</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.TstampPrecision" title="cypcap.TstampPrecision"><span class="pre">cypcap.TstampPrecision</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.get_tstamp_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the time stamp precision returned in captures.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.getnonblock">
+<span class="sig-name descname"><span class="pre">getnonblock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.getnonblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the state of non-blocking mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.inject">
+<span class="sig-name descname"><span class="pre">inject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buf</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.inject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmit a packet.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#cypcap.Pcap.sendpacket" title="cypcap.Pcap.sendpacket"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sendpacket()</span></code></a> is like <a class="reference internal" href="#cypcap.Pcap.inject" title="cypcap.Pcap.inject"><code class="xref py py-meth docutils literal notranslate"><span class="pre">inject()</span></code></a>, but it returns 0 on success, rather than
+returning the number of bytes written. (pcap_inject() comes from OpenBSD;
+pcap_sendpacket() comes from WinPcap/Npcap. Both are provided for compatibility.)</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.is_swapped">
+<span class="sig-name descname"><span class="pre">is_swapped</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.is_swapped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find out whether a savefile has the native byte order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.list_datalinks">
+<span class="sig-name descname"><span class="pre">list_datalinks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#cypcap.DatalinkType" title="cypcap.DatalinkType"><span class="pre">cypcap.DatalinkType</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cypcap.Pcap.list_datalinks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of link-layer header types supported by a Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.list_tstamp_types">
+<span class="sig-name descname"><span class="pre">list_tstamp_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#cypcap.TstampType" title="cypcap.TstampType"><span class="pre">cypcap.TstampType</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cypcap.Pcap.list_tstamp_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of time stamp types supported by a capture device.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.loop">
+<span class="sig-name descname"><span class="pre">loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cnt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#cypcap.Pkthdr" title="cypcap.Pkthdr"><span class="pre">cypcap.Pkthdr</span></a><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process packets from a live capture or savefile.</p>
+<p>Unlike <a class="reference internal" href="#cypcap.Pcap.dispatch" title="cypcap.Pcap.dispatch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch()</span></code></a> this does not return on live packet buffer timeouts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.sendpacket">
+<span class="sig-name descname"><span class="pre">sendpacket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buf</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.sendpacket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmit a packet.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#cypcap.Pcap.sendpacket" title="cypcap.Pcap.sendpacket"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sendpacket()</span></code></a> is like <a class="reference internal" href="#cypcap.Pcap.inject" title="cypcap.Pcap.inject"><code class="xref py py-meth docutils literal notranslate"><span class="pre">inject()</span></code></a>, but it returns 0 on success, rather than
+returning the number of bytes written. (pcap_inject() comes from OpenBSD;
+pcap_sendpacket() comes from WinPcap/Npcap. Both are provided for compatibility.)</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_buffer_size">
+<span class="sig-name descname"><span class="pre">set_buffer_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_buffer_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the buffer size for a not-yet-activated Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_datalink">
+<span class="sig-name descname"><span class="pre">set_datalink</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datalink</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.DatalinkType" title="cypcap.DatalinkType"><span class="pre">cypcap.DatalinkType</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_datalink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the link-layer header type to be used by a Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_immediate_mode">
+<span class="sig-name descname"><span class="pre">set_immediate_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">immediate_mode</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_immediate_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set immediate mode for a not-yet-activated Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_promisc">
+<span class="sig-name descname"><span class="pre">set_promisc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">promisc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_promisc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set promiscuous mode for a not-yet-activated Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_rfmon">
+<span class="sig-name descname"><span class="pre">set_rfmon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rfmon</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_rfmon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set monitor mode for a not-yet-activated Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_snaplen">
+<span class="sig-name descname"><span class="pre">set_snaplen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snaplen</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_snaplen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the snapshot length for a not-yet-Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_timeout">
+<span class="sig-name descname"><span class="pre">set_timeout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the packet buffer timeout for a not-yet-activated Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_tstamp_precision">
+<span class="sig-name descname"><span class="pre">set_tstamp_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tstamp_precision</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.TstampPrecision" title="cypcap.TstampPrecision"><span class="pre">cypcap.TstampPrecision</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_tstamp_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the time stamp precision returned in captures.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.set_tstamp_type">
+<span class="sig-name descname"><span class="pre">set_tstamp_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tstamp_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.TstampType" title="cypcap.TstampType"><span class="pre">cypcap.TstampType</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.set_tstamp_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the time stamp type to be used by a Pcap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.setdirection">
+<span class="sig-name descname"><span class="pre">setdirection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.setdirection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the direction for which packets will be captured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.setfilter">
+<span class="sig-name descname"><span class="pre">setfilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpf_prog</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.BpfProgram" title="cypcap.BpfProgram"><span class="pre">cypcap.BpfProgram</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.setfilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the BPF filter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.setnonblock">
+<span class="sig-name descname"><span class="pre">setnonblock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nonblock</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.setnonblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the state of non-blocking mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.snapshot">
+<span class="sig-name descname"><span class="pre">snapshot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.snapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the snapshot length.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Pcap.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Stat" title="cypcap.Stat"><span class="pre">cypcap.Stat</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get capture statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.Pkthdr">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">Pkthdr</span></span><a class="headerlink" href="#cypcap.Pkthdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pcap packet header.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Pkthdr.caplen">
+<span class="sig-name descname"><span class="pre">caplen</span></span><a class="headerlink" href="#cypcap.Pkthdr.caplen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of portion present.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Pkthdr.len">
+<span class="sig-name descname"><span class="pre">len</span></span><a class="headerlink" href="#cypcap.Pkthdr.len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of this packet (off wire).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Pkthdr.ts">
+<span class="sig-name descname"><span class="pre">ts</span></span><a class="headerlink" href="#cypcap.Pkthdr.ts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timestamp.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="bpfprogram">
+<h2>BpfProgram<a class="headerlink" href="#bpfprogram" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.BpfProgram">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">BpfProgram</span></span><a class="headerlink" href="#cypcap.BpfProgram" title="Permalink to this definition">¶</a></dt>
+<dd><p>A BPF filter program for <a class="reference internal" href="#cypcap.Pcap.setfilter" title="cypcap.Pcap.setfilter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pcap.setfilter()</span></code></a>.</p>
+<p>Can be created via <a class="reference internal" href="#cypcap.Pcap.compile" title="cypcap.Pcap.compile"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pcap.compile()</span></code></a>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.BpfProgram.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.BpfProgram.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the filter to stdout.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sadly the dumping function doesn’t take an output stream…</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.BpfProgram.offline_filter">
+<span class="sig-name descname"><span class="pre">offline_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pkt_header</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.Pkthdr" title="cypcap.Pkthdr"><span class="pre">cypcap.Pkthdr</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pkt_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#cypcap.BpfProgram.offline_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether a filter matches a packet.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="stat">
+<h2>Stat<a class="headerlink" href="#stat" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.Stat">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">Stat</span></span><a class="headerlink" href="#cypcap.Stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capture statistics.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Stat.drop">
+<span class="sig-name descname"><span class="pre">drop</span></span><a class="headerlink" href="#cypcap.Stat.drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of packets dropped.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Stat.ifdrop">
+<span class="sig-name descname"><span class="pre">ifdrop</span></span><a class="headerlink" href="#cypcap.Stat.ifdrop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drops by interface – only supported on some platforms.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Stat.recv">
+<span class="sig-name descname"><span class="pre">recv</span></span><a class="headerlink" href="#cypcap.Stat.recv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of packets received.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="dumper">
+<h2>Dumper<a class="headerlink" href="#dumper" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.Dumper">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">Dumper</span></span><a class="headerlink" href="#cypcap.Dumper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dumper represents a capture savefile.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Dumper.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Dumper.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the Dumper.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Dumper.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pkt_header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pkt_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Dumper.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a packet to a capture file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Dumper.ftell">
+<span class="sig-name descname"><span class="pre">ftell</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Dumper.ftell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current file offset for a savefile being written.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="enumeration-constants">
+<h2>Enumeration &amp; Constants<a class="headerlink" href="#enumeration-constants" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.DatalinkType">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">DatalinkType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.DatalinkType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Datalink types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.NULL_">
+<span class="sig-name descname"><span class="pre">NULL_</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#cypcap.DatalinkType.NULL_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.EN10MB">
+<span class="sig-name descname"><span class="pre">EN10MB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#cypcap.DatalinkType.EN10MB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.EN3MB">
+<span class="sig-name descname"><span class="pre">EN3MB</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#cypcap.DatalinkType.EN3MB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.AX25">
+<span class="sig-name descname"><span class="pre">AX25</span></span><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#cypcap.DatalinkType.AX25" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.PRONET">
+<span class="sig-name descname"><span class="pre">PRONET</span></span><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#cypcap.DatalinkType.PRONET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.CHAOS">
+<span class="sig-name descname"><span class="pre">CHAOS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#cypcap.DatalinkType.CHAOS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.IEEE802">
+<span class="sig-name descname"><span class="pre">IEEE802</span></span><em class="property"> <span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#cypcap.DatalinkType.IEEE802" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.ARCNET">
+<span class="sig-name descname"><span class="pre">ARCNET</span></span><em class="property"> <span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#cypcap.DatalinkType.ARCNET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.SLIP">
+<span class="sig-name descname"><span class="pre">SLIP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#cypcap.DatalinkType.SLIP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.PPP">
+<span class="sig-name descname"><span class="pre">PPP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">9</span></em><a class="headerlink" href="#cypcap.DatalinkType.PPP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.FDDI">
+<span class="sig-name descname"><span class="pre">FDDI</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#cypcap.DatalinkType.FDDI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="cypcap.DatalinkType.description">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#cypcap.DatalinkType.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.Direction">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">Direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direction for <code class="xref py py-func docutils literal notranslate"><span class="pre">setdirection()</span></code>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Direction.INOUT">
+<span class="sig-name descname"><span class="pre">INOUT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#cypcap.Direction.INOUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Direction.IN">
+<span class="sig-name descname"><span class="pre">IN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#cypcap.Direction.IN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Direction.OUT">
+<span class="sig-name descname"><span class="pre">OUT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#cypcap.Direction.OUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.TstampType">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">TstampType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.TstampType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timestamp types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.TstampType.HOST">
+<span class="sig-name descname"><span class="pre">HOST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#cypcap.TstampType.HOST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.TstampType.HOST_LOWPREC">
+<span class="sig-name descname"><span class="pre">HOST_LOWPREC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#cypcap.TstampType.HOST_LOWPREC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.TstampType.HOST_HIPREC">
+<span class="sig-name descname"><span class="pre">HOST_HIPREC</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#cypcap.TstampType.HOST_HIPREC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.TstampType.ADAPTER">
+<span class="sig-name descname"><span class="pre">ADAPTER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#cypcap.TstampType.ADAPTER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.TstampType.ADAPTER_UNSYNCED">
+<span class="sig-name descname"><span class="pre">ADAPTER_UNSYNCED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#cypcap.TstampType.ADAPTER_UNSYNCED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.TstampType.HOST_HIPREC_UNSYNCED">
+<span class="sig-name descname"><span class="pre">HOST_HIPREC_UNSYNCED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#cypcap.TstampType.HOST_HIPREC_UNSYNCED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="cypcap.TstampType.name">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#cypcap.TstampType.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="cypcap.TstampType.description">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#cypcap.TstampType.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.TstampPrecision">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">TstampPrecision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.TstampPrecision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timestamp precision.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.TstampPrecision.MICRO">
+<span class="sig-name descname"><span class="pre">MICRO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#cypcap.TstampPrecision.MICRO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.TstampPrecision.NANO">
+<span class="sig-name descname"><span class="pre">NANO</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#cypcap.TstampPrecision.NANO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.NETMASK_UNKNOWN">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">NETMASK_UNKNOWN</span></span><a class="headerlink" href="#cypcap.NETMASK_UNKNOWN" title="Permalink to this definition">¶</a></dt>
+<dd><p>The netmask for <a class="reference internal" href="#cypcap.compile" title="cypcap.compile"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compile()</span></code></a> is unknown.</p>
+</dd></dl>
+
+</section>
+<section id="getting-library-version">
+<h2>Getting library version<a class="headerlink" href="#getting-library-version" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.lib_version">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">lib_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.lib_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the version information for libpcap.</p>
+</dd></dl>
+
+</section>
+<section id="errors-warnings">
+<h2>Errors &amp; Warnings<a class="headerlink" href="#errors-warnings" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.Error">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">Error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised when an error occurs in libpcap.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Error.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#cypcap.ErrorCode" title="cypcap.ErrorCode"><span class="pre">ErrorCode</span></a></em><a class="headerlink" href="#cypcap.Error.code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error code.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Error.msg">
+<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#cypcap.Error.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error message.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.Warning">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">Warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Warning category for libpcap warnings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Warning.code">
+<span class="sig-name descname"><span class="pre">code</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#cypcap.ErrorCode" title="cypcap.ErrorCode"><span class="pre">ErrorCode</span></a></em><a class="headerlink" href="#cypcap.Warning.code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error code.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Warning.msg">
+<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#cypcap.Warning.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Warning message.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.ErrorCode">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">ErrorCode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.ErrorCode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pcap error codes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.ERROR">
+<span class="sig-name descname"><span class="pre">ERROR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-1</span></em><a class="headerlink" href="#cypcap.ErrorCode.ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.BREAK">
+<span class="sig-name descname"><span class="pre">BREAK</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-2</span></em><a class="headerlink" href="#cypcap.ErrorCode.BREAK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.NOT_ACTIVATED">
+<span class="sig-name descname"><span class="pre">NOT_ACTIVATED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-3</span></em><a class="headerlink" href="#cypcap.ErrorCode.NOT_ACTIVATED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.ACTIVATED">
+<span class="sig-name descname"><span class="pre">ACTIVATED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-4</span></em><a class="headerlink" href="#cypcap.ErrorCode.ACTIVATED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.NO_SUCH_DEVICE">
+<span class="sig-name descname"><span class="pre">NO_SUCH_DEVICE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-5</span></em><a class="headerlink" href="#cypcap.ErrorCode.NO_SUCH_DEVICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.RFMON_NOTSUP">
+<span class="sig-name descname"><span class="pre">RFMON_NOTSUP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-6</span></em><a class="headerlink" href="#cypcap.ErrorCode.RFMON_NOTSUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.NOT_RFMON">
+<span class="sig-name descname"><span class="pre">NOT_RFMON</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-7</span></em><a class="headerlink" href="#cypcap.ErrorCode.NOT_RFMON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.PERM_DENIED">
+<span class="sig-name descname"><span class="pre">PERM_DENIED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-8</span></em><a class="headerlink" href="#cypcap.ErrorCode.PERM_DENIED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.IFACE_NOT_UP">
+<span class="sig-name descname"><span class="pre">IFACE_NOT_UP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-9</span></em><a class="headerlink" href="#cypcap.ErrorCode.IFACE_NOT_UP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.CANTSET_TSTAMP_TYPE">
+<span class="sig-name descname"><span class="pre">CANTSET_TSTAMP_TYPE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-10</span></em><a class="headerlink" href="#cypcap.ErrorCode.CANTSET_TSTAMP_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.PROMISC_PERM_DENIED">
+<span class="sig-name descname"><span class="pre">PROMISC_PERM_DENIED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-11</span></em><a class="headerlink" href="#cypcap.ErrorCode.PROMISC_PERM_DENIED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.TSTAMP_PRECISION_NOTSUP">
+<span class="sig-name descname"><span class="pre">TSTAMP_PRECISION_NOTSUP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-12</span></em><a class="headerlink" href="#cypcap.ErrorCode.TSTAMP_PRECISION_NOTSUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.WARNING">
+<span class="sig-name descname"><span class="pre">WARNING</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#cypcap.ErrorCode.WARNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.WARNING_PROMISC_NOTSUP">
+<span class="sig-name descname"><span class="pre">WARNING_PROMISC_NOTSUP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#cypcap.ErrorCode.WARNING_PROMISC_NOTSUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.WARNING_TSTAMP_TYPE_NOTSUP">
+<span class="sig-name descname"><span class="pre">WARNING_TSTAMP_TYPE_NOTSUP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#cypcap.ErrorCode.WARNING_TSTAMP_TYPE_NOTSUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="cypcap.ErrorCode.description">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#cypcap.ErrorCode.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error code description.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">cypcap</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=segevfiner&repo=cypcap&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://pypi.org/project/cypcap/">cypcap @ PyPI</a></li>
+    
+    <li class="toctree-l1"><a href="https://github.com/segevfiner/cypcap">cypcap @ GitHub</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Segev Finer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
