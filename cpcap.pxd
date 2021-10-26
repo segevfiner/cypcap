@@ -1,6 +1,36 @@
 from csocket cimport sockaddr, timeval
 
 cdef extern from "<pcap/pcap.h>" nogil:
+    """
+    #ifndef PCAP_TSTAMP_HOST_HIPREC_UNSYNCED
+    #define PCAP_TSTAMP_HOST_HIPREC_UNSYNCED 5
+    #endif
+
+    #ifndef PCAP_IF_WIRELESS
+    #define PCAP_IF_WIRELESS 0x00000008
+    #endif
+
+    #ifndef PCAP_IF_CONNECTION_STATUS
+    #define PCAP_IF_CONNECTION_STATUS 0x00000030
+    #endif
+
+    #ifndef PCAP_IF_CONNECTION_STATUS_UNKNOWN
+    #define PCAP_IF_CONNECTION_STATUS_UNKNOWN 0x00000000
+    #endif
+
+    #ifndef PCAP_IF_CONNECTION_STATUS_CONNECTED
+    #define PCAP_IF_CONNECTION_STATUS_CONNECTED 0x00000010
+    #endif
+
+    #ifndef PCAP_IF_CONNECTION_STATUS_DISCONNECTED
+    #define PCAP_IF_CONNECTION_STATUS_DISCONNECTED 0x00000020
+    #endif
+
+    #ifndef PCAP_IF_CONNECTION_STATUS_NOT_APPLICABLE
+    #define PCAP_IF_CONNECTION_STATUS_NOT_APPLICABLE 0x00000030
+    #endif
+    """
+
     ctypedef unsigned int bpf_u_int32
 
     enum:

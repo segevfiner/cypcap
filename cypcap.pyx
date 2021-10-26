@@ -28,7 +28,10 @@ class DatalinkType(enum.IntEnum):
 
     @property
     def description(self):
-        return cpcap.pcap_datalink_val_to_description_or_dlt(self).decode()
+        IF HAVE_DATALINK_VAL_TO_DESCRIPTION_OR_DLT:
+            return cpcap.pcap_datalink_val_to_description_or_dlt(self).decode()
+        ELSE:
+            return cpcap.pcap_datalink_val_to_description(self).decode()
 
 
 class error(Exception):
@@ -42,9 +45,10 @@ class warning(Warning):
     pass
 
 
-cdef char init_errbuf[cpcap.PCAP_ERRBUF_SIZE]
-if cpcap.pcap_init(cpcap.PCAP_CHAR_ENC_UTF_8, init_errbuf) < 0:
-    raise error(ErrorCode.ERROR, init_errbuf.decode())
+IF HAVE_PCAP_INIT:
+    cdef char init_errbuf[cpcap.PCAP_ERRBUF_SIZE]
+    if cpcap.pcap_init(cpcap.PCAP_CHAR_ENC_UTF_8, init_errbuf) < 0:
+        raise error(ErrorCode.ERROR, init_errbuf.decode())
 
 
 class PcapIf:
@@ -69,7 +73,7 @@ cdef object PcapIf_from_c(cpcap.pcap_if_t* dev):
 
     return PcapIf(
         dev.name.decode(),
-        dev.description.decode(),
+        dev.description.decode() if dev.description is not NULL else None,
         addresses,
         PcapIfFlags(dev.flags),
     )
