@@ -43,14 +43,14 @@ cdef extern from "<pcap/pcap.h>" nogil:
     #endif
 
     #ifndef HAVE_PCAP_INIT
-    int pcap_init(unsigned int opts, char *errbuf)
+    static int pcap_init(unsigned int opts, char *errbuf)
     {
         return 0;
     }
     #endif
 
     #ifndef HAVE_DATALINK_VAL_TO_DESCRIPTION_OR_DLT
-    static void const char * pcap_datalink_val_to_description_or_dlt(int dlt)
+    static const char * pcap_datalink_val_to_description_or_dlt(int dlt)
     {
             static char unkbuf[40];
             const char *description;
