@@ -8,7 +8,7 @@ Welcome to cypcap's documentation!
 Version: |release|
 
 This package is a Cython based binding for modern libpcap versions, for Python 3.6+, attempting to
-be more complete than existing and poorly maintained implementations.
+be more complete than existing and poorly maintained packages.
 
 See `pcap(3pcap) <https://www.tcpdump.org/manpages/pcap.3pcap.html>`_ for more detailed
 documentation about libpcap.
