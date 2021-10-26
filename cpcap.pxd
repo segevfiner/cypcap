@@ -3,6 +3,17 @@ from libc.stdint cimport int64_t
 
 cdef extern from "<pcap/pcap.h>" nogil:
     """
+    #include <stdio.h>
+
+    // Definitions and stubs for supporting older libpcap versions
+    #ifndef PCAP_CHAR_ENC_LOCAL
+    #define PCAP_CHAR_ENC_LOCAL	0x00000000U
+    #endif
+
+    #ifndef PCAP_CHAR_ENC_UTF_8
+    #define PCAP_CHAR_ENC_UTF_8	0x00000001U
+    #endif
+
     #ifndef PCAP_TSTAMP_HOST_HIPREC_UNSYNCED
     #define PCAP_TSTAMP_HOST_HIPREC_UNSYNCED 5
     #endif
@@ -29,6 +40,29 @@ cdef extern from "<pcap/pcap.h>" nogil:
 
     #ifndef PCAP_IF_CONNECTION_STATUS_NOT_APPLICABLE
     #define PCAP_IF_CONNECTION_STATUS_NOT_APPLICABLE 0x00000030
+    #endif
+
+    #ifndef HAVE_PCAP_INIT
+    int pcap_init(unsigned int opts, char *errbuf)
+    {
+        return 0;
+    }
+    #endif
+
+    #ifndef HAVE_DATALINK_VAL_TO_DESCRIPTION_OR_DLT
+    static void const char * pcap_datalink_val_to_description_or_dlt(int dlt)
+    {
+            static char unkbuf[40];
+            const char *description;
+
+            description = pcap_datalink_val_to_description(dlt);
+            if (description != NULL) {
+                    return description;
+            } else {
+                    (void)snprintf(unkbuf, sizeof(unkbuf), "DLT %u", dlt);
+                    return unkbuf;
+            }
+    }
     #endif
     """
 

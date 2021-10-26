@@ -28,10 +28,7 @@ class DatalinkType(enum.IntEnum):
 
     @property
     def description(self):
-        IF HAVE_DATALINK_VAL_TO_DESCRIPTION_OR_DLT:
-            return cpcap.pcap_datalink_val_to_description_or_dlt(self).decode()
-        ELSE:
-            return cpcap.pcap_datalink_val_to_description(self).decode()
+        return cpcap.pcap_datalink_val_to_description_or_dlt(self).decode()
 
 
 class error(Exception):
@@ -45,10 +42,9 @@ class warning(Warning):
     pass
 
 
-IF HAVE_PCAP_INIT:
-    cdef char init_errbuf[cpcap.PCAP_ERRBUF_SIZE]
-    if cpcap.pcap_init(cpcap.PCAP_CHAR_ENC_UTF_8, init_errbuf) < 0:
-        raise error(ErrorCode.ERROR, init_errbuf.decode())
+cdef char init_errbuf[cpcap.PCAP_ERRBUF_SIZE]
+if cpcap.pcap_init(cpcap.PCAP_CHAR_ENC_UTF_8, init_errbuf) < 0:
+    raise error(ErrorCode.ERROR, init_errbuf.decode())
 
 
 class PcapIf:
@@ -105,7 +101,9 @@ class ErrorCode(enum.IntEnum):
     PROMISC_PERM_DENIED = cpcap.PCAP_ERROR_PROMISC_PERM_DENIED
     TSTAMP_PRECISION_NOTSUP = cpcap.PCAP_ERROR_TSTAMP_PRECISION_NOTSUP
 
-    # TODO pcap_statustostr?
+    @property
+    def description(self):
+        return cpcap.pcap_statustostr(self).decode()
 
 
 class WarningCode(enum.IntEnum):

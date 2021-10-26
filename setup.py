@@ -112,24 +112,26 @@ class build_ext(_build_ext):
     def run(self):
         from distutils import ccompiler
 
-        if self.cython_compile_time_env is None:
-            self.cython_compile_time_env  = []
+        if self.define is None:
+            self.define  = []
 
         compiler = ccompiler.new_compiler()
-        self.cython_compile_time_env.append(("HAVE_PCAP_INIT", has_function(
+        if has_function(
             compiler,
             "pcap_init(0, NULL)",
             includes=["pcap/pcap.h"],
             include_dirs=include_dirs,
             libraries=libraries,
-            library_dirs=library_dirs)))
-        self.cython_compile_time_env.append(("HAVE_DATALINK_VAL_TO_DESCRIPTION_OR_DLT", has_function(
+            library_dirs=library_dirs):
+                self.define.append(("HAVE_PCAP_INIT", 1))
+        if has_function(
             compiler,
             "pcap_datalink_val_to_description_or_dlt(0)",
             includes=["pcap/pcap.h"],
             include_dirs=include_dirs,
             libraries=libraries,
-            library_dirs=library_dirs)))
+            library_dirs=library_dirs):
+                self.define.append(("HAVE_DATALINK_VAL_TO_DESCRIPTION_OR_DLT", 1))
 
         _build_ext.run(self)
 
