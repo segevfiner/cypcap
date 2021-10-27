@@ -269,7 +269,8 @@ cdef makesockaddr_addr(csocket.sockaddr* addr):
             PyErr_SetFromErrno(OSError)
         return inet6_buf.decode()
     else:
-        # TODO What should we do for unknown sa_family?
+        # TODO What should we do for unknown sa_family? We don't even know the right size to copy it
+        # raw...
         return (<unsigned char*>addr)[:sizeof(csocket.sockaddr)]
 
 
