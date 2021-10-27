@@ -45,7 +45,7 @@ def test_basic_inject_capture(interface):
             if pkthdr is None:
                 continue
 
-            found_pkt = dpkt.ethernet.Ethernet(data)
+            captured_pkt = dpkt.ethernet.Ethernet(data)
             break
 
-        print(repr(found_pkt))
+        assert bytes(pkt) == bytes(captured_pkt)
