@@ -144,6 +144,7 @@ class build_ext(_build_ext):
 
         _build_ext.run(self)
 
+
 setup(
     name="cypcap",
     version=version,
