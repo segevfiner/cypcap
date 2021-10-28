@@ -39,7 +39,7 @@ jobs:
         sudo ip addr
     - name: Give Python CAP_NET_RAW
       run: |
-        sudo setcap CAP_NET_RAW+ep $(which python3)
+        sudo setcap CAP_NET_RAW+ep "$(realpath $(which python3))"
     - name: Test with pytest
       run: |
         pytest -v --interface=dummy0
