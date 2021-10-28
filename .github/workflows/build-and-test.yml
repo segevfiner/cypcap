@@ -37,6 +37,9 @@ jobs:
         sudo ip link set dummy0 up
         sudo ip addr add 172.27.224.1 dev dummy0
         sudo ip addr
+    - name: Give Python CAP_NET_RAW
+      run: |
+        sudo setcap CAP_NET_RAW+ep $(which python3)
     - name: Test with pytest
       run: |
         pytest -v --interface=dummy0
