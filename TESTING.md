@@ -7,7 +7,8 @@ commands:
 # Give the virtualenv Python CAP_NET_RAW
 sudo setcap CAP_NET_RAW+ep venv/bin/python
 
-# Configure the dummy0 interface (Need to modprobe dummy on Linux)
+# Configure the dummy0 interface
+sudo ip link add dummy0 type dummy # Skip on WSL2
 sudo ip link set dummy0 up
 sudo ip addr add 172.27.224.1 dev dummy0
 ```

@@ -33,11 +33,10 @@ jobs:
         pip install -e .[dev]
     - name: Setup dummy0
       run: |
-        sudo modprobe dummy
-        dmesg
-        sudo ip link
+        sudo ip link add dummy0 type dummy
         sudo ip link set dummy0 up
         sudo ip addr add 172.27.224.1 dev dummy0
+        sudo ip addr
     - name: Test with pytest
       run: |
         pytest -v --interface=dummy0
