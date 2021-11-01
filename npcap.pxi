@@ -20,6 +20,11 @@ cdef extern from *:
             fprintf(stderr, "Error in SetDllDirectory: %x\\n", GetLastError());
             return 0;
         }
+        pcap_lib_version();
+        if (SetDllDirectoryW(NULL) == 0) {
+            fprintf(stderr, "Error in SetDllDirectory: %x\\n", GetLastError());
+            return 0;
+        }
         return 1;
     }
     #else
