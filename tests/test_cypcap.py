@@ -158,3 +158,7 @@ def test_nonexistent_interface():
     with pytest.raises(cypcap.Error):
         pcap = cypcap.create("nonexistent0")
         pcap.activate()
+
+
+def test_lib_version():
+    assert isinstance(cypcap.lib_version(), str)
