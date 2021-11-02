@@ -57,6 +57,16 @@ def sender_pcap(interface):
         yield pcap
 
 
+def test_findalldevs(interface):
+    devs = cypcap.findalldevs()
+
+    dev = next((dev for dev in devs if dev.name == interface), None)
+    assert dev is not None
+
+    assert len(dev.addresses) > 0
+    assert dev.flags
+
+
 def test_inject_capture(pcap, sender_pcap, echo_pkt):
     sender_pcap.inject(bytes(echo_pkt))
 
