@@ -412,10 +412,10 @@ cpdef Pcap open_dead(linktype: DatalinkType, snaplen: int, precision: TstampPrec
     return Pcap.from_ptr(pcap)
 
 
-def open_offline(fname: str, precision: TstampPrecision=TstampPrecision.MICRO) -> Pcap:
+def open_offline(fname: os.PathLike, precision: TstampPrecision=TstampPrecision.MICRO) -> Pcap:
     """Open a saved capture file for reading."""
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
-    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_offline_with_tstamp_precision(fname, precision, errbuf)
+    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_offline_with_tstamp_precision(os.fsencode(fname), precision, errbuf)
     if not pcap:
         raise Error(ErrorCode.ERROR, errbuf.decode())
 

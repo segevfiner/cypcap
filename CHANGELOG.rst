@@ -7,6 +7,7 @@ Unreleased
 Changed
 ^^^^^^^
 * Support ``os.PathLike`` in ``dump_open`` & ``dump_open_append``.
+* Support ``os.PathLike`` in ``open_offline``.
 
 v0.1.0b1 (2021-10-26)
 ---------------------
