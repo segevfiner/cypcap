@@ -22,9 +22,10 @@ jobs:
     - name: Install
       run: |
         pip install -e .[dev]
-    - uses: ammaraskar/sphinx-action@master
-      with:
-        docs-folder: "docs/"
+    - name: Build documentation
+      run: |
+        make html
+      working-directory: ./docs
     - name: Commit documentation changes
       run: |
         git worktree add gh-pages gh-pages
