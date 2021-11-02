@@ -157,6 +157,13 @@ documentation about libpcap.</p>
 
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.lookupnet">
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">lookupnet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#cypcap.PcapIf" title="cypcap.PcapIf"><span class="pre">cypcap.PcapIf</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.lookupnet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the IPv4 network number and netmask for a device.</p>
+<p>This is mostly used to pass the netmask to <a class="reference internal" href="#cypcap.Pcap.compile" title="cypcap.Pcap.compile"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pcap.compile()</span></code></a>.</p>
+</dd></dl>
+
 </section>
 <section id="opening-a-pcap">
 <h2>Opening a Pcap<a class="headerlink" href="#opening-a-pcap" title="Permalink to this headline">¶</a></h2>

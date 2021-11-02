@@ -34,6 +34,8 @@ Finding Devices/Interfaces
    :undoc-members:
    :member-order: bysource
 
+.. autofunction:: lookupnet
+
 Opening a Pcap
 --------------
 .. autofunction:: create
