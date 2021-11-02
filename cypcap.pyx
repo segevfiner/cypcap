@@ -439,8 +439,8 @@ cdef struct _LoopCallbackContext:
 
 # TODO Is the way we propogate exceptions here safe?
 cdef void _loop_callback(unsigned char* user, const cpcap.pcap_pkthdr* pkt_header, const unsigned char* pkt_data) except * with gil:
+    ctx = <_LoopCallbackContext*>user
     try:
-        ctx = <_LoopCallbackContext*>user
         (<object>ctx.func)(Pkthdr.from_ptr(pkt_header), pkt_data[:pkt_header.caplen])
     except:
         cpcap.pcap_breakloop((<Pcap>ctx.pcap).pcap)
