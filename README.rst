@@ -3,6 +3,14 @@ cypcap
 .. image:: https://img.shields.io/pypi/v/cypcap.svg
    :target: https://pypi.org/project/cypcap/
    :alt: PyPI
+   
+.. image:: https://github.com/segevfiner/cypcap/actions/workflows/docs.yml/badge.svg
+   :target: https://segevfiner.github.io/cypcap/
+   :alt: Docs
+   
+.. image:: https://github.com/segevfiner/cypcap/actions/workflows/build-and-test.yml/badge.svg
+   :target: https://github.com/segevfiner/cypcap/actions/workflows/build-and-test.yml
+   :alt: Build & Test
 
 This package is a Cython based binding for modern libpcap versions, for Python 3.6+, attempting to
 be more complete than existing and poorly maintained packages.
