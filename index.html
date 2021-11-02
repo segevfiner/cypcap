@@ -15,6 +15,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -188,7 +189,7 @@ documentation about libpcap.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cypcap.open_offline">
-<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">open_offline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.TstampPrecision" title="cypcap.TstampPrecision"><span class="pre">cypcap.TstampPrecision</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">TstampPrecision.MICRO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Pcap" title="cypcap.Pcap"><span class="pre">cypcap.Pcap</span></a></span></span><a class="headerlink" href="#cypcap.open_offline" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">open_offline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.10)"><span class="pre">os.PathLike</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cypcap.TstampPrecision" title="cypcap.TstampPrecision"><span class="pre">cypcap.TstampPrecision</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">TstampPrecision.MICRO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Pcap" title="cypcap.Pcap"><span class="pre">cypcap.Pcap</span></a></span></span><a class="headerlink" href="#cypcap.open_offline" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a saved capture file for reading.</p>
 </dd></dl>
 
@@ -267,13 +268,13 @@ documentation about libpcap.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.Pcap.dump_open">
-<span class="sig-name descname"><span class="pre">dump_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Dumper" title="cypcap.Dumper"><span class="pre">cypcap.Dumper</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.dump_open" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">dump_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.10)"><span class="pre">os.PathLike</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Dumper" title="cypcap.Dumper"><span class="pre">cypcap.Dumper</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.dump_open" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a file to which to write packets.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.Pcap.dump_open_append">
-<span class="sig-name descname"><span class="pre">dump_open_append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Dumper" title="cypcap.Dumper"><span class="pre">cypcap.Dumper</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.dump_open_append" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">dump_open_append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.10)"><span class="pre">os.PathLike</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Dumper" title="cypcap.Dumper"><span class="pre">cypcap.Dumper</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.dump_open_append" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open a file to which to write packets but, if the file already exists, and is a pcap file
 with the same byte order as the host opening the file, and has the same time stamp
 precision, link-layer header type, and snapshot length as p, it will write new packets at
@@ -294,8 +295,9 @@ the end of the file.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.Pcap.inject">
-<span class="sig-name descname"><span class="pre">inject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buf</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.inject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transmit a packet.</p>
+<span class="sig-name descname"><span class="pre">inject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buf</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.inject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmit a packet. <em>buf</em> is a object supporting the buffer protocol, e.g. <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a>,
+<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytearray" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytearray</span></code></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#cypcap.Pcap.sendpacket" title="cypcap.Pcap.sendpacket"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sendpacket()</span></code></a> is like <a class="reference internal" href="#cypcap.Pcap.inject" title="cypcap.Pcap.inject"><code class="xref py py-meth docutils literal notranslate"><span class="pre">inject()</span></code></a>, but it returns 0 on success, rather than
@@ -331,8 +333,9 @@ pcap_sendpacket() comes from WinPcap/Npcap. Both are provided for compatibility.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.Pcap.sendpacket">
-<span class="sig-name descname"><span class="pre">sendpacket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buf</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.sendpacket" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transmit a packet.</p>
+<span class="sig-name descname"><span class="pre">sendpacket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.sendpacket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transmit a packet. <em>buf</em> is a object supporting the buffer protocol, e.g. <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a>,
+<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytearray" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytearray</span></code></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#cypcap.Pcap.sendpacket" title="cypcap.Pcap.sendpacket"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sendpacket()</span></code></a> is like <a class="reference internal" href="#cypcap.Pcap.inject" title="cypcap.Pcap.inject"><code class="xref py py-meth docutils literal notranslate"><span class="pre">inject()</span></code></a>, but it returns 0 on success, rather than
@@ -859,6 +862,9 @@ pcap_sendpacket() comes from WinPcap/Npcap. Both are provided for compatibility.
 
 
 <h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
 
 
 <hr />
@@ -873,6 +879,7 @@ pcap_sendpacket() comes from WinPcap/Npcap. Both are provided for compatibility.
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="changelog.html" title="next chapter">Changelog</a></li>
   </ul></li>
 </ul>
 </div>
