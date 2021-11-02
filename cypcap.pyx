@@ -357,6 +357,11 @@ def findalldevs() -> List[PcapIf]:
 
 
 def lookupnet(device: Union[str, PcapIf]) -> (int, int):
+    """
+    Find the IPv4 network number and netmask for a device.
+
+    This is mostly used to pass the netmask to :meth:`Pcap.compile`.
+    """
     if isinstance(device, PcapIf):
         device = device.name
 
