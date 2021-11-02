@@ -356,14 +356,14 @@ def findalldevs() -> List[PcapIf]:
         cpcap.pcap_freealldevs(devs)
 
 
-def lookupnet(device: Union[str, PcapIf]):
+def lookupnet(device: Union[str, PcapIf]) -> (int, int):
     if isinstance(device, PcapIf):
         device = device.name
 
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
     cdef cpcap.bpf_u_int32 net
     cdef cpcap.bpf_u_int32 mask
-    err = cpcap.pcap_lookupnet(device, &net, &mask, errbuf)
+    err = cpcap.pcap_lookupnet(device.encode(), &net, &mask, errbuf)
     if err < 0:
         raise Error(err, errbuf.decode())
 
