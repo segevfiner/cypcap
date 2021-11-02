@@ -4,6 +4,10 @@ Changelog
 Unreleased
 ----------
 
+Added
+^^^^^
+* Tests & Github Actions CI
+
 Changed
 ^^^^^^^
 * Support ``os.PathLike`` in ``dump_open`` & ``dump_open_append``.
