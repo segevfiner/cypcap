@@ -28,6 +28,7 @@ jobs:
       working-directory: ./docs
     - name: Commit documentation changes
       run: |
+        git fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin gh-pages
         git worktree add gh-pages gh-pages
         git -C gh-pages rm -rf .
         cp -r docs/_build/html/* gh-pages/
