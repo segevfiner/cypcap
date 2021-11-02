@@ -33,7 +33,6 @@ jobs:
         git -C gh-pages rm -rf .
         cp -r docs/_build/html/* gh-pages/
         cd gh-pages
-        touch .nojekyll
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .
