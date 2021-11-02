@@ -3,12 +3,15 @@
 This module is a Cython based binding for modern libpcap.
 """
 
+import os
 import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
 from typing import Optional, Union, List, Callable
+
 cimport cython
 from cpython cimport PyObject, PyErr_SetFromErrno
+
 cimport cpcap
 cimport csocket
 
@@ -788,18 +791,18 @@ cdef class Pcap:
 
         return stat
 
-    def dump_open(self, fname: str) -> Dumper:
+    def dump_open(self, fname: os.PathLike) -> Dumper:
         """Open a file to which to write packets."""
         self._check_closed()
 
         cdef Dumper dumper = Dumper.__new__(Dumper)
-        dumper.dumper = cpcap.pcap_dump_open(self.pcap, fname)
+        dumper.dumper = cpcap.pcap_dump_open(self.pcap, os.fspath(fname))
         if not dumper.dumper:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
         return dumper
 
-    def dump_open_append(self, fname: str) -> Dumper:
+    def dump_open_append(self, fname: os.PathLike) -> Dumper:
         """
         Open a file to which to write packets but, if the file already exists, and is a pcap file
         with the same byte order as the host opening the file, and has the same time stamp
@@ -809,7 +812,7 @@ cdef class Pcap:
         self._check_closed()
 
         cdef Dumper dumper = Dumper.__new__(Dumper)
-        dumper.dumper = cpcap.pcap_dump_open_append(self.pcap, fname)
+        dumper.dumper = cpcap.pcap_dump_open_append(self.pcap, os.fspath(fname))
         if not dumper.dumper:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
