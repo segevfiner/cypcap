@@ -796,7 +796,7 @@ cdef class Pcap:
         self._check_closed()
 
         cdef Dumper dumper = Dumper.__new__(Dumper)
-        dumper.dumper = cpcap.pcap_dump_open(self.pcap, os.fspath(fname))
+        dumper.dumper = cpcap.pcap_dump_open(self.pcap, os.fsencode(fname))
         if not dumper.dumper:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
@@ -812,7 +812,7 @@ cdef class Pcap:
         self._check_closed()
 
         cdef Dumper dumper = Dumper.__new__(Dumper)
-        dumper.dumper = cpcap.pcap_dump_open_append(self.pcap, os.fspath(fname))
+        dumper.dumper = cpcap.pcap_dump_open_append(self.pcap, os.fsencode(fname))
         if not dumper.dumper:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
