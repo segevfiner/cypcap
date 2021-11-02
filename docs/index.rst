@@ -2,8 +2,10 @@ Welcome to cypcap's documentation!
 ==================================
 
 .. toctree::
+   :hidden:
    :maxdepth: 2
-   :caption: Contents:
+
+   changelog
 
 Version: |release|
 
