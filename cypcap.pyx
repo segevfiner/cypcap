@@ -818,9 +818,10 @@ cdef class Pcap:
 
         return dumper
 
-    def inject(self, buf: bytes) -> int:
+    def inject(self, const unsigned char[::1] buf) -> int:
         """
-        Transmit a packet.
+        Transmit a packet. *buf* is a object supporting the buffer protocol, e.g. :class:`bytes`,
+        :class:`bytearray`.
 
         .. note::
 
@@ -830,15 +831,16 @@ cdef class Pcap:
         """
         self._check_closed()
 
-        result = cpcap.pcap_inject(self.pcap, <unsigned char*>buf, <int>len(buf))
+        result = cpcap.pcap_inject(self.pcap, &buf[0], <size_t>buf.shape[0])
         if result < 0:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
         return result
 
-    def sendpacket(self, buf: bytes):
+    def sendpacket(self, const unsigned char[::1] buf):
         """
-        Transmit a packet.
+        Transmit a packet. *buf* is a object supporting the buffer protocol, e.g. :class:`bytes`,
+        :class:`bytearray`.
 
         .. note::
 
@@ -848,7 +850,7 @@ cdef class Pcap:
         """
         self._check_closed()
 
-        result = cpcap.pcap_sendpacket(self.pcap, <unsigned char*>buf, <int>len(buf))
+        result = cpcap.pcap_sendpacket(self.pcap, &buf[0], <int>buf.shape[0])
         if result < 0:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
