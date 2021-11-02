@@ -202,6 +202,7 @@ setup(
             library_dirs=library_dirs,
             libraries=libraries,
             extra_link_args=extra_link_args,
+            define_macros=[("CYTHON_TRACE_NOGIL", 1)],
         ),
     ]),
     cmdclass={"build_ext": build_ext},
