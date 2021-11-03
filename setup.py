@@ -195,15 +195,19 @@ setup(
     ],
     keywords="libpcap pcap",
     zip_safe=False,
-    ext_modules=cythonize([
-        Extension(
-            "cypcap", ["cypcap.pyx"],
-            include_dirs=include_dirs,
-            library_dirs=library_dirs,
-            libraries=libraries,
-            extra_link_args=extra_link_args,
-        ),
-    ]),
+    ext_modules=cythonize(
+        [
+            Extension(
+                "cypcap", ["cypcap.pyx"],
+                include_dirs=include_dirs,
+                library_dirs=library_dirs,
+                libraries=libraries,
+                extra_link_args=extra_link_args,
+                # define_macros=[("CYTHON_TRACE_NOGIL", 1)],
+            ),
+        ],
+        # compiler_directives={'linetrace': True},
+    ),
     cmdclass={"build_ext": build_ext},
     python_requires='>=3.6',
     extras_require={
