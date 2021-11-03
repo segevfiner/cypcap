@@ -181,7 +181,7 @@ setup(
     },
     license="BSD-3-Clause",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Topic :: System :: Networking :: Monitoring",
         "License :: OSI Approved :: BSD License",
