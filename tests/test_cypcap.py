@@ -92,7 +92,7 @@ def test_lookupnet(interface, interface_addresses):
     assert interface_addresses[netifaces.AF_INET][0]['netmask'] == socket.inet_ntop(socket.AF_INET, netmask.to_bytes(4, 'little'))
 
 
-def test_iteration(pcap, sender_pcap, echo_pkt):
+def test_inject_capture(pcap, sender_pcap, echo_pkt):
     sender_pcap.inject(bytes(echo_pkt))
 
     for pkthdr, data in pcap:
@@ -104,6 +104,49 @@ def test_iteration(pcap, sender_pcap, echo_pkt):
 
     assert bytes(echo_pkt) == bytes(captured_pkt)
     assert repr(captured_pkthdr)
+
+
+def test_sendpacket_capture(pcap, sender_pcap, echo_pkt):
+    sender_pcap.sendpacket(bytes(echo_pkt))
+
+    for pkthdr, data in pcap:
+        if pkthdr is None:
+            continue
+
+        captured_pkt = dpkt.ethernet.Ethernet(data)
+        break
+
+    assert bytes(echo_pkt) == bytes(captured_pkt)
+
+
+def test_stats(pcap, sender_pcap, echo_pkt):
+    sender_pcap.inject(bytes(echo_pkt))
+
+    for pkthdr, data in pcap:
+        if pkthdr is None:
+            continue
+
+        captured_pkthdr, captured_pkt = pkthdr, dpkt.ethernet.Ethernet(data)
+        break
+
+    assert bytes(echo_pkt) == bytes(captured_pkt)
+
+    stats = pcap.stats()
+    assert repr(stats)
+    assert stats.recv == 1
+    assert stats.drop == 0
+    assert stats.ifdrop == 0
+
+
+def test_setfilter(interface, pcap, sender_pcap, echo_pkt):
+    sender_pcap.sendpacket(bytes(echo_pkt))
+
+    _, netmask = cypcap.lookupnet(interface)
+    bpf = pcap.compile("tcp", True, netmask)
+    pcap.setfilter(bpf)
+    pcap.setnonblock(True)
+
+    assert next(pcap) == (None, None)
 
 
 def test_loop(pcap, sender_pcap, echo_pkt):
@@ -211,19 +254,6 @@ def test_open_offline(tmp_path, echo_pkt):
         assert not dump.is_swapped()
         for i, (pkthdr, data) in enumerate(dump):
             assert bytes(dpkt.ethernet.Ethernet(data)) == bytes(packets[i])
-
-
-def test_sendpacket_capture(pcap, sender_pcap, echo_pkt):
-    sender_pcap.sendpacket(bytes(echo_pkt))
-
-    for pkthdr, data in pcap:
-        if pkthdr is None:
-            continue
-
-        captured_pkt = dpkt.ethernet.Ethernet(data)
-        break
-
-    assert bytes(echo_pkt) == bytes(captured_pkt)
 
 
 def test_capture_dump(pcap, sender_pcap, echo_pkt, tmp_path):

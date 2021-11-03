@@ -784,7 +784,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_geterr(self.pcap).decode())
 
-    def setdirection(self, d):
+    def setdirection(self, d: Direction):
         """Set the direction for which packets will be captured."""
         self._check_closed()
 
