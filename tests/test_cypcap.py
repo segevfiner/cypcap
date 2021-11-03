@@ -133,7 +133,7 @@ def test_stats(pcap, sender_pcap, echo_pkt):
 
     stats = pcap.stats()
     assert repr(stats)
-    assert stats.recv == 1
+    assert stats.recv >= 1
     assert stats.drop == 0
     assert stats.ifdrop == 0
 
