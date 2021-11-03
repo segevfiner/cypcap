@@ -17,6 +17,10 @@ Changed
   deprecated ``old_build_ext`` and keyed off whether to generate C sources on whether Cython is
   installed).
 
+Fixed
+^^^^^
+* ``NETMASK_UNKNOWN`` was of the wrong type.
+
 v0.1.0b1 (2021-10-26)
 ---------------------
 Initial beta release. Only tested manually and lightly.
