@@ -17,7 +17,7 @@ cimport cpcap
 cimport csocket
 
 
-__version__ = u"0.1.0b1"
+__version__ = u"0.1.0"
 
 
 include "npcap.pxi"
