@@ -8,6 +8,27 @@ from setuptools.command.build_ext import build_ext as _build_ext
 from distutils.errors import CompileError, LinkError
 
 
+USE_CYTHON = os.path.exists(".git")
+
+if USE_CYTHON:
+    from Cython.Build import cythonize
+else:
+    def cythonize(extensions, **_ignore):
+        for extension in extensions:
+            sources = []
+            for sfile in extension.sources:
+                path, ext = os.path.splitext(sfile)
+                if ext in ('.pyx', '.py'):
+                    if extension.language == 'c++':
+                        ext = '.cpp'
+                    else:
+                        ext = '.c'
+                    sfile = path + ext
+                sources.append(sfile)
+            extension.sources[:] = sources
+        return extensions
+
+
 with open("cypcap.pyx", "r", encoding="utf-8") as f:
     version = re.search(r'(?m)^__version__ = u"([a-zA-Z0-9.-]+)"', f.read()).group(1)
 
@@ -174,20 +195,20 @@ setup(
     ],
     keywords="libpcap pcap",
     zip_safe=False,
-    ext_modules=[
+    ext_modules=cythonize([
         Extension(
             "cypcap", ["cypcap.pyx"],
             include_dirs=include_dirs,
             library_dirs=library_dirs,
             libraries=libraries,
             extra_link_args=extra_link_args,
-            depends=["cpcap.pxd", "csocket.pxd", "npcap.pxi"],
         ),
-    ],
+    ]),
     cmdclass={"build_ext": build_ext},
     python_requires='>=3.6',
     extras_require={
         "dev": [
+            "cython>=0.29.24",
             "sphinx==4.*",
             "pytest",
             "dpkt",
