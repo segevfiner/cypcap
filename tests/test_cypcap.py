@@ -158,7 +158,7 @@ def test_sendpacket_capture(pcap, sender_pcap, echo_pkt):
     assert bytes(echo_pkt) == bytes(captured_pkt)
 
 
-def test_dump(pcap, sender_pcap, echo_pkt, tmp_path):
+def test_capture_dump(pcap, sender_pcap, echo_pkt, tmp_path):
     dump_file = tmp_path / "dump.pcap"
 
     packets = []
