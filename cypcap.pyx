@@ -1,4 +1,4 @@
-# cython: language_level=3str, binding=True, linetrace=True
+# cython: language_level=3str, binding=True
 """
 This module is a Cython based binding for modern libpcap.
 """
