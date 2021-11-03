@@ -100,7 +100,7 @@ def test_inject_capture(pcap, sender_pcap, echo_pkt):
     assert repr(captured_pkthdr)
 
 
-def test_openlive(interface, sender_pcap, echo_pkt):
+def test_open_live(interface, sender_pcap, echo_pkt):
     with cypcap.open_live(interface, 65536, True, 1000) as pcap:
         sender_pcap.inject(bytes(echo_pkt))
 
@@ -113,6 +113,11 @@ def test_openlive(interface, sender_pcap, echo_pkt):
 
         assert bytes(echo_pkt) == bytes(captured_pkt)
         assert repr(captured_pkthdr)
+
+
+def test_open_dead():
+    with cypcap.open_dead(cypcap.DatalinkType.EN10MB, 65536) as pcap:
+        assert pcap.compile("tcp", True, cypcap.NETMASK_UNKNOWN) is not None
 
 
 def test_sendpacket_capture(pcap, sender_pcap, echo_pkt):

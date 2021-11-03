@@ -185,7 +185,7 @@ class Direction(enum.IntEnum):
     OUT = cpcap.PCAP_D_OUT
 
 
-NETMASK_UNKNOWN = cpcap.PCAP_NETMASK_UNKNOWN
+NETMASK_UNKNOWN = <cpcap.bpf_u_int32>cpcap.PCAP_NETMASK_UNKNOWN
 
 
 class TstampType(enum.IntEnum):
