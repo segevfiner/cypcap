@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.1.1 (2021-11-03)
+-------------------
+
+Fixed
+^^^^^
+* ``cypcap.pyx`` was missing from sdist due to ``cythonize``. (Bug in Cython?)
+
 v0.1.0 (2021-11-03)
 -------------------
 
