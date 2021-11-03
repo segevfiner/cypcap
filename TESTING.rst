@@ -20,6 +20,12 @@ Testing Setup
 
 Run pytest with `--interface=<iface>`, e.g. `--interface=dummy0`
 
+Coverage
+--------
+1. Uncomment ``define_macros=[("CYTHON_TRACE_NOGIL", 1)],`` & ``compiler_directives={'linetrace':
+   True},`` in ``setup.py``.
+2. Rebuild.
+
 VS Code
 -------
 ``.vscode/setting.json``:
