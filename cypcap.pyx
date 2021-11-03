@@ -10,6 +10,7 @@ import warnings
 from typing import Optional, Union, List, Callable
 
 cimport cython
+from libc cimport stdio
 from cpython cimport PyObject, PyErr_SetFromErrno
 
 cimport cpcap
@@ -22,6 +23,7 @@ __version__ = u"0.1.0b1"
 include "npcap.pxi"
 
 
+# TODO This is a really big enumeration, add more values as requested
 class DatalinkType(enum.IntEnum):
     """Datalink types."""
     NULL_ = cpcap.DLT_NULL
@@ -35,6 +37,12 @@ class DatalinkType(enum.IntEnum):
     SLIP = cpcap.DLT_SLIP
     PPP = cpcap.DLT_PPP
     FDDI = cpcap.DLT_FDDI
+
+    RAW = cpcap.DLT_RAW
+
+    IEEE802_11_RADIO = cpcap.DLT_IEEE802_11_RADIO
+
+    DOCSIS = cpcap.DLT_DOCSIS
 
     @property
     def description(self) -> str:
@@ -883,6 +891,7 @@ cdef class BpfProgram:
         .. note:: Sadly the dumping function doesn't take an output stream...
         """
         cpcap.bpf_dump(&self.bpf_prog, option)
+        stdio.fflush(stdio.stdout)
 
 
 cdef class Dumper:

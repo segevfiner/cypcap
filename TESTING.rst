@@ -24,7 +24,7 @@ Coverage
 --------
 1. Uncomment ``define_macros=[("CYTHON_TRACE_NOGIL", 1)],`` & ``compiler_directives={'linetrace':
    True},`` in ``setup.py``.
-2. Rebuild.
+2. Rebuild. (May have to manually delete ``cypcap.c``)
 
 VS Code
 -------

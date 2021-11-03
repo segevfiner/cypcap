@@ -1,3 +1,4 @@
+import sys
 import socket
 import copy
 
@@ -91,7 +92,7 @@ def test_lookupnet(interface, interface_addresses):
     assert interface_addresses[netifaces.AF_INET][0]['netmask'] == socket.inet_ntop(socket.AF_INET, netmask.to_bytes(4, 'little'))
 
 
-def test_inject_capture(pcap, sender_pcap, echo_pkt):
+def test_iteration(pcap, sender_pcap, echo_pkt):
     sender_pcap.inject(bytes(echo_pkt))
 
     for pkthdr, data in pcap:
@@ -103,6 +104,54 @@ def test_inject_capture(pcap, sender_pcap, echo_pkt):
 
     assert bytes(echo_pkt) == bytes(captured_pkt)
     assert repr(captured_pkthdr)
+
+
+def test_loop(pcap, sender_pcap, echo_pkt):
+    sender_pcap.inject(bytes(echo_pkt))
+
+    def callback(pkthdr, data):
+        pkt = dpkt.ethernet.Ethernet(data)
+        assert bytes(echo_pkt) == bytes(pkt)
+
+    pcap.loop(1, callback)
+
+
+def test_breakloop(pcap, sender_pcap, echo_pkt):
+    sender_pcap.inject(bytes(echo_pkt))
+    sender_pcap.inject(bytes(echo_pkt))
+
+    captured = 0
+    def callback(pkthdr, data):
+        nonlocal captured
+        pkt = dpkt.ethernet.Ethernet(data)
+        assert bytes(echo_pkt) == bytes(pkt)
+        captured += 1
+        pcap.breakloop()
+
+    with pytest.raises(cypcap.Error, match="BREAK"):
+        pcap.loop(2, callback)
+
+    assert captured == 1
+
+
+def test_loop_exception(pcap, sender_pcap, echo_pkt):
+    sender_pcap.inject(bytes(echo_pkt))
+
+    def callback(pkthdr, data):
+        raise ValueError(1234)
+
+    with pytest.raises(ValueError, match="1234"):
+        pcap.loop(1, callback)
+
+
+def test_dispatch(pcap, sender_pcap, echo_pkt):
+    sender_pcap.inject(bytes(echo_pkt))
+
+    def callback(pkthdr, data):
+        pkt = dpkt.ethernet.Ethernet(data)
+        assert bytes(echo_pkt) == bytes(pkt)
+
+    pcap.dispatch(1, callback)
 
 
 def test_create_interface_obj(interface_obj, sender_pcap, echo_pkt):
@@ -145,6 +194,25 @@ def test_open_dead():
         assert pcap.compile("tcp", True, cypcap.NETMASK_UNKNOWN) is not None
 
 
+def test_open_offline(tmp_path, echo_pkt):
+    packets = []
+    for i in range(1, 5):
+        pkt = copy.deepcopy(echo_pkt)
+        pkt.data.data.data.seq = i
+        packets.append(pkt)
+
+    dump_file = tmp_path / "dump.pcap"
+    with open(dump_file, "wb") as f:
+        writer = dpkt.pcap.Writer(f, 65536)
+        for pkt in packets:
+            writer.writepkt(pkt)
+
+    with cypcap.open_offline(dump_file) as dump:
+        assert not dump.is_swapped()
+        for i, (pkthdr, data) in enumerate(dump):
+            assert bytes(dpkt.ethernet.Ethernet(data)) == bytes(packets[i])
+
+
 def test_sendpacket_capture(pcap, sender_pcap, echo_pkt):
     sender_pcap.sendpacket(bytes(echo_pkt))
 
@@ -164,6 +232,7 @@ def test_capture_dump(pcap, sender_pcap, echo_pkt, tmp_path):
     packets = []
     for i in range(1, 5):
         pkt = copy.deepcopy(echo_pkt)
+        pkt.data.data.data.seq = i
         packets.append(pkt)
         sender_pcap.inject(bytes(pkt))
 
@@ -175,6 +244,7 @@ def test_capture_dump(pcap, sender_pcap, echo_pkt, tmp_path):
 
             dump.dump(pkthdr, data)
             captured += 1
+            assert dump.ftell() > 0
 
             if captured == 4:
                 break
@@ -184,10 +254,89 @@ def test_capture_dump(pcap, sender_pcap, echo_pkt, tmp_path):
             assert bytes(dpkt.ethernet.Ethernet(data)) == bytes(packets[i])
 
 
+def test_capture_dump_nanoseconds(interface, sender_pcap, echo_pkt, tmp_path):
+    dump_file = tmp_path / "dump.pcap"
+
+    captured = 0
+    with cypcap.create(interface) as pcap:
+        pcap.set_snaplen(65536)
+        pcap.set_promisc(True)
+        pcap.set_timeout(1000)
+        pcap.set_tstamp_precision(cypcap.TstampPrecision.NANO)
+        pcap.activate()
+
+        packets = []
+        for i in range(1, 5):
+            pkt = copy.deepcopy(echo_pkt)
+            pkt.data.data.data.seq = i
+            packets.append(pkt)
+            sender_pcap.inject(bytes(pkt))
+
+        with pcap.dump_open(dump_file) as dump:
+            for pkthdr, data in pcap:
+                if pkthdr is None:
+                    continue
+
+                dump.dump(pkthdr, data)
+                captured += 1
+                assert dump.ftell() > 0
+
+                if captured == 4:
+                    break
+
+    with cypcap.open_offline(dump_file, cypcap.TstampPrecision.NANO) as dump:
+        for i, (pkthdr, data) in enumerate(dump):
+            assert bytes(dpkt.ethernet.Ethernet(data)) == bytes(packets[i])
+
+
+def test_datalink(pcap):
+    assert pcap.datalink() == cypcap.DatalinkType.EN10MB
+
+
+def test_snapshot(pcap):
+    assert pcap.snapshot() == 65536
+
+
+def test_is_swapped(pcap):
+    assert not pcap.is_swapped()
+
+
+def test_nonblock(pcap):
+    assert not pcap.getnonblock()
+    pcap.setnonblock(True)
+    assert pcap.getnonblock()
+
+    assert next(pcap) == (None, None)
+
+
+def test_can_set_rfmon(pcap):
+    assert isinstance(pcap.can_set_rfmon(), bool)
+
+
+def test_list_tstamp_types(pcap):
+    tstamp_types = pcap.list_tstamp_types()
+    assert len(tstamp_types) > 0
+    assert cypcap.TstampType.HOST in tstamp_types
+
+
+def test_list_datalinks(pcap):
+    datalinks = pcap.list_datalinks()
+    assert len(datalinks) > 0
+    assert cypcap.DatalinkType.EN10MB in datalinks
+
+
 def test_nonexistent_interface():
     with pytest.raises(cypcap.Error):
         pcap = cypcap.create("nonexistent0")
         pcap.activate()
+
+
+def test_compile_dump(capfd):
+    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
+    bpf.dump()
+    sys.stdout.flush()
+    captured = capfd.readouterr()
+    assert len(captured.out) > 0
 
 
 def test_lib_version():

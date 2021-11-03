@@ -81,6 +81,12 @@ cdef extern from "<pcap/pcap.h>" nogil:
         DLT_PPP
         DLT_FDDI
 
+        DLT_RAW
+
+        DLT_IEEE802_11_RADIO
+
+        DLT_DOCSIS
+
     struct bpf_insn:
         unsigned short	code
         unsigned char 	jt
@@ -171,8 +177,7 @@ cdef extern from "<pcap/pcap.h>" nogil:
         PCAP_WARNING_PROMISC_NOTSUP
         PCAP_WARNING_TSTAMP_TYPE_NOTSUP
 
-    enum:
-        PCAP_NETMASK_UNKNOWN
+    enum: PCAP_NETMASK_UNKNOWN
 
     int pcap_init(unsigned int, char *)
 
