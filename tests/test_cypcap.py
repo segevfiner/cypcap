@@ -55,6 +55,11 @@ def sender_pcap(interface):
         yield pcap
 
 
+@pytest.fixture
+def interface_obj(interface):
+    return next((dev for dev in cypcap.findalldevs() if dev.name == interface), None)
+
+
 def test_datalink_description():
     assert cypcap.DatalinkType.EN10MB.description == "Ethernet"
 
@@ -98,6 +103,26 @@ def test_inject_capture(pcap, sender_pcap, echo_pkt):
 
     assert bytes(echo_pkt) == bytes(captured_pkt)
     assert repr(captured_pkthdr)
+
+
+def test_create_interface_obj(interface_obj, sender_pcap, echo_pkt):
+     with cypcap.create(interface_obj) as pcap:
+        pcap.set_snaplen(65536)
+        pcap.set_promisc(True)
+        pcap.set_timeout(1000)
+        pcap.activate()
+
+        sender_pcap.inject(bytes(echo_pkt))
+
+        for pkthdr, data in pcap:
+            if pkthdr is None:
+                continue
+
+            captured_pkthdr, captured_pkt = pkthdr, dpkt.ethernet.Ethernet(data)
+            break
+
+        assert bytes(echo_pkt) == bytes(captured_pkt)
+        assert repr(captured_pkthdr)
 
 
 def test_open_live(interface, sender_pcap, echo_pkt):
