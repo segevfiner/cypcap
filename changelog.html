@@ -48,6 +48,9 @@
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">dump_open</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">dump_open_append</span></code>.</p></li>
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">open_offline</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">inject</span></code> and <code class="docutils literal notranslate"><span class="pre">sendpacket</span></code> now take an object implementing the buffer protocol.</p></li>
+<li><p>Switch to using <code class="docutils literal notranslate"><span class="pre">cythonize</span></code> in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> (The built-in setuptools integration uses the
+deprecated <code class="docutils literal notranslate"><span class="pre">old_build_ext</span></code> and keyed off whether to generate C sources on whether Cython is
+installed).</p></li>
 </ul>
 </section>
 </section>
