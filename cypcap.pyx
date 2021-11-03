@@ -187,7 +187,7 @@ class ErrorCode(enum.IntEnum):
 
 
 class Direction(enum.IntEnum):
-    """Direction for :func:`setdirection`."""
+    """Direction for :meth:`Pcap.setdirection`."""
     INOUT = cpcap.PCAP_D_INOUT
     IN = cpcap.PCAP_D_IN
     OUT = cpcap.PCAP_D_OUT
