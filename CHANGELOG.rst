@@ -12,12 +12,9 @@ Added
 
 Changed
 ^^^^^^^
-* ``BpfProgram.dump`` renamed to ``BpfProgram.debug_dump``.
-
-Changed
-^^^^^^^
 * Change ``findalldevs`` interface address parsing to use the same format as the ``socket``
   module and add support for ``AF_PACKET`` ``sockaddr_ll`` used in Linux.
+* ``BpfProgram.dump`` renamed to ``BpfProgram.debug_dump``.
 
 v0.1.1 (2021-11-03)
 -------------------
