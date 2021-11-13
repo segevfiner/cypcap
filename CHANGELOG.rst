@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+Added
+^^^^^
+* ``Pkthdr`` can be created from Python and is mutable (Useful for ``bpf.offline_filter``).
+
 v0.1.1 (2021-11-03)
 -------------------
 

@@ -17,7 +17,7 @@ cimport cpcap
 cimport csocket
 
 
-__version__ = u"0.1.1"
+__version__ = u"0.2.0"
 
 
 include "npcap.pxi"
@@ -291,6 +291,12 @@ cdef class Pkthdr:
     """
     cdef cpcap.pcap_pkthdr pkthdr
 
+    def __init__(self, double ts: float=0.0, int caplen=0, len: int=0):
+        self.pkthdr.ts.tv_sec = <long>ts
+        self.pkthdr.ts.tv_usec = <long>(ts * 1000000 % 1000000)
+        self.pkthdr.caplen = caplen
+        self.pkthdr.len = len
+
     @staticmethod
     cdef from_ptr(const cpcap.pcap_pkthdr* pkthdr):
         cdef Pkthdr self = Pkthdr.__new__(Pkthdr)
@@ -305,6 +311,11 @@ cdef class Pkthdr:
         """Timestamp."""
         return self.pkthdr.ts.tv_sec + self.pkthdr.ts.tv_usec / 1000000
 
+    @ts.setter
+    def ts(self, double ts: float):
+        self.pkthdr.ts.tv_sec = <long>ts
+        self.pkthdr.ts.tv_usec = <long>(ts * 1000000 % 1000000)
+
     # TODO Consider a ts_datetime property that returns ts as a datetime (What about the timezone though...)
 
     @property
@@ -312,10 +323,18 @@ cdef class Pkthdr:
         """Length of portion present."""
         return self.pkthdr.caplen
 
+    @caplen.setter
+    def caplen(self, caplen: int):
+        self.pkthdr.caplen = caplen
+
     @property
     def len(self) -> int:
         """Length of this packet (off wire)."""
         return self.pkthdr.len
+
+    @len.setter
+    def len(self, len: int):
+        self.pkthdr.len = len
 
 
 @cython.freelist(8)
