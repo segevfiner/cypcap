@@ -16,13 +16,6 @@ jobs:
       # Used to host cibuildwheel
       - uses: actions/setup-python@v2
 
-      - name: Install dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          sudo apt update
-          sudo apt install -y libpcap-dev
-
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
@@ -40,6 +33,9 @@ jobs:
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.2.2
         env:
+          CIBW_BEFORE_ALL_LINUX: >
+            sudo apt update &&
+            sudo apt install -y libpcap-dev
           CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=$NPCAP_SDK
 
       - name: Build wheels
