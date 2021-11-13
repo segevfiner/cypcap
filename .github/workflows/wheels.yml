@@ -7,9 +7,9 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        # ubuntu-20.04
-        os: [windows-2019, macOS-10.15]
+        os: [ubuntu-20.04, windows-2019, macOS-10.15]
 
     steps:
       - uses: actions/checkout@v2
@@ -41,7 +41,13 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BEFORE_ALL_LINUX: >
-            yum install -y libpcap-devel
+            curl https://www.tcpdump.org/release/libpcap-1.10.1.tar.gz -O &&
+            tar xf libpcap-1.10.1.tar.gz &&
+            cd libpcap-1.10.1
+            yum install -y flex bison
+            ./configure
+            make -j2
+            make install
           CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=$NPCAP_SDK
 
       - uses: actions/upload-artifact@v2
