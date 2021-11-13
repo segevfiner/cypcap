@@ -7,6 +7,12 @@ Unreleased
 Added
 ^^^^^
 * ``Pkthdr`` can be created from Python and is mutable (Useful for ``bpf.offline_filter``).
+* Add ``BpfProgram.dumps``/``BpfProgram.loads`` to dump and load the filter in the format used by
+  iptables, tc-bpf, etc.
+
+Changed
+^^^^^^^
+* ``BpfProgram.dump`` renamed to ``BpfProgram.debug_dump``.
 
 v0.1.1 (2021-11-03)
 -------------------

@@ -11,6 +11,7 @@ from typing import Optional, Union, List, Callable
 
 cimport cython
 from libc cimport stdio
+from libc.stdlib cimport malloc, free
 from cpython cimport PyObject, PyErr_SetFromErrno
 
 cimport cpcap
@@ -886,7 +887,7 @@ cdef class Pcap:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
 
-# TODO Support dumping/loading bytecode, __getitem__?
+# TODO Support __getitem__?
 cdef class BpfProgram:
     """
     A BPF filter program for :meth:`Pcap.setfilter`.
@@ -894,16 +895,20 @@ cdef class BpfProgram:
     Can be created via :meth:`Pcap.compile`.
     """
     cdef cpcap.bpf_program bpf_prog
+    cdef bint use_free
 
     def __dealloc__(self):
         if self.bpf_prog.bf_insns:
-            cpcap.pcap_freecode(&self.bpf_prog)
+            if self.use_free:
+                free(self.bpf_prog.bf_insns)
+            else:
+                cpcap.pcap_freecode(&self.bpf_prog)
 
     def offline_filter(self, pkt_header: Pkthdr, pkt_data: bytes) -> bool:
         """Check whether a filter matches a packet."""
         return cpcap.pcap_offline_filter(&self.bpf_prog, &pkt_header.pkthdr, pkt_data)
 
-    def dump(self, option=0):
+    def debug_dump(self, option: int=0):
         """
         Dump the filter to stdout.
 
@@ -911,6 +916,43 @@ cdef class BpfProgram:
         """
         cpcap.bpf_dump(&self.bpf_prog, option)
         stdio.fflush(stdio.stdout)
+
+    def dumps(self):
+        """Dump the BPF filter in the format used by iptables, tc-bpf, etc."""
+        out = []
+
+        out.append(f"{self.bpf_prog.bf_len},")
+
+        for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len-1]:
+            out.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k},")
+
+        insn = self.bpf_prog.bf_insns[self.bpf_prog.bf_len-1]
+        out.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
+
+        return ''.join(out)
+
+    @staticmethod
+    def loads(s: str):
+        """Load a BPF filter in the format used by iptables, tc-bpf, etc."""
+        cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
+
+        length, *insns = s.split(',')
+
+        if len(insns) != length:
+            raise ValueError("invalid BPF bytecode")
+
+        self.use_free = True
+        self.bpf_prog.bf_len = length
+        self.bpf_prog.bf_insns = <cpcap.bpf_insn*>malloc(self.bpf_prog.bf_len * sizeof(cpcap.bpf_insn))
+
+        for i, insn in enumerate(insns):
+            code, jt, jf, k = insn.split(None, 4)
+            self.bpf_prog.bf_insns[i].code = int(code)
+            self.bpf_prog.bf_insns[i].jt = int(jt)
+            self.bpf_prog.bf_insns[i].jf = int(jf)
+            self.bpf_prog.bf_insns[i].k = int(k)
+
+        return self
 
 
 cdef class Dumper:
