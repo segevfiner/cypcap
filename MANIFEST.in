@@ -1,2 +1,3 @@
 include cypcap.c
 include *.pyx *.pxd *.pxi
+include LICENSE-PSF

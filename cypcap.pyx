@@ -17,6 +17,9 @@ cimport cpcap
 cimport csocket
 
 
+cdef extern object makesockaddr(csocket.sockaddr*)
+
+
 __version__ = u"0.2.0"
 
 
@@ -224,23 +227,25 @@ class PcapAddr:
     """
     Pcap interface address.
 
+    Addresses are in the same format as used by the :mod:`socket` module.
+
     .. attribute:: addr
-       :type: str
+       :type: tuple
 
        Address.
 
     .. attribute:: netmask
-       :type: str
+       :type: tuple
 
        Netmask for the address.
 
     .. attribute:: broadaddr
-       :type: str
+       :type: Optional[tuple]
 
        Broadcast address for that address.
 
     .. attribute:: dstaddr
-       :type: Optional[str]
+       :type: Optional[tuple]
 
        P2P destination address for that address.
     """
@@ -257,31 +262,11 @@ class PcapAddr:
 
 cdef object PcapAddr_from_c(cpcap.pcap_addr* addr):
     return PcapAddr(
-        makesockaddr_addr(addr.addr),
-        makesockaddr_addr(addr.netmask),
-        makesockaddr_addr(addr.broadaddr),
-        makesockaddr_addr(addr.dstaddr),
+        makesockaddr(addr.addr),
+        makesockaddr(addr.netmask),
+        makesockaddr(addr.broadaddr),
+        makesockaddr(addr.dstaddr),
     )
-
-
-cdef makesockaddr_addr(csocket.sockaddr* addr):
-    cdef char inet_buf[csocket.INET_ADDRSTRLEN]
-    cdef char inet6_buf[csocket.INET6_ADDRSTRLEN]
-
-    if not addr:
-        return None
-    elif addr.sa_family == csocket.AF_INET:
-        if not csocket.inet_ntop(csocket.AF_INET, &(<csocket.sockaddr_in*>addr).sin_addr, inet_buf, sizeof(inet_buf)):
-            PyErr_SetFromErrno(OSError)
-        return inet_buf.decode()
-    elif addr.sa_family == csocket.AF_INET6:
-        if not csocket.inet_ntop(csocket.AF_INET6, &(<csocket.sockaddr_in6*>addr).sin6_addr, inet6_buf, sizeof(inet6_buf)):
-            PyErr_SetFromErrno(OSError)
-        return inet6_buf.decode()
-    else:
-        # TODO What should we do for unknown sa_family? We don't even know the right size to copy it
-        # raw...
-        return (<unsigned char*>addr)[:sizeof(csocket.sockaddr)]
 
 
 @cython.freelist(8)

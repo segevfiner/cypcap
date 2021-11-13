@@ -198,7 +198,7 @@ setup(
     ext_modules=cythonize(
         [
             Extension(
-                "cypcap", ["cypcap.pyx"],
+                "cypcap", ["cypcap.pyx", "sockaddr.c"],
                 include_dirs=include_dirs,
                 library_dirs=library_dirs,
                 libraries=libraries,
