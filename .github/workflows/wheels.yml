@@ -37,8 +37,8 @@ jobs:
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BEFORE_ALL_LINUX: >
-            sudo apt update &&
-            sudo apt install -y libpcap-dev
+            apt update &&
+            apt install -y libpcap-dev
           CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=$NPCAP_SDK
 
       - uses: actions/upload-artifact@v2
