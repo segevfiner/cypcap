@@ -163,7 +163,7 @@ def test_setfilter(interface, pcap, sender_pcap, echo_pkt):
     assert next(pcap) == (None, None)
 
 
-def test_setdirection(interface, pcap, sender_pcap, echo_pkt):
+def test_setdirection(pcap, sender_pcap, echo_pkt):
     # TODO setdirection is not available on all platforms, so we might later need to add a
     # try/except here to skip this test if it is not supported
     sender_pcap.sendpacket(bytes(echo_pkt))
