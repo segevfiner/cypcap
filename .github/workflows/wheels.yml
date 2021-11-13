@@ -16,6 +16,27 @@ jobs:
       # Used to host cibuildwheel
       - uses: actions/setup-python@v2
 
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          sudo apt update
+          sudo apt install -y libpcap-dev
+
+      - name: Install dependencies
+        if: runner.os == 'Windows'
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          Invoke-WebRequest https://nmap.org/npcap/dist/npcap-sdk-1.11.zip -OutFile npcak-sdk.zip
+          Expand-Archive npcap-sdk.zip
+          echo "NPCAP_SDK=$(Resolve-Path npcap-sdk)" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        if: runner.os == 'macOS'
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          brew install libpcap
+
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.2.2
 
