@@ -41,10 +41,10 @@ jobs:
           CIBW_BEFORE_ALL_LINUX: >
             curl https://www.tcpdump.org/release/libpcap-1.10.1.tar.gz -O &&
             tar xf libpcap-1.10.1.tar.gz &&
-            cd libpcap-1.10.1
-            yum install -y flex bison
-            ./configure
-            make -j2
+            cd libpcap-1.10.1 &&
+            yum install -y flex bison &&
+            ./configure &&
+            make -j2 &&
             make install
           CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=$NPCAP_SDK
 
