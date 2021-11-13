@@ -38,7 +38,7 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_SKIP: '*-musllinux*'
+          CIBW_SKIP: 'pp* *-musllinux*'
           CIBW_BEFORE_ALL_LINUX: >
             curl https://www.tcpdump.org/release/libpcap-1.10.1.tar.gz -O &&
             tar xf libpcap-1.10.1.tar.gz &&
