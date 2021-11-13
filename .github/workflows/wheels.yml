@@ -23,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           Invoke-WebRequest https://nmap.org/npcap/dist/npcap-sdk-1.11.zip -OutFile npcap-sdk.zip
           Expand-Archive npcap-sdk.zip
-          echo "NPCAP_SDK=$(Resolve-Path npcap-sdk)" >> $GITHUB_ENV
+          echo "NPCAP_SDK=$(Resolve-Path npcap-sdk)" >> $env:GITHUB_ENV
 
       - name: Install dependencies (macOS)
         if: runner.os == 'macOS'
