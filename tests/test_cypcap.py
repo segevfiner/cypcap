@@ -498,9 +498,9 @@ def test_offline_filter(echo_pkt):
     assert not bpf.offline_filter(pkthdr, data)
 
 
-def test_compile_dump(capfd):
+def test_compile_debug_dump(capfd):
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    bpf.dump()
+    bpf.debug_dump()
     sys.stdout.flush()
     captured = capfd.readouterr()
     assert len(captured.out) > 0
