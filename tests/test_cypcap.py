@@ -498,12 +498,26 @@ def test_offline_filter(echo_pkt):
     assert not bpf.offline_filter(pkthdr, data)
 
 
-def test_compile_dump(capfd):
+def test_compile_debug_dump(capfd):
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    bpf.dump()
-    sys.stdout.flush()
+    bpf.debug_dump()
     captured = capfd.readouterr()
     assert len(captured.out) > 0
+
+
+def test_compile_dumps_loads(capfd):
+    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
+    bpf.debug_dump()
+    debug_dump1 = capfd.readouterr()
+
+    dump = bpf.dumps()
+    assert isinstance(dump, str)
+
+    bpf2 = cypcap.BpfProgram.loads(dump)
+    bpf2.debug_dump()
+    debug_dump2 = capfd.readouterr()
+
+    assert debug_dump1 == debug_dump2
 
 
 def test_lib_version():
