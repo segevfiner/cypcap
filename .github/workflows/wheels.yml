@@ -35,11 +35,14 @@ jobs:
         run: python -m pip install cibuildwheel==2.2.2
 
       - name: Build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse
+        run: |
+          ls $NPCAP_SDK
+          echo $CIBW_ENVIRONMENT_WINDOWS
+          python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BEFORE_ALL_LINUX: >
             yum install -y libpcap-devel
-          CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=${{ env.NPCAP_SDK }}
+          CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=$NPCAP_SDK
 
       - uses: actions/upload-artifact@v2
         with:
