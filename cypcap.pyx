@@ -937,6 +937,7 @@ cdef class BpfProgram:
         cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
 
         length, *insns = s.split(',')
+        length = int(length)
 
         if len(insns) != length:
             raise ValueError("invalid BPF bytecode")
