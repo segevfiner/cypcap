@@ -8,7 +8,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macOS-10.15]
+        # ubuntu-20.04
+        os: [windows-2019, macOS-10.15]
 
     steps:
       - uses: actions/checkout@v2
@@ -37,8 +38,7 @@ jobs:
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BEFORE_ALL_LINUX: >
-            apt update &&
-            apt install -y libpcap-dev
+            yum install -y libpcap-devel
           CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=$NPCAP_SDK
 
       - uses: actions/upload-artifact@v2
