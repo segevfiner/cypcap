@@ -402,7 +402,7 @@ def create(source: Union[str, PcapIf]) -> Pcap:
     if not pcap:
         raise Error(ErrorCode.ERROR, errbuf.decode())
 
-    return Pcap.from_ptr(pcap)
+    return Pcap.from_ptr(pcap, PcapType.LIVE, source)
 
 
 def open_live(device: Union[str, PcapIf], snaplen: int, promisc: bool, double to_ms: float) -> Pcap:
@@ -420,13 +420,13 @@ def open_live(device: Union[str, PcapIf], snaplen: int, promisc: bool, double to
     if not pcap:
         raise Error(ErrorCode.ERROR, errbuf.decode())
 
-    return Pcap.from_ptr(pcap)
+    return Pcap.from_ptr(pcap, PcapType.LIVE, device)
 
 
 cpdef Pcap open_dead(linktype: DatalinkType, snaplen: int, precision: TstampPrecision=TstampPrecision.MICRO):
     """Open a fake Pcap for compiling filters or opening a capture for output."""
     cdef cpcap.pcap_t* pcap = cpcap.pcap_open_dead_with_tstamp_precision(linktype, snaplen, precision)
-    return Pcap.from_ptr(pcap)
+    return Pcap.from_ptr(pcap, PcapType.DEAD)
 
 
 def open_offline(fname: os.PathLike, precision: TstampPrecision=TstampPrecision.MICRO) -> Pcap:
@@ -436,7 +436,7 @@ def open_offline(fname: os.PathLike, precision: TstampPrecision=TstampPrecision.
     if not pcap:
         raise Error(ErrorCode.ERROR, errbuf.decode())
 
-    return Pcap.from_ptr(pcap)
+    return Pcap.from_ptr(pcap, PcapType.OFFLINE, os.fsdecode(fname))
 
 
 def compile(linktype: DatalinkType, snaplen: int, filter_: str, optimize: bool, netmask: int) -> BpfProgram:
@@ -448,6 +448,13 @@ def compile(linktype: DatalinkType, snaplen: int, filter_: str, optimize: bool, 
     """
     with open_dead(linktype, snaplen) as pcap:
         return pcap.compile(filter_, optimize, netmask)
+
+
+class PcapType(enum.Enum):
+    """Pcap types."""
+    LIVE = 1
+    DEAD = 2
+    OFFLINE = 3
 
 
 cdef struct _LoopCallbackContext:
@@ -487,17 +494,27 @@ cdef class Pcap:
     Or use :meth:`loop` or :meth:`dispatch`.
     """
     cdef cpcap.pcap_t* pcap
+    cdef readonly object type
+    cdef readonly str source
 
     @staticmethod
-    cdef from_ptr(cpcap.pcap_t* pcap):
+    cdef from_ptr(cpcap.pcap_t* pcap, typ, str source=None):
         cdef Pcap self = Pcap.__new__(Pcap)
         self.pcap = pcap
+        self.type = typ
+        self.source = source
         return self
 
     def __dealloc__(self):
         if self.pcap:
             warnings.warn(f"unclosed Pcap {self!r}", ResourceWarning, source=self)
             self.close()
+
+    def __repr__(self):
+        if self.source is not None:
+            return f"<Pcap {self.type.name} on {self.source!r}>"
+        else:
+            return f"<Pcap {self.type.name}>"
 
     cpdef close(self):
         """Close the Pcap."""
@@ -772,10 +789,31 @@ cdef class Pcap:
 
         return result
 
-    def compile(self, filter_: str, optimize: bool, netmask: int) -> BpfProgram:
-        """Compile a filter expression."""
+    def compile(self, filter_: str, optimize: bool, netmask: Optional[int]=None) -> BpfProgram:
+        """
+        Compile a filter expression.
+
+        If you don't supply a netmask, for a live capture, compile will try to use :func:`lookupnet`
+        to figure out the netmask, falling back to :data:`NETMASK_UNKNWON`, for dead or capture
+        files, it will use :data:`NETMASK_UNKNWON`.
+        """
         # Note that if we add support for libpcap older than 1.8, we need to add a global lock here
+        cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+        cdef cpcap.bpf_u_int32 net
+        cdef cpcap.bpf_u_int32 mask
+
         self._check_closed()
+
+        if netmask is None:
+            if self.type is PcapType.LIVE:
+                err = cpcap.pcap_lookupnet(self.source.encode(), &net, &mask, errbuf)
+                if err < 0:
+                    raise Error(err, errbuf.decode())
+
+                netmask = mask
+                print(netmask)
+            else:
+                netmask = NETMASK_UNKNOWN
 
         cdef BpfProgram bpf_prog = BpfProgram.__new__(BpfProgram)
         err = cpcap.pcap_compile(self.pcap, &bpf_prog.bpf_prog, filter_.encode(), optimize, netmask)

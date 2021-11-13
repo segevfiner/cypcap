@@ -54,6 +54,11 @@ Pcap
    :members:
    :undoc-members:
 
+.. autoclass:: PcapType
+   :members:
+   :undoc-members:
+   :member-order: bysource
+
 .. autoclass:: Pkthdr(ts: float=0.0, caplen: int=0, len: int=0)
    :members:
    :undoc-members:
