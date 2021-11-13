@@ -47,14 +47,9 @@ iptables, tc-bpf, etc.</p></li>
 <section id="changed">
 <h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">BpfProgram.dump</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">BpfProgram.debug_dump</span></code>.</p></li>
-</ul>
-</section>
-<section id="id1">
-<h3>Changed<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
 <li><p>Change <code class="docutils literal notranslate"><span class="pre">findalldevs</span></code> interface address parsing to use the same format as the <code class="docutils literal notranslate"><span class="pre">socket</span></code>
 module and add support for <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code> <code class="docutils literal notranslate"><span class="pre">sockaddr_ll</span></code> used in Linux.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BpfProgram.dump</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">BpfProgram.debug_dump</span></code>.</p></li>
 </ul>
 </section>
 </section>
@@ -69,14 +64,14 @@ module and add support for <code class="docutils literal notranslate"><span clas
 </section>
 <section id="v0-1-0-2021-11-03">
 <h2>v0.1.0 (2021-11-03)<a class="headerlink" href="#v0-1-0-2021-11-03" title="Permalink to this headline">¶</a></h2>
-<section id="id2">
-<h3>Added<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<section id="id1">
+<h3>Added<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Tests &amp; Github Actions CI</p></li>
 </ul>
 </section>
-<section id="id3">
-<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<section id="id2">
+<h3>Changed<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">dump_open</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">dump_open_append</span></code>.</p></li>
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">open_offline</span></code>.</p></li>
@@ -86,8 +81,8 @@ deprecated <code class="docutils literal notranslate"><span class="pre">old_buil
 installed).</p></li>
 </ul>
 </section>
-<section id="id4">
-<h3>Fixed<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<section id="id3">
+<h3>Fixed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">NETMASK_UNKNOWN</span></code> was of the wrong type.</p></li>
 </ul>
