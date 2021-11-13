@@ -36,8 +36,8 @@ jobs:
 
       - name: Build wheels
         run: |
-          ls $NPCAP_SDK
-          echo $CIBW_ENVIRONMENT_WINDOWS
+          ls $env:NPCAP_SDK
+          echo $env:CIBW_ENVIRONMENT_WINDOWS
           python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BEFORE_ALL_LINUX: >
