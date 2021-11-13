@@ -8,6 +8,11 @@ Added
 ^^^^^
 * ``Pkthdr`` can be created from Python and is mutable (Useful for ``bpf.offline_filter``).
 
+Changed
+^^^^^^^
+* Change ``findalldevs`` interface address parsing to use the same format as the ``socket``
+  module and add support for ``AF_PACKET`` ``sockaddr_ll`` used in Linux.
+
 v0.1.1 (2021-11-03)
 -------------------
 
