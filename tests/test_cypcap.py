@@ -41,7 +41,7 @@ def pcap(interface):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.activate()
         yield pcap
 
@@ -51,7 +51,7 @@ def sender_pcap(interface):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.activate()
         yield pcap
 
@@ -233,7 +233,7 @@ def test_create_interface_obj(interface_obj, sender_pcap, echo_pkt):
      with cypcap.create(interface_obj) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.activate()
 
         sender_pcap.inject(bytes(echo_pkt))
@@ -385,7 +385,7 @@ def test_capture_dump_nanoseconds(interface, sender_pcap, echo_pkt, tmp_path):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.set_tstamp_precision(cypcap.TstampPrecision.NANO)
         pcap.activate()
 
@@ -452,7 +452,7 @@ def test_set_immediate_mode(interface):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.set_immediate_mode(True)
         pcap.activate()
 
@@ -463,7 +463,7 @@ def test_set_buffer_size(interface):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.set_buffer_size(10 * 1024 * 1024)
         pcap.activate()
 

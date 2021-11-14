@@ -631,11 +631,14 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_timeout(self, timeout: int):
-        """Set the packet buffer timeout for a not-yet-activated Pcap."""
+    def set_timeout(self, double timeout: float):
+        """
+        Set the packet buffer timeout for a not-yet-activated Pcap (In seconds as a floating point
+        number).
+        """
         self._check_closed()
 
-        err = cpcap.pcap_set_timeout(self.pcap, timeout)
+        err = cpcap.pcap_set_timeout(self.pcap, int(timeout * 1000))
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
