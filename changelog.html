@@ -42,6 +42,9 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">Pkthdr</span></code> can be created from Python and is mutable (Useful for <code class="docutils literal notranslate"><span class="pre">bpf.offline_filter</span></code>).</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">BpfProgram.dumps</span></code>/<code class="docutils literal notranslate"><span class="pre">BpfProgram.loads</span></code> to dump and load the filter in the format used by
 iptables, tc-bpf, etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Pcap</span></code> now has a <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Pcap</span></code> now has a <code class="docutils literal notranslate"><span class="pre">type</span></code> and <code class="docutils literal notranslate"><span class="pre">source</span></code> attributes.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">PcapType</span></code> for indicating the type of a <code class="docutils literal notranslate"><span class="pre">Pcap</span></code>.</p></li>
 </ul>
 </section>
 <section id="changed">
@@ -51,6 +54,8 @@ iptables, tc-bpf, etc.</p></li>
 module and add support for <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code> <code class="docutils literal notranslate"><span class="pre">sockaddr_ll</span></code> used in Linux.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">BpfProgram.dump</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">BpfProgram.debug_dump</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">set_timeout</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">open_live</span></code> now accept Python style float seconds instead of milliseconds.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">netmask</span></code> argument to <code class="docutils literal notranslate"><span class="pre">Pcap.compile</span></code> is now optional, the package will try to figure out
+the correct value by itself.</p></li>
 </ul>
 </section>
 </section>

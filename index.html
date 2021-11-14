@@ -253,8 +253,11 @@ documentation about libpcap.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.Pcap.compile">
-<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">netmask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.BpfProgram" title="cypcap.BpfProgram"><span class="pre">cypcap.BpfProgram</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.compile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">netmask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.BpfProgram" title="cypcap.BpfProgram"><span class="pre">cypcap.BpfProgram</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.compile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compile a filter expression.</p>
+<p>If you don’t supply a netmask, for a live capture, compile will try to use <a class="reference internal" href="#cypcap.lookupnet" title="cypcap.lookupnet"><code class="xref py py-func docutils literal notranslate"><span class="pre">lookupnet()</span></code></a>
+to figure out the netmask, falling back to <code class="xref py py-data docutils literal notranslate"><span class="pre">NETMASK_UNKNWON</span></code>, for dead or capture
+files, it will use <code class="xref py py-data docutils literal notranslate"><span class="pre">NETMASK_UNKNWON</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -426,11 +429,42 @@ number).</p>
 <dd><p>Get the snapshot length.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Pcap.source">
+<span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#cypcap.Pcap.source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.Pcap.stats">
 <span class="sig-name descname"><span class="pre">stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Stat" title="cypcap.Stat"><span class="pre">cypcap.Stat</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get capture statistics.</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Pcap.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#cypcap.Pcap.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cypcap.PcapType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cypcap.</span></span><span class="sig-name descname"><span class="pre">PcapType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.PcapType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pcap types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapType.LIVE">
+<span class="sig-name descname"><span class="pre">LIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#cypcap.PcapType.LIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapType.DEAD">
+<span class="sig-name descname"><span class="pre">DEAD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#cypcap.PcapType.DEAD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.PcapType.OFFLINE">
+<span class="sig-name descname"><span class="pre">OFFLINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#cypcap.PcapType.OFFLINE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
