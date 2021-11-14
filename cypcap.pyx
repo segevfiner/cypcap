@@ -405,7 +405,7 @@ def create(source: Union[str, PcapIf]) -> Pcap:
     return Pcap.from_ptr(pcap)
 
 
-def open_live(device: Union[str, PcapIf], snaplen: int, promisc: bool, to_ms: int) -> Pcap:
+def open_live(device: Union[str, PcapIf], snaplen: int, promisc: bool, double to_ms: float) -> Pcap:
     """
     Open a device for capturing.
 
@@ -416,7 +416,7 @@ def open_live(device: Union[str, PcapIf], snaplen: int, promisc: bool, to_ms: in
         device = device.name
 
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
-    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_live(device.encode(), snaplen, promisc, to_ms, errbuf)
+    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_live(device.encode(), snaplen, promisc, int(to_ms * 1000), errbuf)
     if not pcap:
         raise Error(ErrorCode.ERROR, errbuf.decode())
 
@@ -631,11 +631,14 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_timeout(self, timeout: int):
-        """Set the packet buffer timeout for a not-yet-activated Pcap."""
+    def set_timeout(self, double timeout: float):
+        """
+        Set the packet buffer timeout for a not-yet-activated Pcap (In seconds as a floating point
+        number).
+        """
         self._check_closed()
 
-        err = cpcap.pcap_set_timeout(self.pcap, timeout)
+        err = cpcap.pcap_set_timeout(self.pcap, int(timeout * 1000))
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
