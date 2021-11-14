@@ -250,7 +250,7 @@ def test_create_interface_obj(interface_obj, sender_pcap, echo_pkt):
 
 
 def test_open_live(interface, sender_pcap, echo_pkt):
-    with cypcap.open_live(interface, 65536, True, 1000) as pcap:
+    with cypcap.open_live(interface, 65536, True, 1) as pcap:
         sender_pcap.inject(bytes(echo_pkt))
 
         for pkthdr, data in pcap:
@@ -265,7 +265,7 @@ def test_open_live(interface, sender_pcap, echo_pkt):
 
 
 def test_open_live_obj(interface_obj, sender_pcap, echo_pkt):
-    with cypcap.open_live(interface_obj, 65536, True, 1000) as pcap:
+    with cypcap.open_live(interface_obj, 65536, True, 1) as pcap:
         sender_pcap.inject(bytes(echo_pkt))
 
         for pkthdr, data in pcap:
