@@ -12,6 +12,8 @@ Added
 * ``Pcap`` now has a ``__repr__``.
 * ``Pcap`` now has a ``type`` and ``source`` attributes.
 * Add ``PcapType`` for indicating the type of a ``Pcap``.
+* ``Pkthdr.ts_datetime`` & ``Pkthdr.ts_utcdatetime`` that return ``Pkthdr.ts`` as a naive
+  ``datetime``.
 
 Changed
 ^^^^^^^
