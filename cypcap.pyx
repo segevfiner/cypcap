@@ -304,6 +304,7 @@ cdef class Pkthdr:
 
     @property
     def ts_datetime(self) -> datetime:
+        """Timestamp as a naive local datetime."""
         return datetime.fromtimestamp(self.ts)
 
     @ts_datetime.setter
@@ -312,6 +313,7 @@ cdef class Pkthdr:
 
     @property
     def ts_utcdatetime(self) -> datetime:
+        """Timestamp as a naive UTC datetime."""
         return datetime.utcfromtimestamp(self.ts)
 
     @ts_utcdatetime.setter
