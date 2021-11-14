@@ -152,11 +152,10 @@ def test_stats(pcap, sender_pcap, echo_pkt):
     assert stats.ifdrop == 0
 
 
-def test_setfilter(interface, pcap, sender_pcap, echo_pkt):
+def test_setfilter(pcap, sender_pcap, echo_pkt):
     sender_pcap.sendpacket(bytes(echo_pkt))
 
-    _, netmask = cypcap.lookupnet(interface)
-    bpf = pcap.compile("tcp", True, netmask)
+    bpf = pcap.compile("tcp", True)
     pcap.setfilter(bpf)
     pcap.setnonblock(True)
 
@@ -281,7 +280,7 @@ def test_open_live_obj(interface_obj, sender_pcap, echo_pkt):
 
 def test_open_dead():
     with cypcap.open_dead(cypcap.DatalinkType.EN10MB, 65536) as pcap:
-        assert pcap.compile("tcp", True, cypcap.NETMASK_UNKNOWN) is not None
+        assert pcap.compile("tcp", True) is not None
 
 
 def test_open_offline(tmp_path, echo_pkt):
