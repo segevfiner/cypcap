@@ -915,7 +915,7 @@ cdef class Pcap:
     def set_pre_config(self, *,
         snaplen: int=None,
         promisc: bool=None,
-        timeout: double=None,
+        timeout: float=None,
         rfmon: bool=None,
         immediate_mode: bool=None,
         buffer_size: int=None,
