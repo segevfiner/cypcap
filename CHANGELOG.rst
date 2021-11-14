@@ -12,6 +12,8 @@ Added
 * ``Pcap`` now has a ``__repr__``.
 * ``Pcap`` now has a ``type`` and ``source`` attributes.
 * Add ``PcapType`` for indicating the type of a ``Pcap``.
+* ``Pcap.set_pre_config`` & ``Pcap.set_config`` shortcuts to set ``Pcap`` configuration via keyword
+  arguments.
 
 Changed
 ^^^^^^^
