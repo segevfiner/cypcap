@@ -7,6 +7,7 @@ import os
 import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
+from datetime import datetime, timezone
 from typing import Optional, Union, List, Tuple, Callable
 
 cimport cython
@@ -290,8 +291,7 @@ cdef class Pkthdr:
     cdef cpcap.pcap_pkthdr pkthdr
 
     def __init__(self, double ts: float=0.0, int caplen=0, len: int=0):
-        self.pkthdr.ts.tv_sec = <long>ts
-        self.pkthdr.ts.tv_usec = <long>(ts * 1000000 % 1000000)
+        self.ts = ts
         self.pkthdr.caplen = caplen
         self.pkthdr.len = len
 
@@ -314,7 +314,26 @@ cdef class Pkthdr:
         self.pkthdr.ts.tv_sec = <long>ts
         self.pkthdr.ts.tv_usec = <long>(ts * 1000000 % 1000000)
 
-    # TODO Consider a ts_datetime property that returns ts as a datetime (What about the timezone though...)
+    @property
+    def ts_datetime(self) -> datetime:
+        """Timestamp as a naive local datetime."""
+        return datetime.fromtimestamp(self.ts)
+
+    @ts_datetime.setter
+    def ts_datetime(self, ts_datetime: datetime):
+        self.ts = ts_datetime.timestamp()
+
+    @property
+    def ts_utcdatetime(self) -> datetime:
+        """Timestamp as a naive UTC datetime."""
+        return datetime.utcfromtimestamp(self.ts)
+
+    @ts_utcdatetime.setter
+    def ts_utcdatetime(self, ts_utcdatetime: datetime):
+        if ts_utcdatetime.tzinfo is None:
+            ts_utcdatetime = ts_utcdatetime.replace(tzinfo=timezone.utc)
+
+        self.ts = ts_utcdatetime.timestamp()
 
     @property
     def caplen(self) -> int:
