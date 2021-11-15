@@ -64,9 +64,9 @@ jobs:
 
     steps:
     - uses: actions/download-artifact@v2
-        with:
-          name: artifact
-          path: dist
+      with:
+        name: artifact
+        path: dist
 
     - name: Release
       uses: softprops/action-gh-release@v1
