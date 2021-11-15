@@ -1,5 +1,6 @@
 import sys
 import socket
+from datetime import datetime
 import copy
 
 import dpkt
@@ -74,12 +75,33 @@ def test_tstamptype_props():
     assert cypcap.TstampType.HOST.description == "Host"
 
 
-def test_pkthdr_init():
-    TS = 1636819043.182649
-    LEN = 1500
+PKTHDR_TS = 1636819043.182649
+PKTHDR_LEN = 1500
 
-    pkthdr = cypcap.Pkthdr(TS, LEN, LEN)
-    assert pkthdr.ts == TS
+
+def test_pkthdr_init():
+    pkthdr = cypcap.Pkthdr(PKTHDR_TS, PKTHDR_LEN, PKTHDR_LEN)
+    assert pkthdr.ts == PKTHDR_TS
+
+
+def test_pkthdr_ts_datetime():
+    pkthdr = cypcap.Pkthdr(PKTHDR_TS, PKTHDR_LEN, PKTHDR_LEN)
+
+    assert pkthdr.ts_datetime == datetime.fromtimestamp(PKTHDR_TS)
+
+    now = datetime.now()
+    pkthdr.ts_datetime = now
+    assert pkthdr.ts_datetime == now
+
+
+def test_pkthdr_ts_utcdatetime():
+    pkthdr = cypcap.Pkthdr(PKTHDR_TS, PKTHDR_LEN, PKTHDR_LEN)
+
+    assert pkthdr.ts_utcdatetime == datetime.utcfromtimestamp(PKTHDR_TS)
+
+    now = datetime.now()
+    pkthdr.ts_utcdatetime = now
+    assert pkthdr.ts_utcdatetime == now
 
 
 def test_findalldevs(interface):

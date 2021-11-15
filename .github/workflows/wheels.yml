@@ -1,0 +1,78 @@
+name: Build Wheels
+
+on:
+  push:
+    branches:
+    - master
+  release:
+    types:
+    - published
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macOS-10.15]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Used to host cibuildwheel
+      - uses: actions/setup-python@v2
+
+      - name: Install cibuildwheel
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install cibuildwheel==2.2.2
+
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Invoke-WebRequest https://nmap.org/npcap/dist/npcap-sdk-1.11.zip -OutFile npcap-sdk.zip
+          Expand-Archive npcap-sdk.zip
+          echo "NPCAP_SDK=$(Resolve-Path npcap-sdk)" >> $env:GITHUB_ENV
+
+      - name: Build sdist
+        if: matrix.os == 'ubuntu-20.04'
+        run: |
+          pip install cython>=0.29.24
+          python setup.py sdist
+
+      - name: Build wheels
+        run: |
+          python -m cibuildwheel --output-dir dist
+        env:
+          CIBW_SKIP: 'pp* *-musllinux*'
+          CIBW_BEFORE_ALL_LINUX: >
+            yum install -y flex bison libnl3-devel bluez-libs-devel &&
+            curl https://www.tcpdump.org/release/libpcap-1.10.1.tar.gz -O &&
+            tar xf libpcap-1.10.1.tar.gz &&
+            cd libpcap-1.10.1 &&
+            ./configure &&
+            make -j2 &&
+            make install
+          CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=$NPCAP_SDK
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist/*
+
+  upload_release:
+    name: Upload release
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: artifact
+        path: dist
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/*

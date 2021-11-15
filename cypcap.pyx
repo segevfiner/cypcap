@@ -7,7 +7,8 @@ import os
 import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
-from typing import Optional, Union, List, Callable
+from datetime import datetime, timezone
+from typing import Optional, Union, List, Tuple, Callable
 
 cimport cython
 from libc cimport stdio
@@ -16,9 +17,6 @@ from cpython cimport PyObject, PyErr_SetFromErrno
 
 cimport cpcap
 cimport csocket
-
-
-cdef extern object makesockaddr(csocket.sockaddr*)
 
 
 __version__ = u"0.2.0"
@@ -224,6 +222,21 @@ class TstampPrecision(enum.IntEnum):
     NANO = cpcap.PCAP_TSTAMP_PRECISION_NANO
 
 
+cdef extern object makesockaddr_c(csocket.sockaddr*)
+
+
+cdef makesockaddr(csocket.sockaddr* addr):
+    if addr is NULL:
+        return None
+
+    try:
+        family = socket.AddressFamily(addr.sa_family)
+    except ValueError:
+        family = addr.sa_family
+
+    return (family, makesockaddr_c(addr))
+
+
 class PcapAddr:
     """
     Pcap interface address.
@@ -231,22 +244,22 @@ class PcapAddr:
     Addresses are in the same format as used by the :mod:`socket` module.
 
     .. attribute:: addr
-       :type: tuple
+       :type: Tuple[socket.AddressFamily, Tuple]
 
        Address.
 
     .. attribute:: netmask
-       :type: tuple
+       :type: Tuple[socket.AddressFamily, Tuple]
 
        Netmask for the address.
 
     .. attribute:: broadaddr
-       :type: Optional[tuple]
+       :type: Optional[Tuple[socket.AddressFamily, Tuple]]
 
        Broadcast address for that address.
 
     .. attribute:: dstaddr
-       :type: Optional[tuple]
+       :type: Optional[Tuple[socket.AddressFamily, Tuple]]
 
        P2P destination address for that address.
     """
@@ -278,8 +291,7 @@ cdef class Pkthdr:
     cdef cpcap.pcap_pkthdr pkthdr
 
     def __init__(self, double ts: float=0.0, int caplen=0, len: int=0):
-        self.pkthdr.ts.tv_sec = <long>ts
-        self.pkthdr.ts.tv_usec = <long>(ts * 1000000 % 1000000)
+        self.ts = ts
         self.pkthdr.caplen = caplen
         self.pkthdr.len = len
 
@@ -302,7 +314,26 @@ cdef class Pkthdr:
         self.pkthdr.ts.tv_sec = <long>ts
         self.pkthdr.ts.tv_usec = <long>(ts * 1000000 % 1000000)
 
-    # TODO Consider a ts_datetime property that returns ts as a datetime (What about the timezone though...)
+    @property
+    def ts_datetime(self) -> datetime:
+        """Timestamp as a naive local datetime."""
+        return datetime.fromtimestamp(self.ts)
+
+    @ts_datetime.setter
+    def ts_datetime(self, ts_datetime: datetime):
+        self.ts = ts_datetime.timestamp()
+
+    @property
+    def ts_utcdatetime(self) -> datetime:
+        """Timestamp as a naive UTC datetime."""
+        return datetime.utcfromtimestamp(self.ts)
+
+    @ts_utcdatetime.setter
+    def ts_utcdatetime(self, ts_utcdatetime: datetime):
+        if ts_utcdatetime.tzinfo is None:
+            ts_utcdatetime = ts_utcdatetime.replace(tzinfo=timezone.utc)
+
+        self.ts = ts_utcdatetime.timestamp()
 
     @property
     def caplen(self) -> int:
