@@ -19,6 +19,8 @@ Changed
 ^^^^^^^
 * Change ``findalldevs`` interface address parsing to use the same format as the ``socket``
   module and add support for ``AF_PACKET`` ``sockaddr_ll`` used in Linux.
+* Addresses in ``PcapIf.addresses``/``PcapAddr`` will now be in the format
+  ``Tuple[socket.AddressFamily, <sockaddr tuple>]``.
 * ``BpfProgram.dump`` renamed to ``BpfProgram.debug_dump``.
 * ``set_timeout`` & ``open_live`` now accept Python style float seconds instead of milliseconds.
 * The ``netmask`` argument to ``Pcap.compile`` is now optional, the package will try to figure out

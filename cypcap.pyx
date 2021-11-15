@@ -8,7 +8,7 @@ import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
 from datetime import datetime, timezone
-from typing import Optional, Union, List, Callable
+from typing import Optional, Union, List, Tuple, Callable
 
 cimport cython
 from libc cimport stdio
@@ -17,9 +17,6 @@ from cpython cimport PyObject, PyErr_SetFromErrno
 
 cimport cpcap
 cimport csocket
-
-
-cdef extern object makesockaddr(csocket.sockaddr*)
 
 
 __version__ = u"0.2.0"
@@ -225,6 +222,21 @@ class TstampPrecision(enum.IntEnum):
     NANO = cpcap.PCAP_TSTAMP_PRECISION_NANO
 
 
+cdef extern object makesockaddr_c(csocket.sockaddr*)
+
+
+cdef makesockaddr(csocket.sockaddr* addr):
+    if addr is NULL:
+        return None
+
+    try:
+        family = socket.AddressFamily(addr.sa_family)
+    except ValueError:
+        family = addr.sa_family
+
+    return (family, makesockaddr_c(addr))
+
+
 class PcapAddr:
     """
     Pcap interface address.
@@ -232,22 +244,22 @@ class PcapAddr:
     Addresses are in the same format as used by the :mod:`socket` module.
 
     .. attribute:: addr
-       :type: tuple
+       :type: Tuple[socket.AddressFamily, Tuple]
 
        Address.
 
     .. attribute:: netmask
-       :type: tuple
+       :type: Tuple[socket.AddressFamily, Tuple]
 
        Netmask for the address.
 
     .. attribute:: broadaddr
-       :type: Optional[tuple]
+       :type: Optional[Tuple[socket.AddressFamily, Tuple]]
 
        Broadcast address for that address.
 
     .. attribute:: dstaddr
-       :type: Optional[tuple]
+       :type: Optional[Tuple[socket.AddressFamily, Tuple]]
 
        P2P destination address for that address.
     """

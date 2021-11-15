@@ -493,6 +493,12 @@ def test_can_set_rfmon(pcap):
     assert isinstance(pcap.can_set_rfmon(), bool)
 
 
+def test_set_rfmon(interface):
+    with cypcap.create(interface) as pcap:
+        pcap.set_rfmon(False)
+        pcap.activate()
+
+
 def test_list_tstamp_types(pcap):
     tstamp_types = pcap.list_tstamp_types()
     assert len(tstamp_types) > 0
