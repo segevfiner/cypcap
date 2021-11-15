@@ -4,6 +4,9 @@ on:
   push:
     branches:
     - master
+  release:
+    types:
+      - created
 
 jobs:
   build_wheels:
@@ -60,7 +63,7 @@ jobs:
   upload_release:
     needs: [build_wheels]
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
+    if: github.event_name == 'release' && github.event.action == 'created'
 
     steps:
     - uses: actions/download-artifact@v2
