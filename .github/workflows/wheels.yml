@@ -58,7 +58,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          path: ./dist/*
+          path: dist/*
 
   upload_release:
     name: Upload release
