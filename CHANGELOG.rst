@@ -15,6 +15,8 @@ Added
 * Add ``PcapType`` for indicating the type of a ``Pcap``.
 * ``Pkthdr.ts_datetime`` & ``Pkthdr.ts_utcdatetime`` that return ``Pkthdr.ts`` as a naive
   ``datetime``.
+* ``Pcap.set_pre_config`` & ``Pcap.set_config`` shortcuts to set ``Pcap`` configuration via keyword
+  arguments.
 
 Changed
 ^^^^^^^

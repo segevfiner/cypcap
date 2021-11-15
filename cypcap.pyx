@@ -943,6 +943,62 @@ cdef class Pcap:
         if result < 0:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
+    def set_pre_config(self, *,
+        snaplen: int=None,
+        promisc: bool=None,
+        timeout: float=None,
+        rfmon: bool=None,
+        immediate_mode: bool=None,
+        buffer_size: int=None,
+        tstamp_type: TstampType=None,
+        tstamp_precision: TstampPrecision=None,
+    ):
+        """Set pre activation configuration from keyword arguments."""
+
+        if snaplen is not None:
+            self.set_snaplen(snaplen)
+
+        if promisc is not None:
+            self.set_promisc(promisc)
+
+        if timeout is not None:
+            self.set_timeout(timeout)
+
+        if rfmon is not None:
+            self.set_rfmon(rfmon)
+
+        if immediate_mode is not None:
+            self.set_immediate_mode(immediate_mode)
+
+        if buffer_size is not None:
+            self.set_buffer_size(buffer_size)
+
+        if tstamp_type is not None:
+            self.set_tstamp_type(tstamp_type)
+
+        if tstamp_precision is not None:
+            self.set_tstamp_precision(tstamp_precision)
+
+    def set_config(self, *,
+        filter: BpfProgram=None,
+        direction: Direction=None,
+        datalink: DatalinkType=None,
+        nonblock: bool=None,
+    ):
+        """Set post activation configuration from keyword arguments."""
+
+        if filter is not None:
+            self.setfilter(filter)
+
+        if direction is not None:
+            self.setdirection(direction)
+
+        if datalink is not None:
+            self.set_datalink(datalink)
+
+        if nonblock is not None:
+            self.setnonblock(nonblock)
+
 
 # TODO Support __getitem__?
 cdef class BpfProgram:

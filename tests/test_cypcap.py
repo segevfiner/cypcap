@@ -499,6 +499,32 @@ def test_set_rfmon(interface):
         pcap.activate()
 
 
+def test_set_pre_config(interface):
+    with cypcap.create(interface) as pcap:
+        pcap.set_pre_config(
+            snaplen=65536,
+            promisc=True,
+            timeout=1,
+            rfmon=False,
+            immediate_mode=True,
+            buffer_size=10*1024*1024,
+            tstamp_type=cypcap.TstampType.HOST,
+            tstamp_precision=cypcap.TstampPrecision.NANO,
+        )
+        pcap.activate()
+
+
+def test_set_config(pcap):
+    bpf = pcap.compile("tcp", True)
+
+    pcap.set_config(
+        filter=bpf,
+        direction=cypcap.Direction.INOUT,
+        datalink=pcap.datalink(),
+        nonblock=False,
+    )
+
+
 def test_list_tstamp_types(pcap):
     tstamp_types = pcap.list_tstamp_types()
     assert len(tstamp_types) > 0
