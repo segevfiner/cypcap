@@ -58,9 +58,10 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          path: ./dist/*.whl
+          path: ./dist/*
 
   upload_release:
+    name: Upload release
     needs: [build_wheels]
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && github.event.action == 'published'
