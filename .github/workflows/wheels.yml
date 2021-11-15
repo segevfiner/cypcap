@@ -4,10 +4,6 @@ on:
   push:
     branches:
     - master
-  # TODO: Probably should remove before merging
-  pull_request:
-    branches:
-    - master
 
 jobs:
   build_wheels:
@@ -36,9 +32,15 @@ jobs:
           Expand-Archive npcap-sdk.zip
           echo "NPCAP_SDK=$(Resolve-Path npcap-sdk)" >> $env:GITHUB_ENV
 
+      - name: Build sdist
+        if: matrix.os == 'ubuntu-20.04'
+        run: |
+          pip install cython>=0.29.24
+          python setup.py sdist
+
       - name: Build wheels
         run: |
-          python -m cibuildwheel --output-dir wheelhouse
+          python -m cibuildwheel --output-dir dist
         env:
           CIBW_SKIP: 'pp* *-musllinux*'
           CIBW_BEFORE_ALL_LINUX: >
@@ -53,4 +55,20 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          path: ./wheelhouse/*.whl
+          path: ./dist/*.whl
+
+  upload_release:
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+
+    steps:
+    - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
