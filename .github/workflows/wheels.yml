@@ -42,7 +42,7 @@ jobs:
         env:
           CIBW_SKIP: 'pp* *-musllinux*'
           CIBW_BEFORE_ALL_LINUX: >
-            yum install -y flex bison libnl-devel bluez-libs-devel &&
+            yum install -y flex bison libnl3-devel bluez-libs-devel &&
             curl https://www.tcpdump.org/release/libpcap-1.10.1.tar.gz -O &&
             tar xf libpcap-1.10.1.tar.gz &&
             cd libpcap-1.10.1 &&
