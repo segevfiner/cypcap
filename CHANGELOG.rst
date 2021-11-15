@@ -1,6 +1,27 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+Added
+^^^^^
+* ``Pkthdr`` can be created from Python and is mutable (Useful for ``bpf.offline_filter``).
+* Add ``BpfProgram.dumps``/``BpfProgram.loads`` to dump and load the filter in the format used by
+  iptables, tc-bpf, etc.
+* ``Pcap`` now has a ``__repr__``.
+* ``Pcap`` now has a ``type`` and ``source`` attributes.
+* Add ``PcapType`` for indicating the type of a ``Pcap``.
+
+Changed
+^^^^^^^
+* Change ``findalldevs`` interface address parsing to use the same format as the ``socket``
+  module and add support for ``AF_PACKET`` ``sockaddr_ll`` used in Linux.
+* ``BpfProgram.dump`` renamed to ``BpfProgram.debug_dump``.
+* ``set_timeout`` & ``open_live`` now accept Python style float seconds instead of milliseconds.
+* The ``netmask`` argument to ``Pcap.compile`` is now optional, the package will try to figure out
+  the correct value by itself.
+
 v0.1.1 (2021-11-03)
 -------------------
 

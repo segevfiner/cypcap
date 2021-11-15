@@ -41,7 +41,7 @@ def pcap(interface):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.activate()
         yield pcap
 
@@ -51,7 +51,7 @@ def sender_pcap(interface):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.activate()
         yield pcap
 
@@ -74,6 +74,14 @@ def test_tstamptype_props():
     assert cypcap.TstampType.HOST.description == "Host"
 
 
+def test_pkthdr_init():
+    TS = 1636819043.182649
+    LEN = 1500
+
+    pkthdr = cypcap.Pkthdr(TS, LEN, LEN)
+    assert pkthdr.ts == TS
+
+
 def test_findalldevs(interface):
     devs = cypcap.findalldevs()
 
@@ -88,6 +96,12 @@ def test_findalldevs(interface):
 
 def test_lookupnet(interface, interface_addresses):
     network, netmask = cypcap.lookupnet(interface)
+    assert interface_addresses[netifaces.AF_INET][0]['addr'] == socket.inet_ntop(socket.AF_INET, network.to_bytes(4, 'little'))
+    assert interface_addresses[netifaces.AF_INET][0]['netmask'] == socket.inet_ntop(socket.AF_INET, netmask.to_bytes(4, 'little'))
+
+
+def test_lookupnet_obj(interface_obj, interface_addresses):
+    network, netmask = cypcap.lookupnet(interface_obj)
     assert interface_addresses[netifaces.AF_INET][0]['addr'] == socket.inet_ntop(socket.AF_INET, network.to_bytes(4, 'little'))
     assert interface_addresses[netifaces.AF_INET][0]['netmask'] == socket.inet_ntop(socket.AF_INET, netmask.to_bytes(4, 'little'))
 
@@ -138,15 +152,32 @@ def test_stats(pcap, sender_pcap, echo_pkt):
     assert stats.ifdrop == 0
 
 
-def test_setfilter(interface, pcap, sender_pcap, echo_pkt):
+def test_setfilter(pcap, sender_pcap, echo_pkt):
     sender_pcap.sendpacket(bytes(echo_pkt))
 
-    _, netmask = cypcap.lookupnet(interface)
-    bpf = pcap.compile("tcp", True, netmask)
+    bpf = pcap.compile("tcp", True)
     pcap.setfilter(bpf)
     pcap.setnonblock(True)
 
     assert next(pcap) == (None, None)
+
+
+def test_setdirection(pcap, sender_pcap, echo_pkt):
+    # TODO setdirection is not available on all platforms, so we might later need to add a
+    # try/except here to skip this test if it is not supported
+    sender_pcap.sendpacket(bytes(echo_pkt))
+
+    pcap.setdirection(cypcap.Direction.OUT)
+
+    for pkthdr, data in pcap:
+        if pkthdr is None:
+            continue
+
+        captured_pkthdr, captured_pkt = pkthdr, dpkt.ethernet.Ethernet(data)
+        break
+
+    assert bytes(echo_pkt) == bytes(captured_pkt)
+    assert repr(captured_pkthdr)
 
 
 def test_loop(pcap, sender_pcap, echo_pkt):
@@ -201,7 +232,7 @@ def test_create_interface_obj(interface_obj, sender_pcap, echo_pkt):
      with cypcap.create(interface_obj) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.activate()
 
         sender_pcap.inject(bytes(echo_pkt))
@@ -218,7 +249,22 @@ def test_create_interface_obj(interface_obj, sender_pcap, echo_pkt):
 
 
 def test_open_live(interface, sender_pcap, echo_pkt):
-    with cypcap.open_live(interface, 65536, True, 1000) as pcap:
+    with cypcap.open_live(interface, 65536, True, 1) as pcap:
+        sender_pcap.inject(bytes(echo_pkt))
+
+        for pkthdr, data in pcap:
+            if pkthdr is None:
+                continue
+
+            captured_pkthdr, captured_pkt = pkthdr, dpkt.ethernet.Ethernet(data)
+            break
+
+        assert bytes(echo_pkt) == bytes(captured_pkt)
+        assert repr(captured_pkthdr)
+
+
+def test_open_live_obj(interface_obj, sender_pcap, echo_pkt):
+    with cypcap.open_live(interface_obj, 65536, True, 1) as pcap:
         sender_pcap.inject(bytes(echo_pkt))
 
         for pkthdr, data in pcap:
@@ -234,7 +280,7 @@ def test_open_live(interface, sender_pcap, echo_pkt):
 
 def test_open_dead():
     with cypcap.open_dead(cypcap.DatalinkType.EN10MB, 65536) as pcap:
-        assert pcap.compile("tcp", True, cypcap.NETMASK_UNKNOWN) is not None
+        assert pcap.compile("tcp", True) is not None
 
 
 def test_open_offline(tmp_path, echo_pkt):
@@ -284,6 +330,53 @@ def test_capture_dump(pcap, sender_pcap, echo_pkt, tmp_path):
             assert bytes(dpkt.ethernet.Ethernet(data)) == bytes(packets[i])
 
 
+def test_capture_dump_append(pcap, sender_pcap, echo_pkt, tmp_path):
+    dump_file = tmp_path / "dump.pcap"
+
+    packets = []
+    for i in range(1, 3):
+        pkt = copy.deepcopy(echo_pkt)
+        pkt.data.data.data.seq = i
+        packets.append(pkt)
+        sender_pcap.inject(bytes(pkt))
+
+    captured = 0
+    with pcap.dump_open(dump_file) as dump:
+        for pkthdr, data in pcap:
+            if pkthdr is None:
+                continue
+
+            dump.dump(pkthdr, data)
+            captured += 1
+            assert dump.ftell() > 0
+
+            if captured == 2:
+                break
+
+    for i in range(3, 5):
+        pkt = copy.deepcopy(echo_pkt)
+        pkt.data.data.data.seq = i
+        packets.append(pkt)
+        sender_pcap.inject(bytes(pkt))
+
+    captured = 0
+    with pcap.dump_open_append(dump_file) as dump:
+        for pkthdr, data in pcap:
+            if pkthdr is None:
+                continue
+
+            dump.dump(pkthdr, data)
+            captured += 1
+            assert dump.ftell() > 0
+
+            if captured == 2:
+                break
+
+    with cypcap.open_offline(dump_file) as dump:
+        for i, (pkthdr, data) in enumerate(dump):
+            assert bytes(dpkt.ethernet.Ethernet(data)) == bytes(packets[i])
+
+
 def test_capture_dump_nanoseconds(interface, sender_pcap, echo_pkt, tmp_path):
     dump_file = tmp_path / "dump.pcap"
 
@@ -291,9 +384,11 @@ def test_capture_dump_nanoseconds(interface, sender_pcap, echo_pkt, tmp_path):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1000)
+        pcap.set_timeout(1)
         pcap.set_tstamp_precision(cypcap.TstampPrecision.NANO)
         pcap.activate()
+
+        assert pcap.get_tstamp_precision() == cypcap.TstampPrecision.NANO
 
         packets = []
         for i in range(1, 5):
@@ -315,12 +410,25 @@ def test_capture_dump_nanoseconds(interface, sender_pcap, echo_pkt, tmp_path):
                     break
 
     with cypcap.open_offline(dump_file, cypcap.TstampPrecision.NANO) as dump:
+        assert dump.get_tstamp_precision() == cypcap.TstampPrecision.NANO
+
         for i, (pkthdr, data) in enumerate(dump):
             assert bytes(dpkt.ethernet.Ethernet(data)) == bytes(packets[i])
 
 
+def test_set_tstamp_type(interface):
+    with cypcap.create(interface) as pcap:
+        tstamp_types = pcap.list_tstamp_types()
+        pcap.set_tstamp_type(tstamp_types[0])
+
+
 def test_datalink(pcap):
     assert pcap.datalink() == cypcap.DatalinkType.EN10MB
+
+
+def test_set_datalink(pcap):
+    datalinks = pcap.list_datalinks()
+    pcap.set_datalink(datalinks[0])
 
 
 def test_snapshot(pcap):
@@ -339,8 +447,34 @@ def test_nonblock(pcap):
     assert next(pcap) == (None, None)
 
 
+def test_set_immediate_mode(interface):
+    with cypcap.create(interface) as pcap:
+        pcap.set_snaplen(65536)
+        pcap.set_promisc(True)
+        pcap.set_timeout(1)
+        pcap.set_immediate_mode(True)
+        pcap.activate()
+
+        assert next(pcap) == (None, None)
+
+
+def test_set_buffer_size(interface):
+    with cypcap.create(interface) as pcap:
+        pcap.set_snaplen(65536)
+        pcap.set_promisc(True)
+        pcap.set_timeout(1)
+        pcap.set_buffer_size(10 * 1024 * 1024)
+        pcap.activate()
+
+
 def test_can_set_rfmon(pcap):
     assert isinstance(pcap.can_set_rfmon(), bool)
+
+
+def test_set_rfmon(interface):
+    with cypcap.create(interface) as pcap:
+        pcap.set_rfmon(False)
+        pcap.activate()
 
 
 def test_list_tstamp_types(pcap):
@@ -361,12 +495,34 @@ def test_nonexistent_interface():
         pcap.activate()
 
 
-def test_compile_dump(capfd):
+def test_offline_filter(echo_pkt):
+    pkthdr, data = cypcap.Pkthdr(0, len(echo_pkt), len(echo_pkt)), bytes(echo_pkt)
+    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "icmp", True, cypcap.NETMASK_UNKNOWN)
+    assert bpf.offline_filter(pkthdr, data)
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    bpf.dump()
-    sys.stdout.flush()
+    assert not bpf.offline_filter(pkthdr, data)
+
+
+def test_compile_debug_dump(capfd):
+    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
+    bpf.debug_dump()
     captured = capfd.readouterr()
     assert len(captured.out) > 0
+
+
+def test_compile_dumps_loads(capfd):
+    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
+    bpf.debug_dump()
+    debug_dump1 = capfd.readouterr()
+
+    dump = bpf.dumps()
+    assert isinstance(dump, str)
+
+    bpf2 = cypcap.BpfProgram.loads(dump)
+    bpf2.debug_dump()
+    debug_dump2 = capfd.readouterr()
+
+    assert debug_dump1 == debug_dump2
 
 
 def test_lib_version():

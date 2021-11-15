@@ -11,13 +11,17 @@ from typing import Optional, Union, List, Callable
 
 cimport cython
 from libc cimport stdio
+from libc.stdlib cimport malloc, free
 from cpython cimport PyObject, PyErr_SetFromErrno
 
 cimport cpcap
 cimport csocket
 
 
-__version__ = u"0.1.1"
+cdef extern object makesockaddr(csocket.sockaddr*)
+
+
+__version__ = u"0.2.0"
 
 
 include "npcap.pxi"
@@ -224,23 +228,25 @@ class PcapAddr:
     """
     Pcap interface address.
 
+    Addresses are in the same format as used by the :mod:`socket` module.
+
     .. attribute:: addr
-       :type: str
+       :type: tuple
 
        Address.
 
     .. attribute:: netmask
-       :type: str
+       :type: tuple
 
        Netmask for the address.
 
     .. attribute:: broadaddr
-       :type: str
+       :type: Optional[tuple]
 
        Broadcast address for that address.
 
     .. attribute:: dstaddr
-       :type: Optional[str]
+       :type: Optional[tuple]
 
        P2P destination address for that address.
     """
@@ -257,31 +263,11 @@ class PcapAddr:
 
 cdef object PcapAddr_from_c(cpcap.pcap_addr* addr):
     return PcapAddr(
-        makesockaddr_addr(addr.addr),
-        makesockaddr_addr(addr.netmask),
-        makesockaddr_addr(addr.broadaddr),
-        makesockaddr_addr(addr.dstaddr),
+        makesockaddr(addr.addr),
+        makesockaddr(addr.netmask),
+        makesockaddr(addr.broadaddr),
+        makesockaddr(addr.dstaddr),
     )
-
-
-cdef makesockaddr_addr(csocket.sockaddr* addr):
-    cdef char inet_buf[csocket.INET_ADDRSTRLEN]
-    cdef char inet6_buf[csocket.INET6_ADDRSTRLEN]
-
-    if not addr:
-        return None
-    elif addr.sa_family == csocket.AF_INET:
-        if not csocket.inet_ntop(csocket.AF_INET, &(<csocket.sockaddr_in*>addr).sin_addr, inet_buf, sizeof(inet_buf)):
-            PyErr_SetFromErrno(OSError)
-        return inet_buf.decode()
-    elif addr.sa_family == csocket.AF_INET6:
-        if not csocket.inet_ntop(csocket.AF_INET6, &(<csocket.sockaddr_in6*>addr).sin6_addr, inet6_buf, sizeof(inet6_buf)):
-            PyErr_SetFromErrno(OSError)
-        return inet6_buf.decode()
-    else:
-        # TODO What should we do for unknown sa_family? We don't even know the right size to copy it
-        # raw...
-        return (<unsigned char*>addr)[:sizeof(csocket.sockaddr)]
 
 
 @cython.freelist(8)
@@ -290,6 +276,12 @@ cdef class Pkthdr:
     Pcap packet header.
     """
     cdef cpcap.pcap_pkthdr pkthdr
+
+    def __init__(self, double ts: float=0.0, int caplen=0, len: int=0):
+        self.pkthdr.ts.tv_sec = <long>ts
+        self.pkthdr.ts.tv_usec = <long>(ts * 1000000 % 1000000)
+        self.pkthdr.caplen = caplen
+        self.pkthdr.len = len
 
     @staticmethod
     cdef from_ptr(const cpcap.pcap_pkthdr* pkthdr):
@@ -305,6 +297,11 @@ cdef class Pkthdr:
         """Timestamp."""
         return self.pkthdr.ts.tv_sec + self.pkthdr.ts.tv_usec / 1000000
 
+    @ts.setter
+    def ts(self, double ts: float):
+        self.pkthdr.ts.tv_sec = <long>ts
+        self.pkthdr.ts.tv_usec = <long>(ts * 1000000 % 1000000)
+
     # TODO Consider a ts_datetime property that returns ts as a datetime (What about the timezone though...)
 
     @property
@@ -312,10 +309,18 @@ cdef class Pkthdr:
         """Length of portion present."""
         return self.pkthdr.caplen
 
+    @caplen.setter
+    def caplen(self, caplen: int):
+        self.pkthdr.caplen = caplen
+
     @property
     def len(self) -> int:
         """Length of this packet (off wire)."""
         return self.pkthdr.len
+
+    @len.setter
+    def len(self, len: int):
+        self.pkthdr.len = len
 
 
 @cython.freelist(8)
@@ -397,10 +402,10 @@ def create(source: Union[str, PcapIf]) -> Pcap:
     if not pcap:
         raise Error(ErrorCode.ERROR, errbuf.decode())
 
-    return Pcap.from_ptr(pcap)
+    return Pcap.from_ptr(pcap, PcapType.LIVE, source)
 
 
-def open_live(device: Union[str, PcapIf], snaplen: int, promisc: bool, to_ms: int) -> Pcap:
+def open_live(device: Union[str, PcapIf], snaplen: int, promisc: bool, double to_ms: float) -> Pcap:
     """
     Open a device for capturing.
 
@@ -411,17 +416,17 @@ def open_live(device: Union[str, PcapIf], snaplen: int, promisc: bool, to_ms: in
         device = device.name
 
     cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
-    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_live(device.encode(), snaplen, promisc, to_ms, errbuf)
+    cdef cpcap.pcap_t* pcap = cpcap.pcap_open_live(device.encode(), snaplen, promisc, int(to_ms * 1000), errbuf)
     if not pcap:
         raise Error(ErrorCode.ERROR, errbuf.decode())
 
-    return Pcap.from_ptr(pcap)
+    return Pcap.from_ptr(pcap, PcapType.LIVE, device)
 
 
 cpdef Pcap open_dead(linktype: DatalinkType, snaplen: int, precision: TstampPrecision=TstampPrecision.MICRO):
     """Open a fake Pcap for compiling filters or opening a capture for output."""
     cdef cpcap.pcap_t* pcap = cpcap.pcap_open_dead_with_tstamp_precision(linktype, snaplen, precision)
-    return Pcap.from_ptr(pcap)
+    return Pcap.from_ptr(pcap, PcapType.DEAD)
 
 
 def open_offline(fname: os.PathLike, precision: TstampPrecision=TstampPrecision.MICRO) -> Pcap:
@@ -431,7 +436,7 @@ def open_offline(fname: os.PathLike, precision: TstampPrecision=TstampPrecision.
     if not pcap:
         raise Error(ErrorCode.ERROR, errbuf.decode())
 
-    return Pcap.from_ptr(pcap)
+    return Pcap.from_ptr(pcap, PcapType.OFFLINE, os.fsdecode(fname))
 
 
 def compile(linktype: DatalinkType, snaplen: int, filter_: str, optimize: bool, netmask: int) -> BpfProgram:
@@ -443,6 +448,13 @@ def compile(linktype: DatalinkType, snaplen: int, filter_: str, optimize: bool, 
     """
     with open_dead(linktype, snaplen) as pcap:
         return pcap.compile(filter_, optimize, netmask)
+
+
+class PcapType(enum.Enum):
+    """Pcap types."""
+    LIVE = 1
+    DEAD = 2
+    OFFLINE = 3
 
 
 cdef struct _LoopCallbackContext:
@@ -482,17 +494,27 @@ cdef class Pcap:
     Or use :meth:`loop` or :meth:`dispatch`.
     """
     cdef cpcap.pcap_t* pcap
+    cdef readonly object type
+    cdef readonly str source
 
     @staticmethod
-    cdef from_ptr(cpcap.pcap_t* pcap):
+    cdef from_ptr(cpcap.pcap_t* pcap, typ, str source=None):
         cdef Pcap self = Pcap.__new__(Pcap)
         self.pcap = pcap
+        self.type = typ
+        self.source = source
         return self
 
     def __dealloc__(self):
         if self.pcap:
             warnings.warn(f"unclosed Pcap {self!r}", ResourceWarning, source=self)
             self.close()
+
+    def __repr__(self):
+        if self.source is not None:
+            return f"<Pcap {self.type.name} on {self.source!r}>"
+        else:
+            return f"<Pcap {self.type.name}>"
 
     cpdef close(self):
         """Close the Pcap."""
@@ -626,11 +648,14 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_timeout(self, timeout: int):
-        """Set the packet buffer timeout for a not-yet-activated Pcap."""
+    def set_timeout(self, double timeout: float):
+        """
+        Set the packet buffer timeout for a not-yet-activated Pcap (In seconds as a floating point
+        number).
+        """
         self._check_closed()
 
-        err = cpcap.pcap_set_timeout(self.pcap, timeout)
+        err = cpcap.pcap_set_timeout(self.pcap, int(timeout * 1000))
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
@@ -764,10 +789,31 @@ cdef class Pcap:
 
         return result
 
-    def compile(self, filter_: str, optimize: bool, netmask: int) -> BpfProgram:
-        """Compile a filter expression."""
+    def compile(self, filter_: str, optimize: bool, netmask: Optional[int]=None) -> BpfProgram:
+        """
+        Compile a filter expression.
+
+        If you don't supply a netmask, for a live capture, compile will try to use :func:`lookupnet`
+        to figure out the netmask, falling back to :data:`NETMASK_UNKNWON`, for dead or capture
+        files, it will use :data:`NETMASK_UNKNWON`.
+        """
         # Note that if we add support for libpcap older than 1.8, we need to add a global lock here
+        cdef char errbuf[cpcap.PCAP_ERRBUF_SIZE]
+        cdef cpcap.bpf_u_int32 net
+        cdef cpcap.bpf_u_int32 mask
+
         self._check_closed()
+
+        if netmask is None:
+            if self.type is PcapType.LIVE:
+                err = cpcap.pcap_lookupnet(self.source.encode(), &net, &mask, errbuf)
+                if err < 0:
+                    raise Error(err, errbuf.decode())
+
+                netmask = mask
+                print(netmask)
+            else:
+                netmask = NETMASK_UNKNOWN
 
         cdef BpfProgram bpf_prog = BpfProgram.__new__(BpfProgram)
         err = cpcap.pcap_compile(self.pcap, &bpf_prog.bpf_prog, filter_.encode(), optimize, netmask)
@@ -867,7 +913,7 @@ cdef class Pcap:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
 
-# TODO Support dumping/loading bytecode, __getitem__?
+# TODO Support __getitem__?
 cdef class BpfProgram:
     """
     A BPF filter program for :meth:`Pcap.setfilter`.
@@ -875,16 +921,20 @@ cdef class BpfProgram:
     Can be created via :meth:`Pcap.compile`.
     """
     cdef cpcap.bpf_program bpf_prog
+    cdef bint use_free
 
     def __dealloc__(self):
         if self.bpf_prog.bf_insns:
-            cpcap.pcap_freecode(&self.bpf_prog)
+            if self.use_free:
+                free(self.bpf_prog.bf_insns)
+            else:
+                cpcap.pcap_freecode(&self.bpf_prog)
 
     def offline_filter(self, pkt_header: Pkthdr, pkt_data: bytes) -> bool:
         """Check whether a filter matches a packet."""
         return cpcap.pcap_offline_filter(&self.bpf_prog, &pkt_header.pkthdr, pkt_data)
 
-    def dump(self, option=0):
+    def debug_dump(self, option: int=0):
         """
         Dump the filter to stdout.
 
@@ -892,6 +942,44 @@ cdef class BpfProgram:
         """
         cpcap.bpf_dump(&self.bpf_prog, option)
         stdio.fflush(stdio.stdout)
+
+    def dumps(self):
+        """Dump the BPF filter in the format used by iptables, tc-bpf, etc."""
+        out = []
+
+        out.append(f"{self.bpf_prog.bf_len},")
+
+        for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len-1]:
+            out.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k},")
+
+        insn = self.bpf_prog.bf_insns[self.bpf_prog.bf_len-1]
+        out.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
+
+        return ''.join(out)
+
+    @staticmethod
+    def loads(s: str):
+        """Load a BPF filter in the format used by iptables, tc-bpf, etc."""
+        cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
+
+        length, *insns = s.split(',')
+        length = int(length)
+
+        if len(insns) != length:
+            raise ValueError("invalid BPF bytecode")
+
+        self.use_free = True
+        self.bpf_prog.bf_len = length
+        self.bpf_prog.bf_insns = <cpcap.bpf_insn*>malloc(self.bpf_prog.bf_len * sizeof(cpcap.bpf_insn))
+
+        for i, insn in enumerate(insns):
+            code, jt, jf, k = insn.split(None, 4)
+            self.bpf_prog.bf_insns[i].code = int(code)
+            self.bpf_prog.bf_insns[i].jt = int(jt)
+            self.bpf_prog.bf_insns[i].jf = int(jf)
+            self.bpf_prog.bf_insns[i].k = int(k)
+
+        return self
 
 
 cdef class Dumper:
