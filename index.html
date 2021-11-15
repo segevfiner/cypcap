@@ -227,6 +227,18 @@ documentation about libpcap.</p>
 <p>Iteration will return <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">None)</span></code> in case of packet buffer timeouts.</p>
 </div>
 <p>Or use <a class="reference internal" href="#cypcap.Pcap.loop" title="cypcap.Pcap.loop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">loop()</span></code></a> or <a class="reference internal" href="#cypcap.Pcap.dispatch" title="cypcap.Pcap.dispatch"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch()</span></code></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Pcap.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#cypcap.PcapType" title="cypcap.PcapType"><span class="pre">PcapType</span></a></em><a class="headerlink" href="#cypcap.Pcap.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of Pcap.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cypcap.Pcap.source">
+<span class="sig-name descname"><span class="pre">source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#cypcap.Pcap.source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Source of the Pcap, meaning depends on <a class="reference internal" href="#cypcap.Pcap.type" title="cypcap.Pcap.type"><code class="xref py py-attr docutils literal notranslate"><span class="pre">type</span></code></a>.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.Pcap.activate">
 <span class="sig-name descname"><span class="pre">activate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Pcap.activate" title="Permalink to this definition">¶</a></dt>
@@ -441,21 +453,11 @@ number).</p>
 <dd><p>Get the snapshot length.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cypcap.Pcap.source">
-<span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#cypcap.Pcap.source" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.Pcap.stats">
 <span class="sig-name descname"><span class="pre">stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.Stat" title="cypcap.Stat"><span class="pre">cypcap.Stat</span></a></span></span><a class="headerlink" href="#cypcap.Pcap.stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get capture statistics.</p>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cypcap.Pcap.type">
-<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#cypcap.Pcap.type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 

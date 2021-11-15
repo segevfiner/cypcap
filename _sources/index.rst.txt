@@ -53,6 +53,17 @@ Pcap
 .. autoclass:: Pcap
    :members:
    :undoc-members:
+   :exclude-members: type, source
+
+   .. attribute:: type
+      :type: PcapType
+
+      Type of Pcap.
+
+   .. attribute:: source
+      :type: str
+
+      Source of the Pcap, meaning depends on :attr:`type`.
 
 .. autoclass:: PcapType
    :members:
