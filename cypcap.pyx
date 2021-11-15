@@ -937,9 +937,9 @@ cdef class Pcap:
             self.set_rfmon(rfmon)
 
         if immediate_mode is not None:
-            self.immediate_mode(immediate_mode)
+            self.set_immediate_mode(immediate_mode)
 
-        if buffer_size is not None(buffer_size):
+        if buffer_size is not None:
             self.set_buffer_size(buffer_size)
 
         if tstamp_type is not None:
