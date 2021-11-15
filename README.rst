@@ -3,11 +3,11 @@ cypcap
 .. image:: https://img.shields.io/pypi/v/cypcap.svg
    :target: https://pypi.org/project/cypcap/
    :alt: PyPI
-   
+
 .. image:: https://github.com/segevfiner/cypcap/actions/workflows/docs.yml/badge.svg
    :target: https://segevfiner.github.io/cypcap/
    :alt: Docs
-   
+
 .. image:: https://github.com/segevfiner/cypcap/actions/workflows/build-and-test.yml/badge.svg
    :target: https://github.com/segevfiner/cypcap/actions/workflows/build-and-test.yml
    :alt: Build & Test
@@ -25,6 +25,8 @@ Installation
 
 Python 3.6+ and libpcap 1.8+ is required (Older libpcap versions can be supported if needed).
 
+Build From Source
+^^^^^^^^^^^^^^^^^
 On Windows, download and extract the `Npcap SDK`_ and set the enviromnet variable ``NPCAP_SDK`` to
 its location (You will also need to install Npcap, Wireshark installs it as part of its
 installation).
