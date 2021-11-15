@@ -6,6 +6,7 @@ Unreleased
 
 Added
 ^^^^^
+* Wheels for Windows, Linux & macOS.
 * ``Pkthdr`` can be created from Python and is mutable (Useful for ``bpf.offline_filter``).
 * Add ``BpfProgram.dumps``/``BpfProgram.loads`` to dump and load the filter in the format used by
   iptables, tc-bpf, etc.
