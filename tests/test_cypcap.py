@@ -471,6 +471,12 @@ def test_can_set_rfmon(pcap):
     assert isinstance(pcap.can_set_rfmon(), bool)
 
 
+def test_set_rfmon(interface):
+    with cypcap.create(interface) as pcap:
+        pcap.set_rfmon(False)
+        pcap.activate()
+
+
 def test_set_pre_config(interface):
     with cypcap.create(interface) as pcap:
         pcap.set_pre_config(
