@@ -45,7 +45,7 @@ make_ipv6_addr(const struct sockaddr_in6 *addr)
 }
 
 PyObject *
-makesockaddr(struct sockaddr *addr)
+makesockaddr_c(struct sockaddr *addr)
 {
     if (addr == NULL) {
         /* No address */
