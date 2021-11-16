@@ -302,7 +302,7 @@ cdef class Pkthdr:
         return self
 
     def __repr__(self):
-        return f"<Pkthdr(ts={self.ts!r}, caplen={self.caplen!r}, len={self.len!r})>"
+        return f"Pkthdr(ts={self.ts!r}, caplen={self.caplen!r}, len={self.len!r})"
 
     @property
     def ts(self) -> int:
