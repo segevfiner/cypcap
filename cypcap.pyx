@@ -271,7 +271,7 @@ class PcapAddr:
         self.dstaddr = dstaddr
 
     def __repr__(self):
-        return f"PcapAddr({self.addr!r}, {self.netmask!r}, {self.broadaddr!r}, {self.dstaddr!r})"
+        return f"PcapAddr(addr={self.addr!r}, netmask={self.netmask!r}, broadaddr={self.broadaddr!r}, dstaddr={self.dstaddr!r})"
 
 
 cdef object PcapAddr_from_c(cpcap.pcap_addr* addr):
