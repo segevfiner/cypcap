@@ -208,11 +208,11 @@ class TstampType(enum.IntEnum):
     HOST_HIPREC_UNSYNCED = cpcap.PCAP_TSTAMP_HOST_HIPREC_UNSYNCED
 
     @property
-    def name(self):
+    def name(self) -> str:
         return cpcap.pcap_tstamp_type_val_to_name(self).decode()
 
     @property
-    def description(self):
+    def description(self) -> str:
         return cpcap.pcap_tstamp_type_val_to_description(self).decode()
 
 
@@ -363,17 +363,17 @@ cdef class Stat:
         return f"<Stat recv={self.recv!r} drop={self.drop!r} ifdrop={self.ifdrop!r}>"
 
     @property
-    def recv(self):
+    def recv(self) -> int:
         """Number of packets received."""
         return self.stat.ps_recv
 
     @property
-    def drop(self):
+    def drop(self) -> int:
         """Number of packets dropped."""
         return self.stat.ps_drop
 
     @property
-    def ifdrop(self):
+    def ifdrop(self) -> int:
         """Drops by interface -- only supported on some platforms."""
         return self.stat.ps_ifdrop
 
@@ -400,7 +400,7 @@ def findalldevs() -> List[PcapIf]:
         cpcap.pcap_freealldevs(devs)
 
 
-def lookupnet(device: Union[str, PcapIf]) -> (int, int):
+def lookupnet(device: Union[str, PcapIf]) -> Tuple[int, int]:
     """
     Find the IPv4 network number and netmask for a device.
 
@@ -586,7 +586,7 @@ cdef class Pcap:
         # ownership is a problem since the pointer is only valid until the next call
         return Pkthdr.from_ptr(pkt_header), pkt_data[:pkt_header.caplen]
 
-    def loop(self, int cnt, callback: Callable[[Pkthdr, bytes], None]):
+    def loop(self, int cnt, callback: Callable[[Pkthdr, bytes], None]) -> None:
         """
         Process packets from a live capture or savefile.
 
@@ -603,7 +603,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_geterr(self.pcap).decode)
 
-    def dispatch(self, int cnt, callback: Callable[[Pkthdr, bytes], None]):
+    def dispatch(self, int cnt, callback: Callable[[Pkthdr, bytes], None]) -> None:
         """Process packets from a live capture or savefile."""
         self._check_closed()
 
@@ -616,7 +616,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_geterr(self.pcap).decode())
 
-    def breakloop(self):
+    def breakloop(self) -> None:
         """Force a :meth:`dispatch` or :meth:`loop` call to return."""
         self._check_closed()
 
@@ -633,7 +633,7 @@ cdef class Pcap:
 
         return bool(result)
 
-    def setnonblock(self, nonblock: bool):
+    def setnonblock(self, nonblock: bool) -> None:
         """Set the state of non-blocking mode."""
         self._check_closed()
 
@@ -642,7 +642,7 @@ cdef class Pcap:
         if result < 0:
             raise Error(result, errbuf.decode())
 
-    def set_snaplen(self, snaplen: int):
+    def set_snaplen(self, snaplen: int) -> None:
         """Set the snapshot length for a not-yet-Pcap."""
         self._check_closed()
 
@@ -650,7 +650,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_promisc(self, promisc: bool):
+    def set_promisc(self, promisc: bool) -> None:
         """Set promiscuous mode for a not-yet-activated Pcap."""
         self._check_closed()
 
@@ -671,7 +671,7 @@ cdef class Pcap:
 
         return bool(result)
 
-    def set_rfmon(self, rfmon: bool):
+    def set_rfmon(self, rfmon: bool) -> None:
         """Set monitor mode for a not-yet-activated Pcap."""
         self._check_closed()
 
@@ -679,7 +679,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_timeout(self, double timeout: float):
+    def set_timeout(self, double timeout: float) -> None:
         """
         Set the packet buffer timeout for a not-yet-activated Pcap (In seconds as a floating point
         number).
@@ -690,7 +690,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_tstamp_type(self, tstamp_type: TstampType):
+    def set_tstamp_type(self, tstamp_type: TstampType) -> None:
         """Set the time stamp type to be used by a Pcap."""
         self._check_closed()
 
@@ -698,7 +698,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_immediate_mode(self, immediate_mode: bool):
+    def set_immediate_mode(self, immediate_mode: bool) -> None:
         """Set immediate mode for a not-yet-activated Pcap."""
         self._check_closed()
 
@@ -706,7 +706,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_buffer_size(self, buffer_size: int):
+    def set_buffer_size(self, buffer_size: int) -> None:
         """Set the buffer size for a not-yet-activated Pcap."""
         self._check_closed()
 
@@ -714,7 +714,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_statustostr(err).decode())
 
-    def set_tstamp_precision(self, tstamp_precision: TstampPrecision):
+    def set_tstamp_precision(self, tstamp_precision: TstampPrecision) -> None:
         """Set the time stamp precision returned in captures."""
         self._check_closed()
 
@@ -728,7 +728,7 @@ cdef class Pcap:
 
         return TstampPrecision(cpcap.pcap_get_tstamp_precision(self.pcap))
 
-    def activate(self):
+    def activate(self) -> None:
         """Activate a Pcap."""
         self._check_closed()
 
@@ -790,7 +790,7 @@ cdef class Pcap:
         finally:
             cpcap.pcap_free_datalinks(datalinks)
 
-    def set_datalink(self, datalink: DatalinkType):
+    def set_datalink(self, datalink: DatalinkType) -> None:
         """Set the link-layer header type to be used by a Pcap."""
         self._check_closed()
 
@@ -810,7 +810,7 @@ cdef class Pcap:
 
         return result
 
-    def is_swapped(self):
+    def is_swapped(self) -> bool:
         """Find out whether a savefile has the native byte order."""
         self._check_closed()
 
@@ -853,7 +853,7 @@ cdef class Pcap:
 
         return bpf_prog
 
-    def setfilter(self, filter: Union[BpfProgram, str], *, optimize=True, netmask=None):
+    def setfilter(self, filter: Union[BpfProgram, str], *, optimize=True, netmask=None) -> None:
         """
         Set the BPF filter.
 
@@ -872,7 +872,7 @@ cdef class Pcap:
         if err < 0:
             raise Error(err, cpcap.pcap_geterr(self.pcap).decode())
 
-    def setdirection(self, d: Direction):
+    def setdirection(self, d: Direction) -> None:
         """Set the direction for which packets will be captured."""
         self._check_closed()
 
@@ -937,7 +937,7 @@ cdef class Pcap:
 
         return result
 
-    def sendpacket(self, const unsigned char[::1] buf):
+    def sendpacket(self, const unsigned char[::1] buf) -> None:
         """
         Transmit a packet. *buf* is a object supporting the buffer protocol, e.g. :class:`bytes`,
         :class:`bytearray`.
@@ -963,7 +963,7 @@ cdef class Pcap:
         buffer_size: int=None,
         tstamp_type: TstampType=None,
         tstamp_precision: TstampPrecision=None,
-    ):
+    ) -> None:
         """Set pre activation configuration from keyword arguments."""
 
         if snaplen is not None:
@@ -995,7 +995,7 @@ cdef class Pcap:
         direction: Direction=None,
         datalink: DatalinkType=None,
         nonblock: bool=None,
-    ):
+    ) -> None:
         """Set post activation configuration from keyword arguments."""
 
         if filter is not None:
@@ -1032,7 +1032,7 @@ cdef class BpfProgram:
         """Check whether a filter matches a packet."""
         return cpcap.pcap_offline_filter(&self.bpf_prog, &pkt_header.pkthdr, pkt_data)
 
-    def debug_dump(self, option: int=0):
+    def debug_dump(self, option: int=0) -> None:
         """
         Dump the filter to stdout.
 
@@ -1041,7 +1041,7 @@ cdef class BpfProgram:
         cpcap.bpf_dump(&self.bpf_prog, option)
         stdio.fflush(stdio.stdout)
 
-    def dumps(self):
+    def dumps(self) -> str:
         """Dump the BPF filter in the format used by iptables, tc-bpf, etc."""
         out = []
 
@@ -1056,7 +1056,7 @@ cdef class BpfProgram:
         return ''.join(out)
 
     @staticmethod
-    def loads(s: str):
+    def loads(s: str) -> BpfProgram:
         """Load a BPF filter in the format used by iptables, tc-bpf, etc."""
         cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
 
@@ -1105,13 +1105,13 @@ cdef class Dumper:
     def __exit__(self, exc_type, exc_value, exc_tb):
         self.close()
 
-    def dump(self, Pkthdr pkt_header, pkt_data):
+    def dump(self, Pkthdr pkt_header: Pkthdr, pkt_data) -> None:
         """Write a packet to a capture file."""
         self._check_closed()
 
         cpcap.pcap_dump(<unsigned char*>self.dumper, &pkt_header.pkthdr, pkt_data)
 
-    def ftell(self):
+    def ftell(self) -> int:
         """Get the current file offset for a savefile being written."""
         self._check_closed()
 
@@ -1122,6 +1122,6 @@ cdef class Dumper:
         return result
 
 
-def lib_version():
+def lib_version() -> str:
     """Get the version information for libpcap."""
     return cpcap.pcap_lib_version().decode()
