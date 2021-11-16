@@ -34,6 +34,16 @@
             
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<section id="unreleased">
+<h2>Unreleased<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
+<section id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">optimize</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">Pcap.compile</span></code> now defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p>Can now call <code class="docutils literal notranslate"><span class="pre">Pcap.setfilter</span></code> with a <code class="docutils literal notranslate"><span class="pre">str</span></code> which will be compiled by calling <code class="docutils literal notranslate"><span class="pre">Pcap.compile</span></code>.</p></li>
+</ul>
+</section>
+</section>
 <section id="v0-2-0-2021-11-15">
 <h2>v0.2.0 (2021-11-15)<a class="headerlink" href="#v0-2-0-2021-11-15" title="Permalink to this headline">¶</a></h2>
 <section id="added">
@@ -52,8 +62,8 @@ iptables, tc-bpf, etc.</p></li>
 arguments.</p></li>
 </ul>
 </section>
-<section id="changed">
-<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
+<section id="id1">
+<h3>Changed<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Change <code class="docutils literal notranslate"><span class="pre">findalldevs</span></code> interface address parsing to use the same format as the <code class="docutils literal notranslate"><span class="pre">socket</span></code>
 module and add support for <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code> <code class="docutils literal notranslate"><span class="pre">sockaddr_ll</span></code> used in Linux.</p></li>
@@ -77,14 +87,14 @@ the correct value by itself.</p></li>
 </section>
 <section id="v0-1-0-2021-11-03">
 <h2>v0.1.0 (2021-11-03)<a class="headerlink" href="#v0-1-0-2021-11-03" title="Permalink to this headline">¶</a></h2>
-<section id="id1">
-<h3>Added<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<section id="id2">
+<h3>Added<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Tests &amp; Github Actions CI</p></li>
 </ul>
 </section>
-<section id="id2">
-<h3>Changed<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<section id="id3">
+<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">dump_open</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">dump_open_append</span></code>.</p></li>
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">open_offline</span></code>.</p></li>
@@ -94,8 +104,8 @@ deprecated <code class="docutils literal notranslate"><span class="pre">old_buil
 installed).</p></li>
 </ul>
 </section>
-<section id="id3">
-<h3>Fixed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<section id="id4">
+<h3>Fixed<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">NETMASK_UNKNOWN</span></code> was of the wrong type.</p></li>
 </ul>
@@ -133,6 +143,7 @@ installed).</p></li>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#unreleased">Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-2-0-2021-11-15">v0.2.0 (2021-11-15)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-1-1-2021-11-03">v0.1.1 (2021-11-03)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-1-0-2021-11-03">v0.1.0 (2021-11-03)</a></li>
