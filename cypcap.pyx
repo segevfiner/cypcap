@@ -820,7 +820,7 @@ cdef class Pcap:
 
         return result
 
-    def compile(self, filter_: str, optimize: bool, netmask: Optional[int]=None) -> BpfProgram:
+    def compile(self, filter_: str, optimize: bool=True, netmask: Optional[int]=None) -> BpfProgram:
         """
         Compile a filter expression.
 
@@ -853,9 +853,20 @@ cdef class Pcap:
 
         return bpf_prog
 
-    def setfilter(self, bpf_prog: BpfProgram):
-        """Set the BPF filter."""
+    def setfilter(self, filter: Union[BpfProgram, str], *, optimize=True, netmask=None):
+        """
+        Set the BPF filter.
+
+        You can pass either a :class:`BpfProgram` or a :class:`str` that will be passed to
+        :meth:`compile` (The keyword arguments are only used when passing a :class:`str`).
+        """
         self._check_closed()
+        cdef BpfProgram bpf_prog
+
+        if isinstance(filter, BpfProgram):
+            bpf_prog = filter
+        else:
+            bpf_prog = self.compile(filter, optimize=optimize, netmask=netmask)
 
         err = cpcap.pcap_setfilter(self.pcap, &bpf_prog.bpf_prog)
         if err < 0:
@@ -980,7 +991,7 @@ cdef class Pcap:
             self.set_tstamp_precision(tstamp_precision)
 
     def set_config(self, *,
-        filter: BpfProgram=None,
+        filter: Union[BpfProgram, str]=None,
         direction: Direction=None,
         datalink: DatalinkType=None,
         nonblock: bool=None,

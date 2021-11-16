@@ -1,6 +1,14 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+Changed
+^^^^^^^
+* The ``optimize`` parameter to ``Pcap.compile`` now defaults to ``True``.
+* Can now call ``Pcap.setfilter`` with a ``str`` which will be compiled by calling ``Pcap.compile``.
+
 v0.2.0 (2021-11-15)
 -------------------
 

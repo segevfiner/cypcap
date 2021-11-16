@@ -174,11 +174,20 @@ def test_stats(pcap, sender_pcap, echo_pkt):
     assert stats.ifdrop == 0
 
 
-def test_setfilter(pcap, sender_pcap, echo_pkt):
+def test_setfilter_bpf(pcap, sender_pcap, echo_pkt):
     sender_pcap.sendpacket(bytes(echo_pkt))
 
     bpf = pcap.compile("tcp", True)
     pcap.setfilter(bpf)
+    pcap.setnonblock(True)
+
+    assert next(pcap) == (None, None)
+
+
+def test_setfilter_str(pcap, sender_pcap, echo_pkt):
+    sender_pcap.sendpacket(bytes(echo_pkt))
+
+    pcap.setfilter("tcp")
     pcap.setnonblock(True)
 
     assert next(pcap) == (None, None)
