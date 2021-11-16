@@ -290,7 +290,7 @@ cdef class Pkthdr:
     """
     cdef cpcap.pcap_pkthdr pkthdr
 
-    def __init__(self, double ts: float=0.0, int caplen=0, len: int=0):
+    def __init__(self, double ts: float=0.0, caplen: int=0, len: int=0):
         self.ts = ts
         self.pkthdr.caplen = caplen
         self.pkthdr.len = len
