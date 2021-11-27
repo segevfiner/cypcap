@@ -58,4 +58,4 @@ Quickstart
 
 License
 -------
-3-Clause BSD license (The same as libpcap itself).
+3-Clause BSD license (The same kind of license that libpcap uses).
