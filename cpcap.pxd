@@ -66,19 +66,19 @@ cdef extern from "<pcap/pcap.h>" nogil:
     #endif
 
     #ifndef __linux__
-    static int pcap_set_protocol_linux(pcap_t *, int)
+    static int pcap_set_protocol_linux(pcap_t *p, int protocol)
     {
         return PCAP_ERROR;
     }
     #endif
 
     #if defined(_WIN32) || defined(MSDOS)
-    static int pcap_get_selectable_fd(pcap_t *)
+    static int pcap_get_selectable_fd(pcap_t *p)
     {
         return -1;
     }
 
-    static struct timeval *pcap_get_required_select_timeout(pcap_t *)
+    static struct timeval *pcap_get_required_select_timeout(pcap_t *p)
     {
         return NULL;
     }
