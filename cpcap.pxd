@@ -64,6 +64,25 @@ cdef extern from "<pcap/pcap.h>" nogil:
             }
     }
     #endif
+
+    #ifndef __linux__
+    static int pcap_set_protocol_linux(pcap_t *, int)
+    {
+        return PCAP_ERROR;
+    }
+    #endif
+
+    #if defined(_WIN32) || defined(MSDOS)
+    static int pcap_get_selectable_fd(pcap_t *)
+    {
+        return -1;
+    }
+
+    static struct timeval *pcap_get_required_select_timeout(pcap_t *)
+    {
+        return NULL;
+    }
+    #endif
     """
 
     ctypedef unsigned int bpf_u_int32
@@ -229,6 +248,8 @@ cdef extern from "<pcap/pcap.h>" nogil:
         PCAP_TSTAMP_PRECISION_MICRO
         PCAP_TSTAMP_PRECISION_NANO
 
+    int pcap_set_protocol_linux(pcap_t *, int)  # Linux only
+
     pcap_t *pcap_open_live(const char *, int, bint, int, char *)
 
     pcap_t *pcap_open_dead(int, int)
@@ -320,3 +341,10 @@ cdef extern from "<pcap/pcap.h>" nogil:
     const char *pcap_lib_version()
 
     void bpf_dump(const bpf_program *, int)
+
+    # Windows only
+    void *pcap_getevent(pcap_t *p)
+
+    # UN*X only
+    int	pcap_get_selectable_fd(pcap_t *)
+    timeval *pcap_get_required_select_timeout(pcap_t *)
