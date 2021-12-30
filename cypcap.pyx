@@ -1011,12 +1011,15 @@ cdef class Pcap:
             self.setnonblock(nonblock)
 
 
-# TODO Support __getitem__?
+cdef _bpf_insn_to_tuple(cpcap.bpf_insn insn):
+    return (int(insn.code), int(insn.jt), int(insn.jf), int(insn.k))
+
+
 cdef class BpfProgram:
     """
     A BPF filter program for :meth:`Pcap.setfilter`.
 
-    Can be created via :meth:`Pcap.compile`.
+    Can be created via :meth:`Pcap.compile` or :meth:`loads`.
     """
     cdef cpcap.bpf_program bpf_prog
     cdef bint use_free
@@ -1027,6 +1030,49 @@ cdef class BpfProgram:
                 free(self.bpf_prog.bf_insns)
             else:
                 cpcap.pcap_freecode(&self.bpf_prog)
+
+    def __repr__(self):
+        return f"<BpfProgram with {self.bpf_prog.bf_len} instructions>"
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            if key < 0:
+                key += self.bpf_prog.bf_len
+
+            if key >= self.bpf_prog.bf_len:
+                raise IndexError("index out of range")
+
+            return _bpf_insn_to_tuple(self.bpf_prog.bf_insns[key])
+        elif isinstance(key, slice):
+            start, stop, step = key.indices(self.bpf_prog.bf_len)
+
+            result = []
+            for i in range(start, stop, step):
+                result.append(_bpf_insn_to_tuple(self.bpf_prog.bf_insns[i]))
+
+            return result
+        else:
+            raise TypeError(f"indices must be integers or slices, not {type(key)}")
+
+    def __len__(self):
+        return self.bpf_prog.bf_len
+
+    # TODO Should this be __init__?
+    @staticmethod
+    def fromlist(list_: list):
+        """Create a BpfProgram from a list of tuples in the form ``[(code, jt, jf, k), ...]``."""
+        cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
+        self.use_free = True
+        self.bpf_prog.bf_len = len(list_)
+        self.bpf_prog.bf_insns = <cpcap.bpf_insn*>malloc(self.bpf_prog.bf_len * sizeof(cpcap.bpf_insn))
+
+        for i, v in enumerate(list_):
+            self.bpf_prog.bf_insns[i].code = int(v[0])
+            self.bpf_prog.bf_insns[i].jt = int(v[1])
+            self.bpf_prog.bf_insns[i].jf = int(v[2])
+            self.bpf_prog.bf_insns[i].k = int(v[3])
+
+        return self
 
     def offline_filter(self, pkt_header: Pkthdr, pkt_data: bytes) -> bool:
         """Check whether a filter matches a packet."""
