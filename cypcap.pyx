@@ -1007,14 +1007,14 @@ cdef class Pcap:
             return None
 
     def set_pre_config(self, *,
-        snaplen: int=None,
-        promisc: bool=None,
-        timeout: float=None,
-        rfmon: bool=None,
-        immediate_mode: bool=None,
-        buffer_size: int=None,
-        tstamp_type: TstampType=None,
-        tstamp_precision: TstampPrecision=None,
+        snaplen: Optional[int]=None,
+        promisc: Optional[bool]=None,
+        timeout: Optional[float]=None,
+        rfmon: Optional[bool]=None,
+        immediate_mode: Optional[bool]=None,
+        buffer_size: Optional[int]=None,
+        tstamp_type: Optional[TstampType]=None,
+        tstamp_precision: Optional[TstampPrecision]=None,
         protocol_linux: Optional[int]=None,
     ) -> None:
         """Set pre activation configuration from keyword arguments."""
@@ -1047,10 +1047,10 @@ cdef class Pcap:
             self.set_protocol_linux(protocol_linux)
 
     def set_config(self, *,
-        filter: Union[BpfProgram, str]=None,
-        direction: Direction=None,
-        datalink: DatalinkType=None,
-        nonblock: bool=None,
+        filter: Optional[Union[BpfProgram, str]]=None,
+        direction: Optional[Direction]=None,
+        datalink: Optional[DatalinkType]=None,
+        nonblock: Optional[bool]=None,
     ) -> None:
         """Set post activation configuration from keyword arguments."""
 
