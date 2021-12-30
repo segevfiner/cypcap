@@ -1015,7 +1015,7 @@ cdef class Pcap:
         buffer_size: int=None,
         tstamp_type: TstampType=None,
         tstamp_precision: TstampPrecision=None,
-        protocol_linux: int,
+        protocol_linux: Optional[int]=None,
     ) -> None:
         """Set pre activation configuration from keyword arguments."""
 
