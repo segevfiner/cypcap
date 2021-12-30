@@ -1059,7 +1059,7 @@ cdef class BpfProgram:
 
     # TODO Should this be __init__?
     @staticmethod
-    def fromlist(list_: list):
+    def fromlist(list_: list) -> BpfProgram:
         """Create a BpfProgram from a list of tuples in the form ``[(code, jt, jf, k), ...]``."""
         cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
         self.use_free = True
