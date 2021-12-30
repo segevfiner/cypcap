@@ -65,6 +65,13 @@ cdef extern from "<pcap/pcap.h>" nogil:
     }
     #endif
 
+    #ifndef _WIN32
+    static void *pcap_getevent(pcap_t *p)
+    {
+        return 0;
+    }
+    #endif
+
     #ifndef __linux__
     static int pcap_set_protocol_linux(pcap_t *p, int protocol)
     {
