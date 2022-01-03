@@ -124,7 +124,7 @@ class PcapIf:
        Interface flags.
     """
 
-    def __init__(self, name, description, addresses, flags):
+    def __init__(self, name: str, description: Optional[str], addresses: PcapAddr, flags: PcapIfFlags):
         self.name = name
         self.description = description
         self.addresses = addresses
@@ -264,7 +264,12 @@ class PcapAddr:
        P2P destination address for that address.
     """
 
-    def __init__(self, addr, netmask, broadaddr, dstaddr):
+    def __init__(self,
+        addr: Tuple[socket.AddressFamily, Tuple],
+        netmask: Tuple[socket.AddressFamily, Tuple],
+        broadaddr: Optional[Tuple[socket.AddressFamily, Tuple]],
+        dstaddr: Optional[Tuple[socket.AddressFamily, Tuple]],
+    ):
         self.addr = addr
         self.netmask = netmask
         self.broadaddr = broadaddr
@@ -527,6 +532,9 @@ cdef class Pcap:
     cdef cpcap.pcap_t* pcap
     cdef readonly object type
     cdef readonly str source
+
+    def __init__(self):
+        raise TypeError(f"cannot create '{self.__name__}' instances")
 
     @staticmethod
     cdef from_ptr(cpcap.pcap_t* pcap, typ, str source=None):
@@ -1021,6 +1029,9 @@ cdef class BpfProgram:
     cdef cpcap.bpf_program bpf_prog
     cdef bint use_free
 
+    def __init__(self):
+        raise TypeError(f"cannot create '{self.__name__}' instances")
+
     def __dealloc__(self):
         if self.bpf_prog.bf_insns:
             if self.use_free:
@@ -1083,6 +1094,9 @@ cdef class BpfProgram:
 cdef class Dumper:
     """Dumper represents a capture savefile."""
     cdef cpcap.pcap_dumper_t* dumper
+
+    def __init__(self):
+        raise TypeError(f"cannot create '{self.__name__}' instances")
 
     def __dealloc__(self):
         if self.dumper:
