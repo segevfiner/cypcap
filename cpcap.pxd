@@ -320,3 +320,5 @@ cdef extern from "<pcap/pcap.h>" nogil:
     const char *pcap_lib_version()
 
     void bpf_dump(const bpf_program *, int)
+
+    char *bpf_image(const bpf_insn *, int)

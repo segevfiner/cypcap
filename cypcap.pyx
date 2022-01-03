@@ -7,6 +7,7 @@ import os
 import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
+import threading
 from datetime import datetime, timezone
 from typing import Optional, Union, List, Tuple, Callable
 
@@ -1011,6 +1012,9 @@ cdef class Pcap:
             self.setnonblock(nonblock)
 
 
+cdef _bpf_image_lock = threading.Lock()
+
+
 # TODO Support __getitem__?
 cdef class BpfProgram:
     """
@@ -1032,14 +1036,28 @@ cdef class BpfProgram:
         """Check whether a filter matches a packet."""
         return cpcap.pcap_offline_filter(&self.bpf_prog, &pkt_header.pkthdr, pkt_data)
 
+    # TODO Make *option* an enum and/or merge with dumps
     def debug_dump(self, option: int=0) -> None:
         """
-        Dump the filter to stdout.
-
-        .. note:: Sadly the dumping function doesn't take an output stream...
+        Dump the filter to a str.
         """
-        cpcap.bpf_dump(&self.bpf_prog, option)
-        stdio.fflush(stdio.stdout)
+        result = []
+
+        if option > 2:
+            result.append(f"{self.bpf_prog.bf_len}")
+            for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+                result.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
+            return '\n'.join(result)
+
+        if option > 1:
+            for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+                result.append(f"{{ 0x{insn.code:x} {insn.jt} {insn.jf} 0x{insn.k:08x} }},")
+            return '\n'.join(result)
+
+        with _bpf_image_lock:
+            for i in range(self.bpf_prog.bf_len):
+                result.append(cpcap.bpf_image(&self.bpf_prog.bf_insns[i], i).decode())
+            return '\n'.join(result)
 
     def dumps(self) -> str:
         """Dump the BPF filter in the format used by iptables, tc-bpf, etc."""
