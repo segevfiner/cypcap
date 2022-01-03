@@ -124,7 +124,7 @@ class PcapIf:
        Interface flags.
     """
 
-    def __init__(self, name: str, description: Optional[str], addresses: PcapAddr, flags: PcapIfFlags):
+    def __init__(self, name: str, description: Optional[str], addresses: 'PcapAddr', flags: 'PcapIfFlags'):
         self.name = name
         self.description = description
         self.addresses = addresses
