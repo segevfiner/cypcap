@@ -985,7 +985,7 @@ cdef class Pcap:
             """
             Get a file descriptor on which a ``select()`` can be done for a live capture.
 
-            Availability: UNIX (POSIX)
+            Availability: Unix (POSIX)
             """
             self._check_closed()
 
@@ -995,7 +995,7 @@ cdef class Pcap:
             """
             Get a timeout to be used when doing ``select()`` for a live capture.
 
-            Availability: UNIX (POSIX)
+            Availability: Unix (POSIX)
             """
             self._check_closed()
 
