@@ -584,3 +584,9 @@ def test_compile_dumps_loads(capfd):
 
 def test_lib_version():
     assert isinstance(cypcap.lib_version(), str)
+
+
+@pytest.mark.parametrize("cls", [cypcap.Pcap, cypcap.BpfProgram, cypcap.Dumper])
+def test_raising_init(cls):
+    with pytest.raises(TypeError, match="cannot create"):
+        cls()

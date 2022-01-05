@@ -534,7 +534,7 @@ cdef class Pcap:
     cdef readonly str source
 
     def __init__(self):
-        raise TypeError(f"cannot create '{self.__name__}' instances")
+        raise TypeError(f"cannot create '{self.__class__.__name__}' instances")
 
     @staticmethod
     cdef from_ptr(cpcap.pcap_t* pcap, typ, str source=None):
@@ -1030,7 +1030,7 @@ cdef class BpfProgram:
     cdef bint use_free
 
     def __init__(self):
-        raise TypeError(f"cannot create '{self.__name__}' instances")
+        raise TypeError(f"cannot create '{self.__class__.__name__}' instances")
 
     def __dealloc__(self):
         if self.bpf_prog.bf_insns:
@@ -1096,7 +1096,7 @@ cdef class Dumper:
     cdef cpcap.pcap_dumper_t* dumper
 
     def __init__(self):
-        raise TypeError(f"cannot create '{self.__name__}' instances")
+        raise TypeError(f"cannot create '{self.__class__.__name__}' instances")
 
     def __dealloc__(self):
         if self.dumper:
