@@ -1019,10 +1019,28 @@ cdef class BpfProgram:
     """
     A BPF filter program for :meth:`Pcap.setfilter`.
 
-    Can be created via :meth:`Pcap.compile` or :meth:`loads`.
+    Can be created via :meth:`Pcap.compile` or :meth:`loads` or by supplying a list of tuples of the
+    form ``[(code, jt, jf, k), ...]``.
     """
     cdef cpcap.bpf_program bpf_prog
     cdef bint use_free
+
+    def __init__(self, list_: list):
+        if self.bpf_prog.bf_insns:
+            if self.use_free:
+                free(self.bpf_prog.bf_insns)
+            else:
+                cpcap.pcap_freecode(&self.bpf_prog)
+
+        self.use_free = True
+        self.bpf_prog.bf_len = len(list_)
+        self.bpf_prog.bf_insns = <cpcap.bpf_insn*>malloc(self.bpf_prog.bf_len * sizeof(cpcap.bpf_insn))
+
+        for i, v in enumerate(list_):
+            self.bpf_prog.bf_insns[i].code = int(v[0])
+            self.bpf_prog.bf_insns[i].jt = int(v[1])
+            self.bpf_prog.bf_insns[i].jf = int(v[2])
+            self.bpf_prog.bf_insns[i].k = int(v[3])
 
     def __dealloc__(self):
         if self.bpf_prog.bf_insns:
@@ -1057,22 +1075,9 @@ cdef class BpfProgram:
     def __len__(self):
         return self.bpf_prog.bf_len
 
-    # TODO Should this be __init__?
-    @staticmethod
-    def fromlist(list_: list) -> BpfProgram:
-        """Create a BpfProgram from a list of tuples in the form ``[(code, jt, jf, k), ...]``."""
-        cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
-        self.use_free = True
-        self.bpf_prog.bf_len = len(list_)
-        self.bpf_prog.bf_insns = <cpcap.bpf_insn*>malloc(self.bpf_prog.bf_len * sizeof(cpcap.bpf_insn))
-
-        for i, v in enumerate(list_):
-            self.bpf_prog.bf_insns[i].code = int(v[0])
-            self.bpf_prog.bf_insns[i].jt = int(v[1])
-            self.bpf_prog.bf_insns[i].jf = int(v[2])
-            self.bpf_prog.bf_insns[i].k = int(v[3])
-
-        return self
+    def __iter__(self):
+        for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+            yield _bpf_insn_to_tuple(insn)
 
     def offline_filter(self, pkt_header: Pkthdr, pkt_data: bytes) -> bool:
         """Check whether a filter matches a packet."""
