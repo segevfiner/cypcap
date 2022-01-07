@@ -7,6 +7,7 @@ import os
 import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
+import threading
 from datetime import datetime, timezone
 from typing import Optional, Union, List, Tuple, Callable
 
@@ -1019,6 +1020,16 @@ cdef class Pcap:
             self.setnonblock(nonblock)
 
 
+class BpfDumpType(enum.IntEnum):
+    DEFAULT = 0
+    MULTILINE = 1
+    C_ARRAY = 2
+    DISASSEMBLY = 3
+
+
+cdef _bpf_image_lock = threading.Lock()
+
+
 cdef _bpf_insn_to_tuple(cpcap.bpf_insn insn):
     return (int(insn.code), int(insn.jt), int(insn.jf), int(insn.k))
 
@@ -1091,32 +1102,55 @@ cdef class BpfProgram:
         """Check whether a filter matches a packet."""
         return cpcap.pcap_offline_filter(&self.bpf_prog, &pkt_header.pkthdr, pkt_data)
 
-    def debug_dump(self, option: int=0) -> None:
+    def dumps(self, type_: BpfDumpType=BpfDumpType.DEFAULT) -> str:
         """
-        Dump the filter to stdout.
+        Dump the BPF filter in the requested format.
 
-        .. note:: Sadly the dumping function doesn't take an output stream...
+        Formats:
+        * ``DEFAULT`` - The format used by iptables, tc-bpf, etc.
+        * ``MULTILINE`` - Like ``DEFAULT`` but with each element on a separate line.
+        * ``C_ARRAY`` - As an array suitable for embedding in C.
+        * ``DISASSEMBLY`` - Human readable disassembly.
         """
-        cpcap.bpf_dump(&self.bpf_prog, option)
-        stdio.fflush(stdio.stdout)
+        result = []
 
-    def dumps(self) -> str:
-        """Dump the BPF filter in the format used by iptables, tc-bpf, etc."""
-        out = []
+        if type_ == BpfDumpType.DEFAULT:
+            result.append(f"{self.bpf_prog.bf_len},")
 
-        out.append(f"{self.bpf_prog.bf_len},")
+            for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len-1]:
+                result.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k},")
 
-        for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len-1]:
-            out.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k},")
+            insn = self.bpf_prog.bf_insns[self.bpf_prog.bf_len-1]
+            result.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
 
-        insn = self.bpf_prog.bf_insns[self.bpf_prog.bf_len-1]
-        out.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
+            return ''.join(result)
 
-        return ''.join(out)
+        elif type_ == BpfDumpType.MULTILINE:
+            result.append(f"{self.bpf_prog.bf_len}")
+            for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+                result.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
+            return '\n'.join(result)
+
+        elif type_ == BpfDumpType.C_ARRAY:
+            for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+                result.append(f"{{ 0x{insn.code:x} {insn.jt} {insn.jf} 0x{insn.k:08x} }},")
+            return '\n'.join(result)
+
+        elif type_ == BpfDumpType.DISASSEMBLY:
+            with _bpf_image_lock:
+                for i in range(self.bpf_prog.bf_len):
+                    result.append(cpcap.bpf_image(&self.bpf_prog.bf_insns[i], i).decode())
+                return '\n'.join(result)
+
+        else:
+            raise ValueError(f"unknown type {type_!r}")
 
     @staticmethod
     def loads(s: str) -> BpfProgram:
-        """Load a BPF filter in the format used by iptables, tc-bpf, etc."""
+        """
+        Load a BPF filter in the format used by iptables, tc-bpf, etc. (The ``DEFAULT`` format from
+        dumps).
+        """
         cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
 
         length, *insns = s.split(',')

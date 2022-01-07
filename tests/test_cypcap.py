@@ -560,51 +560,56 @@ def test_offline_filter(echo_pkt):
     assert not bpf.offline_filter(pkthdr, data)
 
 
-def test_compile_debug_dump(capfd):
-    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    bpf.debug_dump()
-    captured = capfd.readouterr()
-    assert len(captured.out) > 0
+@pytest.mark.parametrize("type_, expected", [
+    (cypcap.BpfDumpType.DEFAULT, "2,40 0 0 12,6 0 0 65536"),
+    (cypcap.BpfDumpType.MULTILINE, "2\n40 0 0 12\n6 0 0 65536"),
+    (cypcap.BpfDumpType.C_ARRAY, "{ 0x28 0 0 0x0000000c },\n{ 0x6 0 0 0x00010000 },"),
+    (cypcap.BpfDumpType.DISASSEMBLY, "(000) ldh      [12]\n(001) ret      #65536"),
+])
+def test_dumps(type_, expected):
+    bpf = cypcap.BpfProgram([(40, 0, 0, 12), (6, 0, 0, 65536)])
+    assert bpf.dumps(type_) == expected
 
 
-def test_compile_dumps_loads(capfd):
+@pytest.mark.parametrize("type_", list(cypcap.BpfDumpType))
+def test_compile_dumps(type_):
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    bpf.debug_dump()
-    debug_dump1 = capfd.readouterr()
+    assert len(bpf.dumps(type_)) > 0
+
+
+def test_compile_dumps_loads():
+    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
+    disasm_dump1 = bpf.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
     dump = bpf.dumps()
     assert isinstance(dump, str)
 
     bpf2 = cypcap.BpfProgram.loads(dump)
-    bpf2.debug_dump()
-    debug_dump2 = capfd.readouterr()
+    disasm_dump2 = bpf2.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
-    assert debug_dump1 == debug_dump2
+    assert disasm_dump1 == disasm_dump2
 
 
-def test_compile_list_init(capfd):
+def test_compile_list_init():
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    bpf.debug_dump()
-    debug_dump1 = capfd.readouterr()
+    disasm_dump1 = bpf.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
     dump = list(bpf)
     assert isinstance(dump, list)
     assert len(dump) == len(bpf)
 
     bpf2 = cypcap.BpfProgram(dump)
-    bpf2.debug_dump()
-    debug_dump2 = capfd.readouterr()
+    disasm_dump2 = bpf2.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
-    assert debug_dump1 == debug_dump2
+    assert disasm_dump1 == disasm_dump2
 
 
-def test_compile_iter(capfd):
+def test_compile_iter():
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    bpf.debug_dump()
-    debug_dump = capfd.readouterr()
+    disasm_dump = bpf.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
     dump = [insn for insn in bpf]
-    assert len(dump) == len(debug_dump.out.splitlines())
+    assert len(dump) == len(disasm_dump.splitlines())
 
 
 def test_lib_version():
