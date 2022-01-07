@@ -597,7 +597,7 @@ def test_compile_iter():
     debug_dump = bpf.debug_dump()
 
     dump = [insn for insn in bpf]
-    assert len(dump) == len(debug_dump.out.splitlines())
+    assert len(dump) == len(debug_dump.splitlines())
 
 
 def test_lib_version():
