@@ -1,6 +1,24 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+Added
+^^^^^
+* ``BpfProgram`` now has ``__getitem__``, ``__len__``, ``__init__``, ``__iter__``, and can be turned
+  into a list.
+
+Changed
+^^^^^^^
+* Classes which should not be instantiated from Python directly should now raise
+  (``Pcap`` & ``Dumper``).
+
+Fixed
+^^^^^
+* ``set_config``, ``set_pre_config`` had wrong typing. (Altough those are not exported to an
+  interface file yet).
+
 v0.3.0 (2021-11-16)
 -------------------
 

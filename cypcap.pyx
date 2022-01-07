@@ -20,7 +20,7 @@ cimport cpcap
 cimport csocket
 
 
-__version__ = u"0.3.0"
+__version__ = u"0.4.0"
 
 
 include "npcap.pxi"
@@ -125,7 +125,7 @@ class PcapIf:
        Interface flags.
     """
 
-    def __init__(self, name, description, addresses, flags):
+    def __init__(self, name: str, description: Optional[str], addresses: 'PcapAddr', flags: 'PcapIfFlags'):
         self.name = name
         self.description = description
         self.addresses = addresses
@@ -265,7 +265,12 @@ class PcapAddr:
        P2P destination address for that address.
     """
 
-    def __init__(self, addr, netmask, broadaddr, dstaddr):
+    def __init__(self,
+        addr: Tuple[socket.AddressFamily, Tuple],
+        netmask: Tuple[socket.AddressFamily, Tuple],
+        broadaddr: Optional[Tuple[socket.AddressFamily, Tuple]],
+        dstaddr: Optional[Tuple[socket.AddressFamily, Tuple]],
+    ):
         self.addr = addr
         self.netmask = netmask
         self.broadaddr = broadaddr
@@ -528,6 +533,9 @@ cdef class Pcap:
     cdef cpcap.pcap_t* pcap
     cdef readonly object type
     cdef readonly str source
+
+    def __init__(self):
+        raise TypeError(f"cannot create '{self.__class__.__name__}' instances")
 
     @staticmethod
     cdef from_ptr(cpcap.pcap_t* pcap, typ, str source=None):
@@ -1015,15 +1023,36 @@ cdef class Pcap:
 cdef _bpf_image_lock = threading.Lock()
 
 
-# TODO Support __getitem__?
+cdef _bpf_insn_to_tuple(cpcap.bpf_insn insn):
+    return (int(insn.code), int(insn.jt), int(insn.jf), int(insn.k))
+
+
 cdef class BpfProgram:
     """
     A BPF filter program for :meth:`Pcap.setfilter`.
 
-    Can be created via :meth:`Pcap.compile`.
+    Can be created via :meth:`Pcap.compile` or :meth:`loads` or by supplying a list of tuples of the
+    form ``[(code, jt, jf, k), ...]``.
     """
     cdef cpcap.bpf_program bpf_prog
     cdef bint use_free
+
+    def __init__(self, list_: list):
+        if self.bpf_prog.bf_insns:
+            if self.use_free:
+                free(self.bpf_prog.bf_insns)
+            else:
+                cpcap.pcap_freecode(&self.bpf_prog)
+
+        self.use_free = True
+        self.bpf_prog.bf_len = len(list_)
+        self.bpf_prog.bf_insns = <cpcap.bpf_insn*>malloc(self.bpf_prog.bf_len * sizeof(cpcap.bpf_insn))
+
+        for i, v in enumerate(list_):
+            self.bpf_prog.bf_insns[i].code = int(v[0])
+            self.bpf_prog.bf_insns[i].jt = int(v[1])
+            self.bpf_prog.bf_insns[i].jf = int(v[2])
+            self.bpf_prog.bf_insns[i].k = int(v[3])
 
     def __dealloc__(self):
         if self.bpf_prog.bf_insns:
@@ -1031,6 +1060,36 @@ cdef class BpfProgram:
                 free(self.bpf_prog.bf_insns)
             else:
                 cpcap.pcap_freecode(&self.bpf_prog)
+
+    def __repr__(self):
+        return f"<BpfProgram with {self.bpf_prog.bf_len} instructions>"
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            if key < 0:
+                key += self.bpf_prog.bf_len
+
+            if key >= self.bpf_prog.bf_len:
+                raise IndexError("index out of range")
+
+            return _bpf_insn_to_tuple(self.bpf_prog.bf_insns[key])
+        elif isinstance(key, slice):
+            start, stop, step = key.indices(self.bpf_prog.bf_len)
+
+            result = []
+            for i in range(start, stop, step):
+                result.append(_bpf_insn_to_tuple(self.bpf_prog.bf_insns[i]))
+
+            return result
+        else:
+            raise TypeError(f"indices must be integers or slices, not {type(key)}")
+
+    def __len__(self):
+        return self.bpf_prog.bf_len
+
+    def __iter__(self):
+        for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+            yield _bpf_insn_to_tuple(insn)
 
     def offline_filter(self, pkt_header: Pkthdr, pkt_data: bytes) -> bool:
         """Check whether a filter matches a packet."""
@@ -1101,6 +1160,9 @@ cdef class BpfProgram:
 cdef class Dumper:
     """Dumper represents a capture savefile."""
     cdef cpcap.pcap_dumper_t* dumper
+
+    def __init__(self):
+        raise TypeError(f"cannot create '{self.__class__.__name__}' instances")
 
     def __dealloc__(self):
         if self.dumper:
