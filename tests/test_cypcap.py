@@ -582,5 +582,30 @@ def test_compile_dumps_loads(capfd):
     assert debug_dump1 == debug_dump2
 
 
+def test_compile_list_init(capfd):
+    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
+    bpf.debug_dump()
+    debug_dump1 = capfd.readouterr()
+
+    dump = list(bpf)
+    assert isinstance(dump, list)
+    assert len(dump) == len(bpf)
+
+    bpf2 = cypcap.BpfProgram(dump)
+    bpf2.debug_dump()
+    debug_dump2 = capfd.readouterr()
+
+    assert debug_dump1 == debug_dump2
+
+
+def test_compile_iter(capfd):
+    bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
+    bpf.debug_dump()
+    debug_dump = capfd.readouterr()
+
+    dump = [insn for insn in bpf]
+    assert len(dump) == len(debug_dump.out.splitlines())
+
+
 def test_lib_version():
     assert isinstance(cypcap.lib_version(), str)
