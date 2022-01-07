@@ -560,44 +560,44 @@ def test_offline_filter(echo_pkt):
     assert not bpf.offline_filter(pkthdr, data)
 
 
-def test_compile_debug_dump():
+def test_compile_dumps_disassembly():
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    assert len(bpf.debug_dump()) > 0
+    assert len(bpf.dumps(cypcap.BpfDumpType.DISASSEMBLY)) > 0
 
 
 def test_compile_dumps_loads():
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    debug_dump1 = bpf.debug_dump()
+    disasm_dump1 = bpf.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
     dump = bpf.dumps()
     assert isinstance(dump, str)
 
     bpf2 = cypcap.BpfProgram.loads(dump)
-    debug_dump2 = bpf2.debug_dump()
+    disasm_dump2 = bpf2.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
-    assert debug_dump1 == debug_dump2
+    assert disasm_dump1 == disasm_dump2
 
 
 def test_compile_list_init():
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    debug_dump1 = bpf.debug_dump()
+    disasm_dump1 = bpf.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
     dump = list(bpf)
     assert isinstance(dump, list)
     assert len(dump) == len(bpf)
 
     bpf2 = cypcap.BpfProgram(dump)
-    debug_dump2 = bpf2.debug_dump()
+    disasm_dump2 = bpf2.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
-    assert debug_dump1 == debug_dump2
+    assert disasm_dump1 == disasm_dump2
 
 
 def test_compile_iter():
     bpf = cypcap.compile(cypcap.DatalinkType.EN10MB, 65536, "tcp", True, cypcap.NETMASK_UNKNOWN)
-    debug_dump = bpf.debug_dump()
+    disasm_dump = bpf.dumps(cypcap.BpfDumpType.DISASSEMBLY)
 
     dump = [insn for insn in bpf]
-    assert len(dump) == len(debug_dump.splitlines())
+    assert len(dump) == len(disasm_dump.splitlines())
 
 
 def test_lib_version():
