@@ -530,25 +530,21 @@ number).</p>
 <p>Can be created via <a class="reference internal" href="#cypcap.Pcap.compile" title="cypcap.Pcap.compile"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pcap.compile()</span></code></a> or <a class="reference internal" href="#cypcap.BpfProgram.loads" title="cypcap.BpfProgram.loads"><code class="xref py py-meth docutils literal notranslate"><span class="pre">loads()</span></code></a> or by supplying a list of tuples of the
 form <code class="docutils literal notranslate"><span class="pre">[(code,</span> <span class="pre">jt,</span> <span class="pre">jf,</span> <span class="pre">k),</span> <span class="pre">...]</span></code>.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="cypcap.BpfProgram.debug_dump">
-<span class="sig-name descname"><span class="pre">debug_dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#cypcap.BpfProgram.debug_dump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dump the filter to stdout.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Sadly the dumping function doesn’t take an output stream…</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cypcap.BpfProgram.dumps">
-<span class="sig-name descname"><span class="pre">dumps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#cypcap.BpfProgram.dumps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dump the BPF filter in the format used by iptables, tc-bpf, etc.</p>
+<span class="sig-name descname"><span class="pre">dumps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">cypcap.BpfDumpType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#cypcap.BpfProgram.dumps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the BPF filter in the requested format.</p>
+<p>Formats:
+* <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> - The format used by iptables, tc-bpf, etc.
+* <code class="docutils literal notranslate"><span class="pre">MULTILINE</span></code> - Like <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> but with each element on a separate line.
+* <code class="docutils literal notranslate"><span class="pre">C_ARRAY</span></code> - As an array suitable for embedding in C.
+* <code class="docutils literal notranslate"><span class="pre">DISASSEMBLY</span></code> - Human readable disassembly.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cypcap.BpfProgram.loads">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cypcap.BpfProgram" title="cypcap.BpfProgram"><span class="pre">cypcap.BpfProgram</span></a></span></span><a class="headerlink" href="#cypcap.BpfProgram.loads" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load a BPF filter in the format used by iptables, tc-bpf, etc.</p>
+<dd><p>Load a BPF filter in the format used by iptables, tc-bpf, etc. (The <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code> format from
+dumps).</p>
 </dd></dl>
 
 <dl class="py method">
