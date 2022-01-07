@@ -41,6 +41,8 @@
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">BpfProgram</span></code> now has <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, <code class="docutils literal notranslate"><span class="pre">__len__</span></code>, <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">__iter__</span></code>, and can be turned
 into a list.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dumps</span></code> can now dump the formats that <code class="docutils literal notranslate"><span class="pre">debug_dump</span></code> used to output and return them as a string
+instead of printing to stdout.</p></li>
 </ul>
 </section>
 <section id="changed">
@@ -48,6 +50,12 @@ into a list.</p></li>
 <ul class="simple">
 <li><p>Classes which should not be instantiated from Python directly should now raise
 (<code class="docutils literal notranslate"><span class="pre">Pcap</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">Dumper</span></code>).</p></li>
+</ul>
+</section>
+<section id="removed">
+<h3>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">debug_dump</span></code> is merged into <code class="docutils literal notranslate"><span class="pre">dumps</span></code> by a new type parameter.</p></li>
 </ul>
 </section>
 <section id="fixed">
