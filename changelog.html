@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Changelog &#8212; cypcap 0.3.0 documentation</title>
+    <title>Changelog &#8212; cypcap 0.4.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -34,6 +34,23 @@
             
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<section id="unreleased">
+<h2>Unreleased<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
+<section id="added">
+<h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">BpfProgram</span></code> now has <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, <code class="docutils literal notranslate"><span class="pre">__len__</span></code>, <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">__iter__</span></code>, and can be turned
+into a list.</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">set_config</span></code>, <code class="docutils literal notranslate"><span class="pre">set_pre_config</span></code> had wrong typing. (Altough those are not exported to an
+interface file yet).</p></li>
+</ul>
+</section>
+</section>
 <section id="v0-3-0-2021-11-16">
 <h2>v0.3.0 (2021-11-16)<a class="headerlink" href="#v0-3-0-2021-11-16" title="Permalink to this headline">¶</a></h2>
 <section id="changed">
@@ -46,8 +63,8 @@
 </section>
 <section id="v0-2-0-2021-11-15">
 <h2>v0.2.0 (2021-11-15)<a class="headerlink" href="#v0-2-0-2021-11-15" title="Permalink to this headline">¶</a></h2>
-<section id="added">
-<h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
+<section id="id1">
+<h3>Added<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Wheels for Windows, Linux &amp; macOS.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Pkthdr</span></code> can be created from Python and is mutable (Useful for <code class="docutils literal notranslate"><span class="pre">bpf.offline_filter</span></code>).</p></li>
@@ -62,8 +79,8 @@ iptables, tc-bpf, etc.</p></li>
 arguments.</p></li>
 </ul>
 </section>
-<section id="id1">
-<h3>Changed<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<section id="id2">
+<h3>Changed<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Change <code class="docutils literal notranslate"><span class="pre">findalldevs</span></code> interface address parsing to use the same format as the <code class="docutils literal notranslate"><span class="pre">socket</span></code>
 module and add support for <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code> <code class="docutils literal notranslate"><span class="pre">sockaddr_ll</span></code> used in Linux.</p></li>
@@ -78,8 +95,8 @@ the correct value by itself.</p></li>
 </section>
 <section id="v0-1-1-2021-11-03">
 <h2>v0.1.1 (2021-11-03)<a class="headerlink" href="#v0-1-1-2021-11-03" title="Permalink to this headline">¶</a></h2>
-<section id="fixed">
-<h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
+<section id="id3">
+<h3>Fixed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cypcap.pyx</span></code> was missing from sdist due to <code class="docutils literal notranslate"><span class="pre">cythonize</span></code>. (Bug in Cython?)</p></li>
 </ul>
@@ -87,14 +104,14 @@ the correct value by itself.</p></li>
 </section>
 <section id="v0-1-0-2021-11-03">
 <h2>v0.1.0 (2021-11-03)<a class="headerlink" href="#v0-1-0-2021-11-03" title="Permalink to this headline">¶</a></h2>
-<section id="id2">
-<h3>Added<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<section id="id4">
+<h3>Added<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Tests &amp; Github Actions CI</p></li>
 </ul>
 </section>
-<section id="id3">
-<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<section id="id5">
+<h3>Changed<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">dump_open</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">dump_open_append</span></code>.</p></li>
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">open_offline</span></code>.</p></li>
@@ -104,8 +121,8 @@ deprecated <code class="docutils literal notranslate"><span class="pre">old_buil
 installed).</p></li>
 </ul>
 </section>
-<section id="id4">
-<h3>Fixed<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<section id="id6">
+<h3>Fixed<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">NETMASK_UNKNOWN</span></code> was of the wrong type.</p></li>
 </ul>
@@ -143,6 +160,7 @@ installed).</p></li>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#unreleased">Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-3-0-2021-11-16">v0.3.0 (2021-11-16)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-2-0-2021-11-15">v0.2.0 (2021-11-15)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-1-1-2021-11-03">v0.1.1 (2021-11-03)</a></li>
