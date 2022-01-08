@@ -73,3 +73,12 @@ html_theme_options = {
 # -- Options for intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
+
+
+def remove_bpf_data_docstring(app, what, name, obj, options, lines):
+    if what == 'data' and name.startswith("cypcap.bpf"):
+        lines.clear()
+
+
+def setup(app):
+    app.connect("autodoc-process-docstring", remove_bpf_data_docstring)

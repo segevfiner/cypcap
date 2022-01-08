@@ -5,6 +5,7 @@
 *.pyd
 *.so
 cypcap/_cypcap.c
+cypcap/bpf.c
 /*.html
 /npcap-sdk/
 docs/_build/
