@@ -10,6 +10,8 @@ Added
   into a list.
 * ``dumps`` can now dump the formats that ``debug_dump`` used to output and return them as a string
   instead of printing to stdout.
+* Platform specific functions ``Pcap.set_protocol_linux``, ``Pcap.get_selectable_fd``,
+  ``Pcap.get_required_select_timeout``, and ``Pcap.getevent``.
 
 Changed
 ^^^^^^^
