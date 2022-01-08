@@ -18,8 +18,8 @@ from libc.stdlib cimport malloc, free
 from libc.stdint cimport uintptr_t
 from cpython cimport PyObject, PyErr_SetFromErrno
 
-cimport cpcap
-cimport csocket
+from . cimport cpcap
+from . cimport csocket
 
 
 __version__ = u"0.4.0"

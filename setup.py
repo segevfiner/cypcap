@@ -3,7 +3,7 @@ import os
 import contextlib
 import re
 from io import open
-from setuptools import setup, Extension
+from setuptools import setup, find_packages, Extension
 from setuptools.command.build_ext import build_ext as _build_ext
 from distutils.errors import CompileError, LinkError
 
@@ -29,7 +29,7 @@ else:
         return extensions
 
 
-with open("cypcap.pyx", "r", encoding="utf-8") as f:
+with open("cypcap/_cypcap.pyx", "r", encoding="utf-8") as f:
     version = re.search(r'(?m)^__version__ = u"([a-zA-Z0-9.-]+)"', f.read()).group(1)
 
 with open("README.rst", "r", encoding="utf-8") as f:
@@ -195,10 +195,11 @@ setup(
     ],
     keywords="libpcap pcap",
     zip_safe=False,
+    packages=find_packages(),
     ext_modules=cythonize(
         [
             Extension(
-                "cypcap", ["cypcap.pyx", "sockaddr.c"],
+                "cypcap._cypcap", ["cypcap/_cypcap.pyx", "cypcap/sockaddr.c"],
                 include_dirs=include_dirs,
                 library_dirs=library_dirs,
                 libraries=libraries,

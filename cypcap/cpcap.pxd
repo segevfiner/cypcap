@@ -1,4 +1,4 @@
-from csocket cimport sockaddr, timeval
+from .csocket cimport sockaddr, timeval
 from libc.stdint cimport int64_t
 
 cdef extern from "<pcap/pcap.h>" nogil:
