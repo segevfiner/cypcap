@@ -13,6 +13,7 @@ See the `README.rst <https://github.com/segevfiner/cypcap/blob/master/README.rst
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
    bpf
    changelog
