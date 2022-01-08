@@ -3,6 +3,7 @@
 This module is a Cython based binding for modern libpcap.
 """
 
+import sys
 import os
 import socket  # To make sure WinSock2 is initialized
 import enum
@@ -14,6 +15,7 @@ from typing import Optional, Union, List, Tuple, Callable
 cimport cython
 from libc cimport stdio
 from libc.stdlib cimport malloc, free
+from libc.stdint cimport uintptr_t
 from cpython cimport PyObject, PyErr_SetFromErrno
 
 cimport cpcap
@@ -70,6 +72,12 @@ class Error(Exception):
         self.code = ErrorCode(code)
         self.msg = msg
         super().__init__(self.code, self.msg)
+
+
+class NotSupportedError(Exception):
+    """
+    Raised when an unsupported operation is requested.
+    """
 
 
 class Warning(Warning):
@@ -737,6 +745,22 @@ cdef class Pcap:
 
         return TstampPrecision(cpcap.pcap_get_tstamp_precision(self.pcap))
 
+
+    """
+    Set capture protocol for a not-yet-activated Pcap.
+
+    Availability: Linux
+    """
+    def set_protocol_linux(self, protocol: int) -> None:
+        self._check_closed()
+
+        if not sys.platform.startswith("linux"):
+            raise NotSupportedError
+
+        err = cpcap.pcap_set_protocol_linux(self.pcap, protocol)
+        if err < 0:
+            raise Error(err, cpcap.pcap_statustostr(err).decode())
+
     def activate(self) -> None:
         """Activate a Pcap."""
         self._check_closed()
@@ -963,6 +987,51 @@ cdef class Pcap:
         if result < 0:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
+
+    def getevent(self) -> int:
+        """
+        Get an event ``HANDLE`` that can be used to unblock pcap.
+
+        Availability: Windows
+        """
+        self._check_closed()
+
+        if sys.platform != "win32":
+            raise NotSupportedError
+
+        return <uintptr_t>cpcap.pcap_getevent(self.pcap)
+
+    def get_selectable_fd(self) -> int:
+        """
+        Get a file descriptor on which a ``select()`` can be done for a live capture.
+
+        Availability: Unix (POSIX)
+        """
+        self._check_closed()
+
+        if os.name != "posix":
+            raise NotSupportedError
+
+        return cpcap.pcap_get_selectable_fd(self.pcap)
+
+    def get_required_select_timeout(self) -> Optional[float]:
+        """
+        Get a timeout to be used when doing ``select()`` for a live capture.
+
+        Availability: Unix (POSIX)
+        """
+        self._check_closed()
+
+        if os.name != "posix":
+            raise NotSupportedError
+
+        timeout = cpcap.pcap_get_required_select_timeout(self.pcap)
+
+        if timeout is not NULL:
+            return timeout.tv_sec + timeout.tv_usec / 1000000
+
+        return None
+
     def set_pre_config(self, *,
         snaplen: Optional[int]=None,
         promisc: Optional[bool]=None,
@@ -972,6 +1041,7 @@ cdef class Pcap:
         buffer_size: Optional[int]=None,
         tstamp_type: Optional[TstampType]=None,
         tstamp_precision: Optional[TstampPrecision]=None,
+        protocol_linux: Optional[int]=None,
     ) -> None:
         """Set pre activation configuration from keyword arguments."""
 
@@ -998,6 +1068,9 @@ cdef class Pcap:
 
         if tstamp_precision is not None:
             self.set_tstamp_precision(tstamp_precision)
+
+        if protocol_linux is not None:
+            self.set_protocol_linux(protocol_linux)
 
     def set_config(self, *,
         filter: Optional[Union[BpfProgram, str]]=None,

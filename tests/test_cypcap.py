@@ -1,4 +1,4 @@
-import sys
+import os
 import socket
 from datetime import datetime
 import copy
@@ -544,6 +544,17 @@ def test_list_datalinks(pcap):
     datalinks = pcap.list_datalinks()
     assert len(datalinks) > 0
     assert cypcap.DatalinkType.EN10MB in datalinks
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Only supported on POSIX")
+def test_get_selectable_fd(pcap):
+    assert isinstance(pcap.get_selectable_fd(), int)
+
+
+@pytest.mark.skipif(os.name != "posix", reason="Only supported on POSIX")
+def test_get_required_select_timeout(pcap):
+    timeout = pcap.get_required_select_timeout()
+    assert timeout is None or isinstance(timeout, int)
 
 
 def test_nonexistent_interface():
