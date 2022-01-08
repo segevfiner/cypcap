@@ -29,7 +29,7 @@ else:
         return extensions
 
 
-with open("cypcap/_cypcap.pyx", "r", encoding="utf-8") as f:
+with open("cypcap/__init__.py", "r", encoding="utf-8") as f:
     version = re.search(r'(?m)^__version__ = u"([a-zA-Z0-9.-]+)"', f.read()).group(1)
 
 with open("README.rst", "r", encoding="utf-8") as f:

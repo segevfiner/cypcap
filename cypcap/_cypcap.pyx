@@ -22,9 +22,6 @@ from . cimport cpcap
 from . cimport csocket
 
 
-__version__ = u"0.4.0"
-
-
 include "npcap.pxi"
 
 
