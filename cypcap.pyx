@@ -8,6 +8,7 @@ import os
 import socket  # To make sure WinSock2 is initialized
 import enum
 import warnings
+import threading
 from datetime import datetime, timezone
 from typing import Optional, Union, List, Tuple, Callable
 
@@ -21,7 +22,7 @@ cimport cpcap
 cimport csocket
 
 
-__version__ = u"0.3.0"
+__version__ = u"0.4.0"
 
 
 include "npcap.pxi"
@@ -126,7 +127,7 @@ class PcapIf:
        Interface flags.
     """
 
-    def __init__(self, name, description, addresses, flags):
+    def __init__(self, name: str, description: Optional[str], addresses: 'PcapAddr', flags: 'PcapIfFlags'):
         self.name = name
         self.description = description
         self.addresses = addresses
@@ -266,7 +267,12 @@ class PcapAddr:
        P2P destination address for that address.
     """
 
-    def __init__(self, addr, netmask, broadaddr, dstaddr):
+    def __init__(self,
+        addr: Tuple[socket.AddressFamily, Tuple],
+        netmask: Tuple[socket.AddressFamily, Tuple],
+        broadaddr: Optional[Tuple[socket.AddressFamily, Tuple]],
+        dstaddr: Optional[Tuple[socket.AddressFamily, Tuple]],
+    ):
         self.addr = addr
         self.netmask = netmask
         self.broadaddr = broadaddr
@@ -529,6 +535,9 @@ cdef class Pcap:
     cdef cpcap.pcap_t* pcap
     cdef readonly object type
     cdef readonly str source
+
+    def __init__(self):
+        raise TypeError(f"cannot create '{self.__class__.__name__}' instances")
 
     @staticmethod
     cdef from_ptr(cpcap.pcap_t* pcap, typ, str source=None):
@@ -1067,15 +1076,46 @@ cdef class Pcap:
             self.setnonblock(nonblock)
 
 
-# TODO Support __getitem__?
+class BpfDumpType(enum.IntEnum):
+    DEFAULT = 0
+    MULTILINE = 1
+    C_ARRAY = 2
+    DISASSEMBLY = 3
+
+
+cdef _bpf_image_lock = threading.Lock()
+
+
+cdef _bpf_insn_to_tuple(cpcap.bpf_insn insn):
+    return (int(insn.code), int(insn.jt), int(insn.jf), int(insn.k))
+
+
 cdef class BpfProgram:
     """
     A BPF filter program for :meth:`Pcap.setfilter`.
 
-    Can be created via :meth:`Pcap.compile`.
+    Can be created via :meth:`Pcap.compile` or :meth:`loads` or by supplying a list of tuples of the
+    form ``[(code, jt, jf, k), ...]``.
     """
     cdef cpcap.bpf_program bpf_prog
     cdef bint use_free
+
+    def __init__(self, list_: list):
+        if self.bpf_prog.bf_insns:
+            if self.use_free:
+                free(self.bpf_prog.bf_insns)
+            else:
+                cpcap.pcap_freecode(&self.bpf_prog)
+
+        self.use_free = True
+        self.bpf_prog.bf_len = len(list_)
+        self.bpf_prog.bf_insns = <cpcap.bpf_insn*>malloc(self.bpf_prog.bf_len * sizeof(cpcap.bpf_insn))
+
+        for i, v in enumerate(list_):
+            self.bpf_prog.bf_insns[i].code = int(v[0])
+            self.bpf_prog.bf_insns[i].jt = int(v[1])
+            self.bpf_prog.bf_insns[i].jf = int(v[2])
+            self.bpf_prog.bf_insns[i].k = int(v[3])
 
     def __dealloc__(self):
         if self.bpf_prog.bf_insns:
@@ -1084,36 +1124,89 @@ cdef class BpfProgram:
             else:
                 cpcap.pcap_freecode(&self.bpf_prog)
 
+    def __repr__(self):
+        return f"<BpfProgram with {self.bpf_prog.bf_len} instructions>"
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            if key < 0:
+                key += self.bpf_prog.bf_len
+
+            if key >= self.bpf_prog.bf_len:
+                raise IndexError("index out of range")
+
+            return _bpf_insn_to_tuple(self.bpf_prog.bf_insns[key])
+        elif isinstance(key, slice):
+            start, stop, step = key.indices(self.bpf_prog.bf_len)
+
+            result = []
+            for i in range(start, stop, step):
+                result.append(_bpf_insn_to_tuple(self.bpf_prog.bf_insns[i]))
+
+            return result
+        else:
+            raise TypeError(f"indices must be integers or slices, not {type(key)}")
+
+    def __len__(self):
+        return self.bpf_prog.bf_len
+
+    def __iter__(self):
+        for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+            yield _bpf_insn_to_tuple(insn)
+
     def offline_filter(self, pkt_header: Pkthdr, pkt_data: bytes) -> bool:
         """Check whether a filter matches a packet."""
         return cpcap.pcap_offline_filter(&self.bpf_prog, &pkt_header.pkthdr, pkt_data)
 
-    def debug_dump(self, option: int=0) -> None:
+    def dumps(self, type_: BpfDumpType=BpfDumpType.DEFAULT) -> str:
         """
-        Dump the filter to stdout.
+        Dump the BPF filter in the requested format.
 
-        .. note:: Sadly the dumping function doesn't take an output stream...
+        Formats:
+        * ``DEFAULT`` - The format used by iptables, tc-bpf, etc.
+        * ``MULTILINE`` - Like ``DEFAULT`` but with each element on a separate line.
+        * ``C_ARRAY`` - As an array suitable for embedding in C.
+        * ``DISASSEMBLY`` - Human readable disassembly.
         """
-        cpcap.bpf_dump(&self.bpf_prog, option)
-        stdio.fflush(stdio.stdout)
+        result = []
 
-    def dumps(self) -> str:
-        """Dump the BPF filter in the format used by iptables, tc-bpf, etc."""
-        out = []
+        if type_ == BpfDumpType.DEFAULT:
+            result.append(f"{self.bpf_prog.bf_len},")
 
-        out.append(f"{self.bpf_prog.bf_len},")
+            for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len-1]:
+                result.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k},")
 
-        for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len-1]:
-            out.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k},")
+            insn = self.bpf_prog.bf_insns[self.bpf_prog.bf_len-1]
+            result.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
 
-        insn = self.bpf_prog.bf_insns[self.bpf_prog.bf_len-1]
-        out.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
+            return ''.join(result)
 
-        return ''.join(out)
+        elif type_ == BpfDumpType.MULTILINE:
+            result.append(f"{self.bpf_prog.bf_len}")
+            for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+                result.append(f"{insn.code} {insn.jt} {insn.jf} {insn.k}")
+            return '\n'.join(result)
+
+        elif type_ == BpfDumpType.C_ARRAY:
+            for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
+                result.append(f"{{ 0x{insn.code:x} {insn.jt} {insn.jf} 0x{insn.k:08x} }},")
+            return '\n'.join(result)
+
+        elif type_ == BpfDumpType.DISASSEMBLY:
+            with _bpf_image_lock:
+                for i in range(self.bpf_prog.bf_len):
+                    result.append(cpcap.bpf_image(&self.bpf_prog.bf_insns[i], i).decode())
+                return '\n'.join(result)
+
+        else:
+            raise ValueError(f"unknown type {type_!r}")
 
     @staticmethod
     def loads(s: str) -> BpfProgram:
-        """Load a BPF filter in the format used by iptables, tc-bpf, etc."""
+        """
+        Load a BPF filter in the format used by iptables, tc-bpf, etc. (The ``DEFAULT`` format from
+        dumps).
+        """
         cdef BpfProgram self = BpfProgram.__new__(BpfProgram)
 
         length, *insns = s.split(',')
@@ -1139,6 +1232,9 @@ cdef class BpfProgram:
 cdef class Dumper:
     """Dumper represents a capture savefile."""
     cdef cpcap.pcap_dumper_t* dumper
+
+    def __init__(self):
+        raise TypeError(f"cannot create '{self.__class__.__name__}' instances")
 
     def __dealloc__(self):
         if self.dumper:

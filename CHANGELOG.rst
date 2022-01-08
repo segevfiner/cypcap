@@ -1,6 +1,30 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+Added
+^^^^^
+* ``BpfProgram`` now has ``__getitem__``, ``__len__``, ``__init__``, ``__iter__``, and can be turned
+  into a list.
+* ``dumps`` can now dump the formats that ``debug_dump`` used to output and return them as a string
+  instead of printing to stdout.
+
+Changed
+^^^^^^^
+* Classes which should not be instantiated from Python directly should now raise
+  (``Pcap`` & ``Dumper``).
+
+Removed
+^^^^^^^
+* ``debug_dump`` is merged into ``dumps`` by a new type parameter.
+
+Fixed
+^^^^^
+* ``set_config``, ``set_pre_config`` had wrong typing. (Altough those are not exported to an
+  interface file yet).
+
 v0.3.0 (2021-11-16)
 -------------------
 

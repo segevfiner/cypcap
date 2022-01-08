@@ -349,6 +349,8 @@ cdef extern from "<pcap/pcap.h>" nogil:
 
     void bpf_dump(const bpf_program *, int)
 
+    char *bpf_image(const bpf_insn *, int)
+
     # Windows only
     void *pcap_getevent(pcap_t *p)
 
