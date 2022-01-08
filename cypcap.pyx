@@ -74,6 +74,12 @@ class Error(Exception):
         super().__init__(self.code, self.msg)
 
 
+class NotSupportedError(Exception):
+    """
+    Raised when an unsupported operation is requested.
+    """
+
+
 class Warning(Warning):
     """
     Warning category for libpcap warnings.
@@ -739,18 +745,21 @@ cdef class Pcap:
 
         return TstampPrecision(cpcap.pcap_get_tstamp_precision(self.pcap))
 
-    if sys.platform.startswith("linux"):
-        """
-        Set capture protocol for a not-yet-activated Pcap.
 
-        Availability: Linux
-        """
-        def set_protocol_linux(self, protocol: int) -> None:
-            self._check_closed()
+    """
+    Set capture protocol for a not-yet-activated Pcap.
 
-            err = cpcap.pcap_set_protocol_linux(self.pcap, protocol)
-            if err < 0:
-                raise Error(err, cpcap.pcap_statustostr(err).decode())
+    Availability: Linux
+    """
+    def set_protocol_linux(self, protocol: int) -> None:
+        self._check_closed()
+
+        if not sys.platform.startswith("linux"):
+            raise NotSupportedError
+
+        err = cpcap.pcap_set_protocol_linux(self.pcap, protocol)
+        if err < 0:
+            raise Error(err, cpcap.pcap_statustostr(err).decode())
 
     def activate(self) -> None:
         """Activate a Pcap."""
@@ -978,42 +987,50 @@ cdef class Pcap:
         if result < 0:
             raise Error(ErrorCode.ERROR, cpcap.pcap_geterr(self.pcap).decode())
 
-    if sys.platform == "win32":
-        def getevent(self) -> int:
-            """
-            Get an event ``HANDLE`` that can be used to unblock pcap.
 
-            Availability: Windows
-            """
-            self._check_closed()
+    def getevent(self) -> int:
+        """
+        Get an event ``HANDLE`` that can be used to unblock pcap.
 
-            return <uintptr_t>cpcap.pcap_getevent(self.pcap)
+        Availability: Windows
+        """
+        self._check_closed()
 
-    if os.name == "posix":
-        def get_selectable_fd(self) -> int:
-            """
-            Get a file descriptor on which a ``select()`` can be done for a live capture.
+        if sys.platform != "win32":
+            raise NotSupportedError
 
-            Availability: Unix (POSIX)
-            """
-            self._check_closed()
+        return <uintptr_t>cpcap.pcap_getevent(self.pcap)
 
-            return cpcap.pcap_get_selectable_fd(self.pcap)
+    def get_selectable_fd(self) -> int:
+        """
+        Get a file descriptor on which a ``select()`` can be done for a live capture.
 
-        def get_required_select_timeout(self) -> Optional[float]:
-            """
-            Get a timeout to be used when doing ``select()`` for a live capture.
+        Availability: Unix (POSIX)
+        """
+        self._check_closed()
 
-            Availability: Unix (POSIX)
-            """
-            self._check_closed()
+        if os.name != "posix":
+            raise NotSupportedError
 
-            timeout = cpcap.pcap_get_required_select_timeout(self.pcap)
+        return cpcap.pcap_get_selectable_fd(self.pcap)
 
-            if timeout is not NULL:
-                return timeout.tv_sec + timeout.tv_usec / 1000000
+    def get_required_select_timeout(self) -> Optional[float]:
+        """
+        Get a timeout to be used when doing ``select()`` for a live capture.
 
-            return None
+        Availability: Unix (POSIX)
+        """
+        self._check_closed()
+
+        if os.name != "posix":
+            raise NotSupportedError
+
+        timeout = cpcap.pcap_get_required_select_timeout(self.pcap)
+
+        if timeout is not NULL:
+            return timeout.tv_sec + timeout.tv_usec / 1000000
+
+        return None
 
     def set_pre_config(self, *,
         snaplen: Optional[int]=None,
