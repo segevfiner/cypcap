@@ -1,5 +1,3 @@
-# cython: language_level=3str
-
 cdef extern from "<pcap.h>":
     pass
 
