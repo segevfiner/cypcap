@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>cypcap.bpf module &#8212; cypcap 0.4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
+    <link rel="prev" title="Welcome to cypcap’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-cypcap.bpf">
+<span id="cypcap-bpf-module"></span><h1>cypcap.bpf module<a class="headerlink" href="#module-cypcap.bpf" title="Permalink to this headline">¶</a></h1>
+<p>BPF Constants and utility functions.</p>
+<p><strong>Instruction classes:</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.CLASS">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">CLASS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.CLASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get instruction class.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.LD">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">LD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#cypcap.bpf.LD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.LDX">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">LDX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#cypcap.bpf.LDX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.ST">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">ST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#cypcap.bpf.ST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.STX">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">STX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#cypcap.bpf.STX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.ALU">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">ALU</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#cypcap.bpf.ALU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.JMP">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">JMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#cypcap.bpf.JMP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.RET">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">RET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#cypcap.bpf.RET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.MISC">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">MISC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#cypcap.bpf.MISC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><strong>ld/ldx fields:</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.SIZE">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">SIZE</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get ld/ldx size.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.W">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">W</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#cypcap.bpf.W" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.H">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">H</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#cypcap.bpf.H" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.B">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">B</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#cypcap.bpf.B" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.MODE">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">MODE</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.MODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get ld/ldx mode.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.IMM">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">IMM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#cypcap.bpf.IMM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.ABS">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">ABS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></em><a class="headerlink" href="#cypcap.bpf.ABS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.IND">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">IND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">64</span></em><a class="headerlink" href="#cypcap.bpf.IND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.MEM">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">MEM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">96</span></em><a class="headerlink" href="#cypcap.bpf.MEM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.LEN">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">LEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">128</span></em><a class="headerlink" href="#cypcap.bpf.LEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.MSH">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">MSH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">160</span></em><a class="headerlink" href="#cypcap.bpf.MSH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><strong>alu/jmp fields:</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.OP">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">OP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.OP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get alu/jmp op.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.ADD">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">ADD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#cypcap.bpf.ADD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.SUB">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">SUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#cypcap.bpf.SUB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.MUL">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">MUL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></em><a class="headerlink" href="#cypcap.bpf.MUL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.DIV">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">DIV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">48</span></em><a class="headerlink" href="#cypcap.bpf.DIV" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.OR">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">OR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">64</span></em><a class="headerlink" href="#cypcap.bpf.OR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.AND">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">AND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">80</span></em><a class="headerlink" href="#cypcap.bpf.AND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.LSH">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">LSH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">96</span></em><a class="headerlink" href="#cypcap.bpf.LSH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.RSH">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">RSH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">112</span></em><a class="headerlink" href="#cypcap.bpf.RSH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.NEG">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">NEG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">128</span></em><a class="headerlink" href="#cypcap.bpf.NEG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.MOD">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">MOD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">144</span></em><a class="headerlink" href="#cypcap.bpf.MOD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.XOR">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">XOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">160</span></em><a class="headerlink" href="#cypcap.bpf.XOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.JA">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">JA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#cypcap.bpf.JA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.JEQ">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">JEQ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#cypcap.bpf.JEQ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.JGT">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">JGT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></em><a class="headerlink" href="#cypcap.bpf.JGT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.JGE">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">JGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">48</span></em><a class="headerlink" href="#cypcap.bpf.JGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.JSET">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">JSET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">64</span></em><a class="headerlink" href="#cypcap.bpf.JSET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.SRC">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">SRC</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.SRC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get alu/jmp src.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.K">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#cypcap.bpf.K" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.X">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">X</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#cypcap.bpf.X" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><strong>ret - BPF_K and BPF_X also apply:</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.RVAL">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">RVAL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.RVAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get return value src.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.A">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">A</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#cypcap.bpf.A" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><strong>misc:</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.MISCOP">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">MISCOP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.MISCOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get misc op.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.TAX">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">TAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#cypcap.bpf.TAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.TXA">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">TXA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">128</span></em><a class="headerlink" href="#cypcap.bpf.TXA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><strong>utils:</strong></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.STMT">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">STMT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.STMT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a BPF statement instruction tuple.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cypcap.bpf.JUMP">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">JUMP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.bpf.JUMP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a BPF jump instruction tuple.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cypcap.bpf.MEMWORDS">
+<span class="sig-prename descclassname"><span class="pre">cypcap.bpf.</span></span><span class="sig-name descname"><span class="pre">MEMWORDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#cypcap.bpf.MEMWORDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of scratch memory words (for BPF_LD|BPF_MEM and BPF_ST).</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">cypcap</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=segevfiner&repo=cypcap&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">cypcap.bpf module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://pypi.org/project/cypcap/">cypcap @ PyPI</a></li>
+    
+    <li class="toctree-l1"><a href="https://github.com/segevfiner/cypcap">cypcap @ GitHub</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to cypcap’s documentation!</a></li>
+      <li>Next: <a href="changelog.html" title="next chapter">Changelog</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Segev Finer.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/bpf.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
