@@ -26,7 +26,7 @@ Removed
 
 Fixed
 ^^^^^
-* ``set_config``, ``set_pre_config`` had wrong typing. (Altough those are not exported to an
+* ``set_config``, ``set_pre_config`` had wrong typing. (Although those are not exported to an
   interface file yet).
 
 v0.3.0 (2021-11-16)
