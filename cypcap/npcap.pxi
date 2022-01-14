@@ -1,4 +1,4 @@
-cimport cpcap
+from . cimport cpcap
 
 cdef extern from *:
     """

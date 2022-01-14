@@ -18,11 +18,8 @@ from libc.stdlib cimport malloc, free
 from libc.stdint cimport uintptr_t
 from cpython cimport PyObject, PyErr_SetFromErrno
 
-cimport cpcap
-cimport csocket
-
-
-__version__ = u"0.4.0"
+from . cimport cpcap
+from . cimport csocket
 
 
 include "npcap.pxi"

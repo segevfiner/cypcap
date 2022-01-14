@@ -1,12 +1,6 @@
 Welcome to cypcap's documentation!
 ==================================
 
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-
-   changelog
-
 Version: |release|
 
 This package is a Cython based binding for modern libpcap versions, for Python 3.6+, attempting to
@@ -16,6 +10,13 @@ See `pcap(3pcap) <https://www.tcpdump.org/manpages/pcap.3pcap.html>`_ for more d
 documentation about libpcap.
 
 See the `README.rst <https://github.com/segevfiner/cypcap/blob/master/README.rst>`_ for installation instructions.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   bpf
+   changelog
 
 .. module:: cypcap
 

@@ -1,2 +1,2 @@
-include cypcap.c
-include *.pyx *.pxd *.pxi
+include cypcap/_cypcap.c cypcap/bpf.c
+recursive-include cypcap *.pyx *.pxd *.pxi
