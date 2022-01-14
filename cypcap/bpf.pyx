@@ -1,7 +1,7 @@
+# cython: language_level=3str, binding=True
 """
 BPF Constants and utility functions.
 """
-
 
 from . cimport cbpf
 

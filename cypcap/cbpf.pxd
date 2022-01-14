@@ -1,5 +1,8 @@
 # cython: language_level=3str
 
+cdef extern from "<pcap.h>":
+    pass
+
 cdef extern from "<pcap/bpf.h>":
     unsigned short BPF_CLASS(unsigned short code)
 
