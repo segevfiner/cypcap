@@ -1115,6 +1115,9 @@ cdef class BpfProgram:
     cdef bint use_free
 
     def __init__(self, list_: list):
+        if len(list) > 2**32-1:
+            raise ValueError("BPF too long")
+
         if self.bpf_prog.bf_insns:
             if self.use_free:
                 free(self.bpf_prog.bf_insns)
@@ -1122,7 +1125,7 @@ cdef class BpfProgram:
                 cpcap.pcap_freecode(&self.bpf_prog)
 
         self.use_free = True
-        self.bpf_prog.bf_len = len(list_)
+        self.bpf_prog.bf_len = <unsigned int>len(list_)
         self.bpf_prog.bf_insns = <cpcap.bpf_insn*>malloc(self.bpf_prog.bf_len * sizeof(cpcap.bpf_insn))
 
         for i, v in enumerate(list_):
