@@ -1115,7 +1115,7 @@ cdef class BpfProgram:
     cdef bint use_free
 
     def __init__(self, list_: list):
-        if len(list) > 2**32-1:
+        if len(list_) > 2**32-1:
             raise ValueError("BPF too long")
 
         if self.bpf_prog.bf_insns:
