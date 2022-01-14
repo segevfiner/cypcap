@@ -12,11 +12,13 @@ Added
   instead of printing to stdout.
 * Platform specific functions ``Pcap.set_protocol_linux``, ``Pcap.get_selectable_fd``,
   ``Pcap.get_required_select_timeout``, and ``Pcap.getevent``.
+* ``cypcap.bpf`` module with constants and utility functions for manually written BPF.
 
 Changed
 ^^^^^^^
 * Classes which should not be instantiated from Python directly should now raise
   (``Pcap`` & ``Dumper``).
+* ``cypcap`` is now a package rather than a single file module, API remains the same.
 
 Removed
 ^^^^^^^
