@@ -1,3 +1,7 @@
+"""
+This module is a Cython based binding for modern libpcap.
+"""
+
 from ._cypcap import *
 
 
