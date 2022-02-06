@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+Fixed
+^^^^^
+* ``dumps(..., cypcap.BpfDumpType.C_ARRAY)`` outputted wrong syntax.
+
 v0.4.0 (2022-01-14)
 -------------------
 

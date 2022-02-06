@@ -574,7 +574,7 @@ def test_offline_filter(echo_pkt):
 @pytest.mark.parametrize("type_, expected", [
     (cypcap.BpfDumpType.DEFAULT, "2,40 0 0 12,6 0 0 65536"),
     (cypcap.BpfDumpType.MULTILINE, "2\n40 0 0 12\n6 0 0 65536"),
-    (cypcap.BpfDumpType.C_ARRAY, "{ 0x28 0 0 0x0000000c },\n{ 0x6 0 0 0x00010000 },"),
+    (cypcap.BpfDumpType.C_ARRAY, "{ 0x28, 0, 0, 0x0000000c },\n{ 0x6, 0, 0, 0x00010000 },"),
     (cypcap.BpfDumpType.DISASSEMBLY, "(000) ldh      [12]\n(001) ret      #65536"),
 ])
 def test_dumps(type_, expected):

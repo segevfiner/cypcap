@@ -1206,7 +1206,7 @@ cdef class BpfProgram:
 
         elif type_ == BpfDumpType.C_ARRAY:
             for insn in self.bpf_prog.bf_insns[:self.bpf_prog.bf_len]:
-                result.append(f"{{ 0x{insn.code:x} {insn.jt} {insn.jf} 0x{insn.k:08x} }},")
+                result.append(f"{{ 0x{insn.code:x}, {insn.jt}, {insn.jf}, 0x{insn.k:08x} }},")
             return '\n'.join(result)
 
         elif type_ == BpfDumpType.DISASSEMBLY:
