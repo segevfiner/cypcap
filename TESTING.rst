@@ -6,7 +6,7 @@ Testing Setup
     pip install -e .[dev]
 
     # Make the virtualenv Python a real file rather than a symlink
-    [ -L "$1" ] && cp --remove-destination "$(readlink "venv/bin/python")" "venv/bin/python"
+    [ -L "venv/bin/python" ] && cp --remove-destination "$(readlink "venv/bin/python")" "venv/bin/python"
 
     # Give the virtualenv Python CAP_NET_RAW
     sudo setcap CAP_NET_RAW+ep venv/bin/python
