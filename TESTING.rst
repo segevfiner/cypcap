@@ -9,8 +9,6 @@ Testing Setup
     [ -L "$1" ] && cp --remove-destination "$(readlink "venv/bin/python")" "venv/bin/python"
 
     # Give the virtualenv Python CAP_NET_RAW
-
-
     sudo setcap CAP_NET_RAW+ep venv/bin/python
 
     # Configure the dummy0 interface
