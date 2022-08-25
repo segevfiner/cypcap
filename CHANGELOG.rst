@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+Fixed
+^^^^^
+* A `const` compiler warning.
+
 v0.4.1 (2022-02-09)
 -------------------
 
