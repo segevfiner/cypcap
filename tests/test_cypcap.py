@@ -478,15 +478,23 @@ def test_nonblock(pcap):
     assert next(pcap) == (None, None)
 
 
-def test_set_immediate_mode(interface):
+def test_set_immediate_mode(interface, echo_pkt, sender_pcap):
     with cypcap.create(interface) as pcap:
         pcap.set_snaplen(65536)
         pcap.set_promisc(True)
-        pcap.set_timeout(1)
         pcap.set_immediate_mode(True)
         pcap.activate()
 
-        assert next(pcap) == (None, None)
+        sender_pcap.sendpacket(bytes(echo_pkt))
+
+        for pkthdr, data in pcap:
+            if pkthdr is None:
+                continue
+
+            captured_pkt = dpkt.ethernet.Ethernet(data)
+            break
+
+        assert bytes(echo_pkt) == bytes(captured_pkt)
 
 
 def test_set_buffer_size(interface):
