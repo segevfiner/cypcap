@@ -85,7 +85,7 @@ cdef extern from "<pcap/pcap.h>" nogil:
         return -1;
     }
 
-    static struct timeval *pcap_get_required_select_timeout(pcap_t *p)
+    static const struct timeval *pcap_get_required_select_timeout(pcap_t *p)
     {
         return NULL;
     }
@@ -356,4 +356,4 @@ cdef extern from "<pcap/pcap.h>" nogil:
 
     # UN*X only
     int	pcap_get_selectable_fd(pcap_t *)
-    timeval *pcap_get_required_select_timeout(pcap_t *)
+    const timeval *pcap_get_required_select_timeout(pcap_t *)
