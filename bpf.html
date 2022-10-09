@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>cypcap.bpf module &#8212; cypcap 0.4.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -12,7 +12,9 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Changelog" href="changelog.html" />
@@ -34,7 +36,7 @@
           <div class="body" role="main">
             
   <section id="module-cypcap.bpf">
-<span id="cypcap-bpf-module"></span><h1>cypcap.bpf module<a class="headerlink" href="#module-cypcap.bpf" title="Permalink to this headline">¶</a></h1>
+<span id="cypcap-bpf-module"></span><h1>cypcap.bpf module<a class="headerlink" href="#module-cypcap.bpf" title="Permalink to this heading">¶</a></h1>
 <p>BPF Constants and utility functions.</p>
 <p><strong>Instruction classes:</strong></p>
 <dl class="py function">
@@ -320,7 +322,57 @@
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">cypcap.bpf module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">cypcap.bpf module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.CLASS"><code class="docutils literal notranslate"><span class="pre">CLASS()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.LD"><code class="docutils literal notranslate"><span class="pre">LD</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.LDX"><code class="docutils literal notranslate"><span class="pre">LDX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.ST"><code class="docutils literal notranslate"><span class="pre">ST</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.STX"><code class="docutils literal notranslate"><span class="pre">STX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.ALU"><code class="docutils literal notranslate"><span class="pre">ALU</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.JMP"><code class="docutils literal notranslate"><span class="pre">JMP</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.RET"><code class="docutils literal notranslate"><span class="pre">RET</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.MISC"><code class="docutils literal notranslate"><span class="pre">MISC</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.SIZE"><code class="docutils literal notranslate"><span class="pre">SIZE()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.W"><code class="docutils literal notranslate"><span class="pre">W</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.H"><code class="docutils literal notranslate"><span class="pre">H</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.B"><code class="docutils literal notranslate"><span class="pre">B</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.MODE"><code class="docutils literal notranslate"><span class="pre">MODE()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.IMM"><code class="docutils literal notranslate"><span class="pre">IMM</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.ABS"><code class="docutils literal notranslate"><span class="pre">ABS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.IND"><code class="docutils literal notranslate"><span class="pre">IND</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.MEM"><code class="docutils literal notranslate"><span class="pre">MEM</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.LEN"><code class="docutils literal notranslate"><span class="pre">LEN</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.MSH"><code class="docutils literal notranslate"><span class="pre">MSH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.OP"><code class="docutils literal notranslate"><span class="pre">OP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.ADD"><code class="docutils literal notranslate"><span class="pre">ADD</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.SUB"><code class="docutils literal notranslate"><span class="pre">SUB</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.MUL"><code class="docutils literal notranslate"><span class="pre">MUL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.DIV"><code class="docutils literal notranslate"><span class="pre">DIV</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.OR"><code class="docutils literal notranslate"><span class="pre">OR</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.AND"><code class="docutils literal notranslate"><span class="pre">AND</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.LSH"><code class="docutils literal notranslate"><span class="pre">LSH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.RSH"><code class="docutils literal notranslate"><span class="pre">RSH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.NEG"><code class="docutils literal notranslate"><span class="pre">NEG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.MOD"><code class="docutils literal notranslate"><span class="pre">MOD</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.XOR"><code class="docutils literal notranslate"><span class="pre">XOR</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.JA"><code class="docutils literal notranslate"><span class="pre">JA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.JEQ"><code class="docutils literal notranslate"><span class="pre">JEQ</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.JGT"><code class="docutils literal notranslate"><span class="pre">JGT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.JGE"><code class="docutils literal notranslate"><span class="pre">JGE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.JSET"><code class="docutils literal notranslate"><span class="pre">JSET</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.SRC"><code class="docutils literal notranslate"><span class="pre">SRC()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.K"><code class="docutils literal notranslate"><span class="pre">K</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.X"><code class="docutils literal notranslate"><span class="pre">X</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.RVAL"><code class="docutils literal notranslate"><span class="pre">RVAL()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.A"><code class="docutils literal notranslate"><span class="pre">A</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.MISCOP"><code class="docutils literal notranslate"><span class="pre">MISCOP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.TAX"><code class="docutils literal notranslate"><span class="pre">TAX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.TXA"><code class="docutils literal notranslate"><span class="pre">TXA</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.STMT"><code class="docutils literal notranslate"><span class="pre">STMT()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.JUMP"><code class="docutils literal notranslate"><span class="pre">JUMP()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cypcap.bpf.MEMWORDS"><code class="docutils literal notranslate"><span class="pre">MEMWORDS</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 
@@ -351,7 +403,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -368,7 +420,7 @@
       &copy;2021, Segev Finer.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.2.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

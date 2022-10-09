@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Changelog &#8212; cypcap 0.4.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -12,7 +12,9 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="cypcap.bpf module" href="bpf.html" />
@@ -33,29 +35,29 @@
           <div class="body" role="main">
             
   <section id="changelog">
-<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading">¶</a></h1>
 <section id="unreleased">
-<h2>Unreleased<a class="headerlink" href="#unreleased" title="Permalink to this headline">¶</a></h2>
+<h2>Unreleased<a class="headerlink" href="#unreleased" title="Permalink to this heading">¶</a></h2>
 <section id="fixed">
-<h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this headline">¶</a></h3>
+<h3>Fixed<a class="headerlink" href="#fixed" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>A <cite>const</cite> compiler warning.</p></li>
 </ul>
 </section>
 </section>
 <section id="v0-4-1-2022-02-09">
-<h2>v0.4.1 (2022-02-09)<a class="headerlink" href="#v0-4-1-2022-02-09" title="Permalink to this headline">¶</a></h2>
+<h2>v0.4.1 (2022-02-09)<a class="headerlink" href="#v0-4-1-2022-02-09" title="Permalink to this heading">¶</a></h2>
 <section id="id1">
-<h3>Fixed<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>Fixed<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">dumps(...,</span> <span class="pre">cypcap.BpfDumpType.C_ARRAY)</span></code> outputted wrong syntax.</p></li>
 </ul>
 </section>
 </section>
 <section id="v0-4-0-2022-01-14">
-<h2>v0.4.0 (2022-01-14)<a class="headerlink" href="#v0-4-0-2022-01-14" title="Permalink to this headline">¶</a></h2>
+<h2>v0.4.0 (2022-01-14)<a class="headerlink" href="#v0-4-0-2022-01-14" title="Permalink to this heading">¶</a></h2>
 <section id="added">
-<h3>Added<a class="headerlink" href="#added" title="Permalink to this headline">¶</a></h3>
+<h3>Added<a class="headerlink" href="#added" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">BpfProgram</span></code> now has <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, <code class="docutils literal notranslate"><span class="pre">__len__</span></code>, <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">__iter__</span></code>, and can be turned
 into a list.</p></li>
@@ -67,7 +69,7 @@ instead of printing to stdout.</p></li>
 </ul>
 </section>
 <section id="changed">
-<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this headline">¶</a></h3>
+<h3>Changed<a class="headerlink" href="#changed" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Classes which should not be instantiated from Python directly should now raise
 (<code class="docutils literal notranslate"><span class="pre">Pcap</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">Dumper</span></code>).</p></li>
@@ -75,13 +77,13 @@ instead of printing to stdout.</p></li>
 </ul>
 </section>
 <section id="removed">
-<h3>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">¶</a></h3>
+<h3>Removed<a class="headerlink" href="#removed" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">debug_dump</span></code> is merged into <code class="docutils literal notranslate"><span class="pre">dumps</span></code> by a new type parameter.</p></li>
 </ul>
 </section>
 <section id="id2">
-<h3>Fixed<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>Fixed<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">set_config</span></code>, <code class="docutils literal notranslate"><span class="pre">set_pre_config</span></code> had wrong typing. (Although those are not exported to an
 interface file yet).</p></li>
@@ -89,9 +91,9 @@ interface file yet).</p></li>
 </section>
 </section>
 <section id="v0-3-0-2021-11-16">
-<h2>v0.3.0 (2021-11-16)<a class="headerlink" href="#v0-3-0-2021-11-16" title="Permalink to this headline">¶</a></h2>
+<h2>v0.3.0 (2021-11-16)<a class="headerlink" href="#v0-3-0-2021-11-16" title="Permalink to this heading">¶</a></h2>
 <section id="id3">
-<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<h3>Changed<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">optimize</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">Pcap.compile</span></code> now defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 <li><p>Can now call <code class="docutils literal notranslate"><span class="pre">Pcap.setfilter</span></code> with a <code class="docutils literal notranslate"><span class="pre">str</span></code> which will be compiled by calling <code class="docutils literal notranslate"><span class="pre">Pcap.compile</span></code>.</p></li>
@@ -99,9 +101,9 @@ interface file yet).</p></li>
 </section>
 </section>
 <section id="v0-2-0-2021-11-15">
-<h2>v0.2.0 (2021-11-15)<a class="headerlink" href="#v0-2-0-2021-11-15" title="Permalink to this headline">¶</a></h2>
+<h2>v0.2.0 (2021-11-15)<a class="headerlink" href="#v0-2-0-2021-11-15" title="Permalink to this heading">¶</a></h2>
 <section id="id4">
-<h3>Added<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<h3>Added<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Wheels for Windows, Linux &amp; macOS.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Pkthdr</span></code> can be created from Python and is mutable (Useful for <code class="docutils literal notranslate"><span class="pre">bpf.offline_filter</span></code>).</p></li>
@@ -117,7 +119,7 @@ arguments.</p></li>
 </ul>
 </section>
 <section id="id5">
-<h3>Changed<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h3>Changed<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Change <code class="docutils literal notranslate"><span class="pre">findalldevs</span></code> interface address parsing to use the same format as the <code class="docutils literal notranslate"><span class="pre">socket</span></code>
 module and add support for <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code> <code class="docutils literal notranslate"><span class="pre">sockaddr_ll</span></code> used in Linux.</p></li>
@@ -131,24 +133,24 @@ the correct value by itself.</p></li>
 </section>
 </section>
 <section id="v0-1-1-2021-11-03">
-<h2>v0.1.1 (2021-11-03)<a class="headerlink" href="#v0-1-1-2021-11-03" title="Permalink to this headline">¶</a></h2>
+<h2>v0.1.1 (2021-11-03)<a class="headerlink" href="#v0-1-1-2021-11-03" title="Permalink to this heading">¶</a></h2>
 <section id="id6">
-<h3>Fixed<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3>Fixed<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cypcap.pyx</span></code> was missing from sdist due to <code class="docutils literal notranslate"><span class="pre">cythonize</span></code>. (Bug in Cython?)</p></li>
 </ul>
 </section>
 </section>
 <section id="v0-1-0-2021-11-03">
-<h2>v0.1.0 (2021-11-03)<a class="headerlink" href="#v0-1-0-2021-11-03" title="Permalink to this headline">¶</a></h2>
+<h2>v0.1.0 (2021-11-03)<a class="headerlink" href="#v0-1-0-2021-11-03" title="Permalink to this heading">¶</a></h2>
 <section id="id7">
-<h3>Added<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h3>Added<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Tests &amp; Github Actions CI</p></li>
 </ul>
 </section>
 <section id="id8">
-<h3>Changed<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<h3>Changed<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">dump_open</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">dump_open_append</span></code>.</p></li>
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">open_offline</span></code>.</p></li>
@@ -159,14 +161,14 @@ installed).</p></li>
 </ul>
 </section>
 <section id="id9">
-<h3>Fixed<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<h3>Fixed<a class="headerlink" href="#id9" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">NETMASK_UNKNOWN</span></code> was of the wrong type.</p></li>
 </ul>
 </section>
 </section>
 <section id="v0-1-0b1-2021-10-26">
-<h2>v0.1.0b1 (2021-10-26)<a class="headerlink" href="#v0-1-0b1-2021-10-26" title="Permalink to this headline">¶</a></h2>
+<h2>v0.1.0b1 (2021-10-26)<a class="headerlink" href="#v0-1-0b1-2021-10-26" title="Permalink to this heading">¶</a></h2>
 <p>Initial beta release. Only tested manually and lightly.</p>
 </section>
 </section>
@@ -227,7 +229,7 @@ installed).</p></li>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -244,7 +246,7 @@ installed).</p></li>
       &copy;2021, Segev Finer.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.2.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
