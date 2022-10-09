@@ -222,7 +222,7 @@ setup(
     extras_require={
         "dev": [
             "cython>=0.29.24",
-            "sphinx==4.*",
+            "sphinx==5.*",
             "pytest",
             "dpkt",
             "netifaces",
