@@ -4,6 +4,10 @@ Changelog
 Unreleased
 ----------
 
+Added
+^^^^^
+* Python 3.11 wheels.
+
 Fixed
 ^^^^^
 * A `const` compiler warning.
