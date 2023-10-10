@@ -33,11 +33,11 @@ jobs:
       - name: Build sdist
         if: matrix.os == 'ubuntu-20.04'
         run: |
-          pip install cython>=0.29.24
+          pip install cython>=3.0.0
           python setup.py sdist
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.2
+        uses: pypa/cibuildwheel@v2.16.2
         env:
           CIBW_SKIP: 'pp* *-musllinux*'
           CIBW_BEFORE_ALL_LINUX: >

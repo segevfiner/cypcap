@@ -193,6 +193,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
     keywords="libpcap pcap",
     zip_safe=False,
@@ -222,8 +223,8 @@ setup(
     python_requires='>=3.6',
     extras_require={
         "dev": [
-            "cython>=0.29.24",
-            "sphinx==5.*",
+            "cython>=3.0.0",
+            "sphinx==7.*",
             "pytest",
             "dpkt",
             "netifaces",

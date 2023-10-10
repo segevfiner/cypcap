@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Unreleased
+----------
+Added
+^^^^^
+* Python 3.12 wheels.
+
 v0.4.2 (2022-11-04)
 -------------------
 
