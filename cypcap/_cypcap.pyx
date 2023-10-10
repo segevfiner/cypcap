@@ -255,7 +255,7 @@ class PcapAddr:
        Address.
 
     .. attribute:: netmask
-       :type: Tuple[socket.AddressFamily, Tuple]
+       :type: Optional[Tuple[socket.AddressFamily, Tuple]]
 
        Netmask for the address.
 
@@ -272,7 +272,7 @@ class PcapAddr:
 
     def __init__(self,
         addr: Tuple[socket.AddressFamily, Tuple],
-        netmask: Tuple[socket.AddressFamily, Tuple],
+        netmask: Optional[Tuple[socket.AddressFamily, Tuple]],
         broadaddr: Optional[Tuple[socket.AddressFamily, Tuple]],
         dstaddr: Optional[Tuple[socket.AddressFamily, Tuple]],
     ):
@@ -1032,7 +1032,7 @@ cdef class Pcap:
     def set_pre_config(self, *,
         snaplen: Optional[int]=None,
         promisc: Optional[bool]=None,
-        timeout: Optional[float]=None,
+        timeout: Optional[int | float]=None,
         rfmon: Optional[bool]=None,
         immediate_mode: Optional[bool]=None,
         buffer_size: Optional[int]=None,
