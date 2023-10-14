@@ -1,6 +1,16 @@
 Changelog
 =========
 
+Unreleased
+----------
+Added
+^^^^^
+* Python 3.12 wheels.
+
+Changed
+^^^^^^^
+* Now using Cython 3.
+
 v0.4.2 (2022-11-04)
 -------------------
 
