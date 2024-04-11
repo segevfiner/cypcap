@@ -1280,6 +1280,16 @@ cdef class Dumper:
 
         cpcap.pcap_dump(<unsigned char*>self.dumper, &pkt_header.pkthdr, pkt_data)
 
+    def flush(self):
+        """Flush the packets to the capture file."""
+        self._check_closed()
+
+        result = cpcap.pcap_dump_flush(self.dumper)
+        if result == cpcap.PCAP_ERROR:
+            raise Error(result, cpcap.pcap_statustostr(<int>result).decode())
+
+        return result
+
     def ftell(self) -> int:
         """Get the current file offset for a savefile being written."""
         self._check_closed()

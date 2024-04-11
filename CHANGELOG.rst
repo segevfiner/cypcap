@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Unreleased
+----------
+Added
+^^^^^
+* ``Dumper.flush``.
+
 v0.5.0 (2023-10-14)
 -------------------
 Added
