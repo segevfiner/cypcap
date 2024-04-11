@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Unreleased
+----------
+Fixed
+^^^^^
+* Don't crash if Npcap is not installed or fails to load.
+
 v0.5.0 (2023-10-14)
 -------------------
 Added
