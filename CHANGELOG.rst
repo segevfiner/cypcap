@@ -1,6 +1,13 @@
 Changelog
 =========
 
+Unreleased
+----------
+Changed
+^^^^^^^
+* ``ts_utcdatetime`` is now a tz aware datetime. ``ts_datetime`` is still naive as getting the local
+  timezone and it's availability is still problematic in Python's standard library.
+
 v0.5.0 (2023-10-14)
 -------------------
 Added

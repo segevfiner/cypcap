@@ -336,8 +336,8 @@ cdef class Pkthdr:
 
     @property
     def ts_utcdatetime(self) -> datetime:
-        """Timestamp as a naive UTC datetime."""
-        return datetime.utcfromtimestamp(self.ts)
+        """Timestamp as a UTC aware datetime."""
+        return datetime.fromtimestamp(self.ts, tz=timezone.utc)
 
     @ts_utcdatetime.setter
     def ts_utcdatetime(self, ts_utcdatetime: datetime):
