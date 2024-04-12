@@ -99,7 +99,7 @@ def test_pkthdr_ts_utcdatetime():
 
     assert pkthdr.ts_utcdatetime == datetime.fromtimestamp(PKTHDR_TS, timezone.utc)
 
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     pkthdr.ts_utcdatetime = now
     assert pkthdr.ts_utcdatetime == now
 
