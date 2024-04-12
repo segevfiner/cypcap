@@ -1,6 +1,6 @@
 import os
 import socket
-from datetime import datetime
+from datetime import datetime, timezone
 import copy
 
 import dpkt
@@ -97,7 +97,7 @@ def test_pkthdr_ts_datetime():
 def test_pkthdr_ts_utcdatetime():
     pkthdr = cypcap.Pkthdr(PKTHDR_TS, PKTHDR_LEN, PKTHDR_LEN)
 
-    assert pkthdr.ts_utcdatetime == datetime.fromtimestamp(PKTHDR_TS, datetime.timezone.utc)
+    assert pkthdr.ts_utcdatetime == datetime.fromtimestamp(PKTHDR_TS, timezone.utc)
 
     now = datetime.now()
     pkthdr.ts_utcdatetime = now
