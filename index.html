@@ -595,7 +595,7 @@ number).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cypcap.Pkthdr.ts_utcdatetime">
 <span class="sig-name descname"><span class="pre">ts_utcdatetime</span></span><a class="headerlink" href="#cypcap.Pkthdr.ts_utcdatetime" title="Link to this definition">¶</a></dt>
-<dd><p>Timestamp as a naive UTC datetime.</p>
+<dd><p>Timestamp as a UTC aware datetime.</p>
 </dd></dl>
 
 </dd></dl>
@@ -679,6 +679,12 @@ dumps).</p>
 <dt class="sig sig-object py" id="cypcap.Dumper.dump">
 <span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pkt_header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#cypcap.Pkthdr" title="cypcap._cypcap.Pkthdr"><span class="pre">Pkthdr</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pkt_data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#cypcap.Dumper.dump" title="Link to this definition">¶</a></dt>
 <dd><p>Write a packet to a capture file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cypcap.Dumper.flush">
+<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cypcap.Dumper.flush" title="Link to this definition">¶</a></dt>
+<dd><p>Flush the packets to the capture file.</p>
 </dd></dl>
 
 <dl class="py method">

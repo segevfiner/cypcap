@@ -33,16 +33,38 @@
             
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">¶</a></h1>
-<section id="v0-5-0-2023-10-14">
-<h2>v0.5.0 (2023-10-14)<a class="headerlink" href="#v0-5-0-2023-10-14" title="Link to this heading">¶</a></h2>
+<section id="unreleased">
+<h2>Unreleased<a class="headerlink" href="#unreleased" title="Link to this heading">¶</a></h2>
 <section id="added">
 <h3>Added<a class="headerlink" href="#added" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>Python 3.12 wheels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Dumper.flush</span></code>.</p></li>
 </ul>
 </section>
 <section id="changed">
 <h3>Changed<a class="headerlink" href="#changed" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ts_utcdatetime</span></code> is now a tz aware datetime. <code class="docutils literal notranslate"><span class="pre">ts_datetime</span></code> is still naive as getting the local
+timezone and its availability is still problematic in Python’s standard library.</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Don’t crash if Npcap is not installed or fails to load.</p></li>
+</ul>
+</section>
+</section>
+<section id="v0-5-0-2023-10-14">
+<h2>v0.5.0 (2023-10-14)<a class="headerlink" href="#v0-5-0-2023-10-14" title="Link to this heading">¶</a></h2>
+<section id="id1">
+<h3>Added<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Python 3.12 wheels.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Changed<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Now using Cython 3.</p></li>
 </ul>
@@ -50,14 +72,14 @@
 </section>
 <section id="v0-4-2-2022-11-04">
 <h2>v0.4.2 (2022-11-04)<a class="headerlink" href="#v0-4-2-2022-11-04" title="Link to this heading">¶</a></h2>
-<section id="id1">
-<h3>Added<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<section id="id3">
+<h3>Added<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Python 3.11 wheels.</p></li>
 </ul>
 </section>
-<section id="fixed">
-<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading">¶</a></h3>
+<section id="id4">
+<h3>Fixed<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>A <cite>const</cite> compiler warning.</p></li>
 </ul>
@@ -65,8 +87,8 @@
 </section>
 <section id="v0-4-1-2022-02-09">
 <h2>v0.4.1 (2022-02-09)<a class="headerlink" href="#v0-4-1-2022-02-09" title="Link to this heading">¶</a></h2>
-<section id="id2">
-<h3>Fixed<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<section id="id5">
+<h3>Fixed<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">dumps(...,</span> <span class="pre">cypcap.BpfDumpType.C_ARRAY)</span></code> outputted wrong syntax.</p></li>
 </ul>
@@ -74,8 +96,8 @@
 </section>
 <section id="v0-4-0-2022-01-14">
 <h2>v0.4.0 (2022-01-14)<a class="headerlink" href="#v0-4-0-2022-01-14" title="Link to this heading">¶</a></h2>
-<section id="id3">
-<h3>Added<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<section id="id6">
+<h3>Added<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">BpfProgram</span></code> now has <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>, <code class="docutils literal notranslate"><span class="pre">__len__</span></code>, <code class="docutils literal notranslate"><span class="pre">__init__</span></code>, <code class="docutils literal notranslate"><span class="pre">__iter__</span></code>, and can be turned
 into a list.</p></li>
@@ -86,8 +108,8 @@ instead of printing to stdout.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cypcap.bpf</span></code> module with constants and utility functions for manually written BPF.</p></li>
 </ul>
 </section>
-<section id="id4">
-<h3>Changed<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<section id="id7">
+<h3>Changed<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Classes which should not be instantiated from Python directly should now raise
 (<code class="docutils literal notranslate"><span class="pre">Pcap</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">Dumper</span></code>).</p></li>
@@ -100,8 +122,8 @@ instead of printing to stdout.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">debug_dump</span></code> is merged into <code class="docutils literal notranslate"><span class="pre">dumps</span></code> by a new type parameter.</p></li>
 </ul>
 </section>
-<section id="id5">
-<h3>Fixed<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<section id="id8">
+<h3>Fixed<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">set_config</span></code>, <code class="docutils literal notranslate"><span class="pre">set_pre_config</span></code> had wrong typing. (Although those are not exported to an
 interface file yet).</p></li>
@@ -110,8 +132,8 @@ interface file yet).</p></li>
 </section>
 <section id="v0-3-0-2021-11-16">
 <h2>v0.3.0 (2021-11-16)<a class="headerlink" href="#v0-3-0-2021-11-16" title="Link to this heading">¶</a></h2>
-<section id="id6">
-<h3>Changed<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<section id="id9">
+<h3>Changed<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">optimize</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">Pcap.compile</span></code> now defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 <li><p>Can now call <code class="docutils literal notranslate"><span class="pre">Pcap.setfilter</span></code> with a <code class="docutils literal notranslate"><span class="pre">str</span></code> which will be compiled by calling <code class="docutils literal notranslate"><span class="pre">Pcap.compile</span></code>.</p></li>
@@ -120,8 +142,8 @@ interface file yet).</p></li>
 </section>
 <section id="v0-2-0-2021-11-15">
 <h2>v0.2.0 (2021-11-15)<a class="headerlink" href="#v0-2-0-2021-11-15" title="Link to this heading">¶</a></h2>
-<section id="id7">
-<h3>Added<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<section id="id10">
+<h3>Added<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Wheels for Windows, Linux &amp; macOS.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Pkthdr</span></code> can be created from Python and is mutable (Useful for <code class="docutils literal notranslate"><span class="pre">bpf.offline_filter</span></code>).</p></li>
@@ -136,8 +158,8 @@ iptables, tc-bpf, etc.</p></li>
 arguments.</p></li>
 </ul>
 </section>
-<section id="id8">
-<h3>Changed<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<section id="id11">
+<h3>Changed<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Change <code class="docutils literal notranslate"><span class="pre">findalldevs</span></code> interface address parsing to use the same format as the <code class="docutils literal notranslate"><span class="pre">socket</span></code>
 module and add support for <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code> <code class="docutils literal notranslate"><span class="pre">sockaddr_ll</span></code> used in Linux.</p></li>
@@ -152,8 +174,8 @@ the correct value by itself.</p></li>
 </section>
 <section id="v0-1-1-2021-11-03">
 <h2>v0.1.1 (2021-11-03)<a class="headerlink" href="#v0-1-1-2021-11-03" title="Link to this heading">¶</a></h2>
-<section id="id9">
-<h3>Fixed<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<section id="id12">
+<h3>Fixed<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cypcap.pyx</span></code> was missing from sdist due to <code class="docutils literal notranslate"><span class="pre">cythonize</span></code>. (Bug in Cython?)</p></li>
 </ul>
@@ -161,14 +183,14 @@ the correct value by itself.</p></li>
 </section>
 <section id="v0-1-0-2021-11-03">
 <h2>v0.1.0 (2021-11-03)<a class="headerlink" href="#v0-1-0-2021-11-03" title="Link to this heading">¶</a></h2>
-<section id="id10">
-<h3>Added<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<section id="id13">
+<h3>Added<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Tests &amp; Github Actions CI</p></li>
 </ul>
 </section>
-<section id="id11">
-<h3>Changed<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
+<section id="id14">
+<h3>Changed<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">dump_open</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">dump_open_append</span></code>.</p></li>
 <li><p>Support <code class="docutils literal notranslate"><span class="pre">os.PathLike</span></code> in <code class="docutils literal notranslate"><span class="pre">open_offline</span></code>.</p></li>
@@ -178,8 +200,8 @@ deprecated <code class="docutils literal notranslate"><span class="pre">old_buil
 installed).</p></li>
 </ul>
 </section>
-<section id="id12">
-<h3>Fixed<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
+<section id="id15">
+<h3>Fixed<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">NETMASK_UNKNOWN</span></code> was of the wrong type.</p></li>
 </ul>
