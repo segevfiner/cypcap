@@ -7,6 +7,11 @@ Added
 ^^^^^
 * ``Dumper.flush``.
 
+Changed
+^^^^^^^
+* ``ts_utcdatetime`` is now a tz aware datetime. ``ts_datetime`` is still naive as getting the local
+  timezone and its availability is still problematic in Python's standard library.
+
 Fixed
 ^^^^^
 * Don't crash if Npcap is not installed or fails to load.
