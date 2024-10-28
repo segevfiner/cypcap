@@ -34,8 +34,8 @@ jobs:
       - name: Build sdist
         if: matrix.os == 'ubuntu-20.04'
         run: |
-          pip install cython>=3.0.0
-          python setup.py sdist
+          pip install build
+          python -m build --sdist
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.3
