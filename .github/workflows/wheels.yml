@@ -11,13 +11,13 @@ on:
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, windows-2019, macOS-11]
+        os: [ubuntu-20.04, windows-2019, macOS-12]
 
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
