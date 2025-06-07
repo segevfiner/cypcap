@@ -5,7 +5,7 @@ on:
     branches:
     - main
     tags:
-    - 'v[0-9].*'
+    - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -19,16 +19,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          Invoke-WebRequest https://nmap.org/npcap/dist/npcap-sdk-1.13.zip -OutFile npcap-sdk.zip
+          Invoke-WebRequest https://nmap.org/npcap/dist/npcap-sdk-1.15.zip -OutFile npcap-sdk.zip
           Expand-Archive npcap-sdk.zip
           echo "NPCAP_SDK=$(Resolve-Path npcap-sdk)" >> $env:GITHUB_ENV
 
@@ -39,7 +38,7 @@ jobs:
           python -m build --sdist
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21.3
+        uses: pypa/cibuildwheel@v2.23.3
         env:
           CIBW_SKIP: 'pp* *-musllinux*'
           CIBW_ARCHS_MACOS: universal2
@@ -58,13 +57,21 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-${{ matrix.os }}
-          path: dist/*
+          path: dist
 
-  upload_release:
-    name: Upload release
+  publish:
+    name: Publish
     needs: [build_wheels]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+
+    permissions:
+      contents: write
+      id-token: write
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/cypcap
 
     steps:
     - uses: actions/download-artifact@v4
@@ -73,8 +80,12 @@ jobs:
         merge-multiple: true
         path: dist
 
+    - name: Publish release distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        packages-dir: dist
+
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-        draft: true
-        files: dist/*
+        files: dist
