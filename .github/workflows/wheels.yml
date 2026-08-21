@@ -51,6 +51,7 @@ jobs:
             make -j2 &&
             make install
           CIBW_ENVIRONMENT_WINDOWS: NPCAP_SDK=$NPCAP_SDK
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: delvewheel repair -w {dest_dir} -v {wheel} --exclude wpcap.dll
         with:
           output-dir: dist
 
