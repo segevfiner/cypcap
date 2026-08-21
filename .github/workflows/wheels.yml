@@ -15,19 +15,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-2019, macOS-13]
+        os: [ubuntu-22.04, windows-2019, macOS-14]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
 
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-          Invoke-WebRequest https://nmap.org/npcap/dist/npcap-sdk-1.15.zip -OutFile npcap-sdk.zip
+          Invoke-WebRequest https://nmap.org/npcap/dist/npcap-sdk-1.16.zip -OutFile npcap-sdk.zip
           Expand-Archive npcap-sdk.zip
           echo "NPCAP_SDK=$(Resolve-Path npcap-sdk)" >> $env:GITHUB_ENV
 
@@ -38,7 +38,7 @@ jobs:
           python -m build --sdist
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.23.3
+        uses: pypa/cibuildwheel@v4.2.0
         env:
           CIBW_SKIP: 'pp* *-musllinux*'
           CIBW_ARCHS_MACOS: universal2
@@ -54,7 +54,7 @@ jobs:
         with:
           output-dir: dist
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.os }}
           path: dist
@@ -74,7 +74,7 @@ jobs:
       url: https://pypi.org/p/cypcap
 
     steps:
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v8
       with:
         pattern: wheels-*
         merge-multiple: true
@@ -86,6 +86,6 @@ jobs:
         packages-dir: dist
 
     - name: Release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         files: dist
