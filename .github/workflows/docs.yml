@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@v7
     - uses: actions/setup-python@v7
       with:
-        python-version: '3.13'
+        python-version: '3.14'
     - name: Setup Pages
       uses: actions/configure-pages@v6
     - name: Install dependencies
@@ -41,6 +41,7 @@ jobs:
 
   deploy:
     name: Deploy
+    if: github.ref_name == 'main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
